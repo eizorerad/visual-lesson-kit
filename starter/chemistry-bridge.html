@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Учебный мост от атомов, связей и реакций к биологическим процессам." />
+    <title>Химия → биология · Visual Lesson Kit</title>
+    <script src="js/config.js"></script>
+    <script src="js/appearance.js"></script>
+    <link rel="stylesheet" href="css/appearance.css" />
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/deck.css" />
+    <link rel="stylesheet" href="css/scene.css" />
+    <link rel="stylesheet" href="css/mobile.css" />
+    <link rel="stylesheet" href="css/russian-font.css" />
+    <link rel="stylesheet" href="css/lesson.css" />
+    <link rel="stylesheet" href="css/film.css" />
+    <link rel="stylesheet" href="css/inquiry.css" />
+    <link rel="stylesheet" href="css/questions.css" />
+    <link rel="stylesheet" href="css/shell.css" />
+  </head>
+  <body>
+    <main class="stage" id="stage" aria-label="Учебная сцена">
+      <div class="slide-frame" id="frame"></div>
+    </main>
+    <div class="progress" id="progress"><span id="progressBar"></span></div>
+    <nav class="chrome" id="chrome" aria-label="Управление уроком">
+      <button type="button" data-action="prev" title="Предыдущий шаг (←)" aria-label="Предыдущий шаг">←</button>
+      <button type="button" class="scene-progress" data-action="overview" title="Все сцены (O / Щ)" aria-label="Все сцены" aria-expanded="false" aria-controls="overview">
+        <span class="counter" id="counter">– / –</span>
+        <span class="step-count" id="stepCount">–</span>
+        <span class="dots" id="stepDots" aria-hidden="true"></span>
+      </button>
+      <button type="button" data-action="next" title="Следующий шаг (→ / пробел)" aria-label="Следующий шаг">→</button>
+      <button type="button" data-action="reading" title="Чтение: пояснения, вопросы и конспект" aria-label="Чтение" aria-expanded="false" aria-controls="notes">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 6C9 4 6 4 3 5v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-3-1-6-1-9 1Zm0 0v14"/></svg>
+      </button>
+      <button type="button" data-action="more" title="Ещё" aria-label="Ещё" aria-expanded="false" aria-controls="moreMenu"><span aria-hidden="true">···</span></button>
+    </nav>
+    <div class="more-menu" id="moreMenu" aria-label="Ещё" hidden>
+      <button type="button" id="languageToggle" data-action="language" title="Сменить язык (L)"><span>Язык</span><span id="languageValue" data-language-value data-i18n-ignore>RU</span></button>
+      <button type="button" id="speedToggle" class="speed-toggle" title="Скорость анимации"><span>Скорость</span><span id="speedValue" data-i18n-ignore>1×</span></button>
+      <details id="appearanceSettings" class="appearance-settings" data-i18n-ignore data-no-swipe>
+        <summary data-appearance-label="appearance">Оформление</summary>
+        <label for="appearanceBackground"><span data-appearance-label="background">Фон</span><select id="appearanceBackground" data-appearance="background"></select></label>
+        <label for="appearancePalette"><span data-appearance-label="palette">Палитра</span><select id="appearancePalette" data-appearance="palette"></select></label>
+        <label for="appearanceFont"><span data-appearance-label="font">Шрифт</span><select id="appearanceFont" data-appearance="font"></select></label>
+      </details>
+      <button type="button" data-action="fullscreen" title="Полный экран (F / А)"><span>Полный экран</span><span class="menu-key" aria-hidden="true">F</span></button>
+      <button type="button" data-action="help" title="Клавиши и управление (?)"><span>Справка</span><span class="menu-key" aria-hidden="true">?</span></button>
+    </div>
+    <aside class="notes" id="notes" aria-label="Чтение" inert>
+      <div class="reading-header">
+        <div class="notes-head" id="notesHead">Пояснения · подсвечен текущий шаг</div>
+        <button type="button" class="reading-language" id="readingLanguageToggle" data-action="language" title="Сменить язык (L)" aria-label="Язык: RU"><span id="readingLanguageValue" data-language-value data-i18n-ignore>RU</span></button>
+        <button type="button" class="panel-close" data-action="close-reading" title="Закрыть чтение" aria-label="Закрыть чтение">×</button>
+      </div>
+      <div class="reading-tabs" role="tablist" aria-label="Разделы чтения">
+        <button type="button" role="tab" id="tab-notes" data-action="notes" aria-controls="notesBody" aria-selected="true">Пояснения</button>
+        <button type="button" role="tab" id="tab-questions" data-action="questions" aria-controls="notesBody" aria-selected="false" tabindex="-1">Вопросы</button>
+        <button type="button" role="tab" id="tab-guide" data-action="guide" aria-controls="notesBody" aria-selected="false" tabindex="-1">Конспект</button>
+      </div>
+      <div class="notes-body" id="notesBody" role="tabpanel" aria-labelledby="tab-notes"></div>
+    </aside>
+    <section class="overview" id="overview" aria-label="Все сцены">
+      <div class="overview-head"><h2>Все сцены</h2><button type="button" class="panel-close" data-action="close-overview" aria-label="Закрыть обзор">×</button></div>
+      <div class="overview-grid" id="overviewGrid"></div>
+    </section>
+    <div class="jump-badge" id="jumpBadge"></div>
+    <div class="rotate" id="rotate">
+      <div class="rotate-card">
+        <svg class="rotate-glyph" viewBox="0 0 96 44" width="116" height="53" aria-hidden="true">
+          <rect x="2" y="3" width="25" height="38" rx="5" fill="none" stroke="currentColor" stroke-width="2" opacity="0.45" />
+          <path d="M40 22h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" opacity="0.6" />
+          <rect class="is-target" x="66" y="10" width="28" height="24" rx="5" fill="none" stroke="currentColor" stroke-width="2" />
+        </svg>
+        <h2>Поверните телефон</h2>
+        <p>Сцены имеют формат 16:9 и удобнее читаются в альбомной ориентации. Свайп влево открывает следующий шаг; кнопка с книгой — текст к рисунку.</p>
+        <button type="button" id="rotateDismiss">Всё равно показать</button>
+      </div>
+    </div>
+    <div class="help" id="help">
+      <div class="help-card">
+        <h2>Как смотреть урок</h2>
+        <dl>
+          <dt>→ ↓ пробел</dt><dd>Следующий шаг; во время анимации — завершить её.</dd>
+          <dt>← ↑</dt><dd>Вернуться на предыдущий шаг.</dd>
+          <dt>Shift + → / ←</dt><dd>Следующая / предыдущая сцена.</dd>
+          <dt>Число, затем Enter</dt><dd>Перейти к сцене по номеру.</dd>
+          <dt>Home / End</dt><dd>Первая / последняя сцена.</dd>
+          <dt>R / К</dt><dd>Начать сцену заново.</dd>
+          <dt>O / Щ</dt><dd>Оглавление.</dd>
+          <dt>N / Т</dt><dd>Пояснения с выделением текущего шага.</dd>
+          <dt>Q / Й</dt><dd>Вопросы и ответы к текущей сцене.</dd>
+          <dt>G / П</dt><dd>Конспект с поиском по вопросам всех сцен.</dd>
+          <dt>L / Д</dt><dd>Сменить язык слайдов, заметок и вопросов.</dd>
+          <dt>F / А</dt><dd>Полный экран.</dd>
+          <dt>Свайп</dt><dd>Один палец на рисунке: влево — следующий шаг, вправо — предыдущий.</dd>
+          <dt>Два пальца</dt><dd>Увеличение средствами браузера. При увеличении свайп перемещает страницу, а не меняет шаг.</dd>
+          <dt>?</dt><dd>Эта справка; щёлкните по ней, чтобы закрыть.</dd>
+        </dl>
+        <p class="help-foot">Следите за одним объектом, пока он меняет представление. Ползунки помогают проверить идею; кнопка источника открывает исходный рисунок и пояснение. Учебные схемы отмечены отдельно от данных источника.</p>
+      </div>
+    </div>
+    <script src="js/lib/dom.js"></script>
+    <script src="js/lib/i18n.js"></script>
+    <script src="js/i18n/en.js"></script>
+    <script src="js/i18n/en-notes.js"></script>
+    <script src="js/i18n/en-perspective.js"></script>
+    <script src="js/lib/touch.js"></script>
+    <script src="js/lib/num.js"></script>
+    <script src="js/lib/anim.js"></script>
+    <script src="js/lib/plot.js"></script>
+    <script src="js/lib/svg.js"></script>
+    <script src="js/deck.js"></script>
+    <script src="js/lesson.js"></script>
+    <script src="js/interaction-regions.js"></script>
+    <script src="js/film.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/motion.js"></script>
+    <script src="js/patterns.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/inquiry.js"></script>
+    <script src="js/matrices.js"></script>
+    <script src="js/partitions.js"></script>
+    <script src="js/predictions.js"></script>
+    <script src="js/resampling.js"></script>
+    <script src="js/threshold.js"></script>
+    <script src="js/perspective.js"></script>
+    <script src="js/statistics.js"></script>
+    <script src="js/biology.js"></script>
+    <script src="js/molecular.js"></script>
+    <script src="js/molecular-expression.js"></script>
+    <script src="js/molecular-regulation.js"></script>
+    <script src="js/molecular-rna-processing.js"></script>
+    <script src="js/molecular-inspect.js"></script>
+    <script src="js/geometry.js"></script>
+    <script src="js/explanation.js"></script>
+    <script src="js/distributions.js"></script>
+    <!-- Chemical drawings and explicit numerical models have separate scientific scopes. -->
+    <script src="js/chemistry.js"></script>
+    <script src="js/physical-chemistry.js"></script>
+    <script src="js/recipes/chemistry-foundations-bonds.js"></script>
+    <script src="js/recipes/chemistry-foundations-environment.js"></script>
+    <script src="js/recipes/chemistry-foundations-transfer.js"></script>
+    <script src="js/recipes/chemistry-context-binding.js"></script>
+    <script src="js/recipes/chemistry-context-reactions.js"></script>
+    <script src="js/recipes/chemistry-context-transport.js"></script>
+    <script src="js/recipes/chemistry-context-energy.js"></script>
+    <script src="js/recipes/chemistry-bridge.js"></script>
+    <script src="js/recipes/chemistry-physics-scenes.js"></script>
+    <!-- QA is inert in ordinary viewing; opt in with ?qa=1. -->
+    <script src="js/chemistry-bridge-qa.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/boot.js"></script>
+  </body>
+</html>

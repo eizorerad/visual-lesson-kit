@@ -1,0 +1,16 @@
+* text=auto
+*.html text eol=lf
+*.js text eol=lf
+*.cjs text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.woff2 binary
+*.ttf binary
+LICENSE text eol=lf
+AUTHORS text eol=lf
+# Source-coordinate checksums refer to the unmodified downloaded bytes.
+*.pdb -text
+*.cif -text
+# Preserve the exact upstream notices, including their supplied line endings.
+licenses/** -text

@@ -1,0 +1,14 @@
+/* Scoped additions: they do not alter the existing scene/player scaffolds. */
+.kit-ponder{position:absolute;display:grid;grid-template-rows:auto 40px 65px 1fr;gap:12px;padding:0 0 0 24px;border-left:2px solid var(--color-dim);font-family:var(--f-text);overflow:auto;}
+.kit-ponder-question{margin:0;font-size:29px;line-height:1.2;font-weight:400;color:var(--color-text);}
+.kit-ponder-controls{display:flex;align-items:center;gap:10px;}
+.kit-ponder-controls button{background:transparent;border:1px solid var(--color-dim);border-radius:2px;padding:7px 12px;color:var(--color-text);font:20px var(--f-text);cursor:pointer;}
+.kit-ponder-controls button:hover,.kit-ponder-controls button:focus-visible{border-color:var(--color-primary);color:var(--color-primary);}
+.kit-ponder-hint,.kit-ponder-answer{margin:0;font-size:23px;line-height:1.3;}
+.kit-ponder-hint{color:var(--color-muted);}.kit-ponder-answer{color:var(--color-focus);}
+.kit-ponder [hidden]{display:none!important;}
+.sequence-token{cursor:pointer;outline:none;}
+.sequence-token:focus-visible circle{stroke:var(--color-focus);stroke-width:4;}
+.sequence-token.is-selected circle{stroke:var(--color-focus);stroke-width:4;}
+.sequence-token.is-related circle{stroke:var(--color-primary);stroke-width:4;}
+.sequence-pair.is-selected{stroke:var(--color-focus);stroke-width:4;}

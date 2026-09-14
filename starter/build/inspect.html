@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lesson layout and motion inspector</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#202020;color:#ededed;font:14px system-ui,sans-serif}header{padding:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}label{display:flex;gap:6px;align-items:center}button,input,select{font:inherit;padding:8px;border:1px solid #888;border-radius:0;background:#fff;color:#171717}button:disabled{opacity:.5}input{width:65px}#status{padding:0 16px 12px;min-height:28px}iframe{display:block;border:0;width:1280px;height:720px;margin:0 auto;background:#000}#viewport{overflow:auto;max-width:100%}pre{margin:16px;padding:16px;background:#121212;max-height:480px;overflow:auto;white-space:pre-wrap}summary{padding:12px 16px;cursor:pointer}a{color:#d9c4ef}
+</style>
+<header>
+ <strong>Development inspector</strong>
+ <label>Scene <input id="scene" type="number" min="1" value="1"></label>
+ <label>Step <input id="step" type="number" min="0" value="0"></label>
+ <button id="show">Show</button>
+ <button id="audit">Measure current</button>
+ <button id="sweep">Scan endpoints · RU/EN × fonts × backgrounds</button>
+ <button id="record">Record next transition</button>
+ <button id="stop">Stop</button>
+</header>
+<div id="status" role="status">Loading the lesson…</div>
+<div id="viewport"><iframe id="lesson" title="Lesson under review" src="../index.html?lang=ru"></iframe></div>
+<details open><summary>Measured results · intended boxes and real rendered text</summary><pre id="result">No inspection yet.</pre></details>
+<script src="inspect.js"></script>
+</html>

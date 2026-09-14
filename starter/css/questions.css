@@ -1,0 +1,57 @@
+/* Current-scene Q&A and the searchable guide share the existing notes panel. */
+.qa-scene-title { margin: 8px 0 18px; color: var(--color-text); font-size: 20px; line-height: 1.3; }
+.qa-item { margin: 0 0 14px; border-bottom: 1px solid var(--color-dim); padding: 0 0 14px; }
+.qa-item > summary { color: var(--color-text); cursor: pointer; font-size: 16px; line-height: 1.4; }
+.qa-answer { margin-top: 10px; }
+.qa-answer p { margin: 0 0 9px; }
+.qa-source { color: var(--color-muted); font-size: 12.5px; overflow-wrap: anywhere; }
+.qa-guide-toggle, .qa-scene-jump {
+  font: inherit; line-height: 1.4; color: var(--color-primary); border: 1px solid var(--color-dim);
+  border-radius: 5px; padding: 9px 11px; background: var(--color-bg); cursor: pointer;
+  text-align: left; white-space: normal; width: 100%;
+}
+.qa-scene-jump { margin: 2px 0 14px; }
+.qa-scene-jump[aria-current="step"] { border-color: var(--color-primary); }
+.qa-scene-group { margin-bottom: 22px; }
+.qa-search-label { display: block; color: var(--color-text); margin: 6px 0 7px; }
+.qa-search {
+  box-sizing: border-box; width: 100%; font: inherit; font-size: 16px;
+  color: var(--color-text); background: var(--color-bg); border: 1px solid var(--color-dim);
+  border-radius: 5px; padding: 10px 11px;
+}
+.qa-result-count { margin: 8px 0 18px; color: var(--color-muted); font-size: 13px; }
+.qa-item > summary:focus-visible, .qa-search:focus-visible,
+.qa-guide-toggle:focus-visible, .qa-scene-jump:focus-visible {
+  outline: 2px solid var(--color-focus); outline-offset: 3px;
+}
+#notes[data-mode="questions"] .notes-body, #notes[data-mode="guide"] .notes-body { overscroll-behavior: contain; }
+
+/* A bottom toolbar must fit the canvas even above the mobile breakpoint or
+   beside an open notes panel. Its actual wrapped height is measured by fit(). */
+body:not(.bar-side) .chrome {
+  width: max-content;
+  max-width: calc(var(--toolbar-available-width, 100vw) - 16px);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+body:not(.bar-side) .chrome > * { flex-shrink: 0; }
+/* Preserve the full-width portrait bar and its touch targets. */
+body.is-narrow:not(.bar-side) .chrome {
+  width: calc(100vw - 16px);
+  gap: 4px;
+}
+body.is-narrow .chrome > * { flex-shrink: 0; }
+body.is-narrow .chrome button { min-height: 40px; }
+body.is-narrow .chrome button[data-action="help"] { display: inline-block; }
+body.is-narrow:not(.bar-side) .chrome .spacer { display: none; }
+body.is-narrow:not(.bar-side) .notes-body,
+body.is-narrow:not(.bar-side) .overview {
+  padding-bottom: calc(var(--toolbar-bottom-space, 100px) + 12px);
+}
+body.bar-side .chrome {
+  max-height: calc(100dvh - 16px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}

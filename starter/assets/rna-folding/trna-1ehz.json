@@ -1,0 +1,1044 @@
+{
+  "pdb_id": "1EHZ",
+  "source_url": "https://files.rcsb.org/download/1EHZ.cif",
+  "entry_url": "https://www.rcsb.org/structure/1EHZ",
+  "primary_paper_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1369984/",
+  "primary_paper_doi": "10.1017/S1355838200000364",
+  "retrieved_date": "2026-09-13",
+  "mmcif_sha256": "3021dd2b6461f850bb66d6748d3c22a5e1bb6cc891c625c15d793f38215b28ab",
+  "method": "X-RAY DIFFRACTION",
+  "resolution_angstrom": 1.93,
+  "organism": "Saccharomyces cerevisiae",
+  "entity": "TRANSFER RNA (PHE)",
+  "model_number": 1,
+  "label_asym_id": "A",
+  "auth_asym_id": "A",
+  "selected_atom": "C4'",
+  "coordinate_units": "angstrom",
+  "residue_count": 76,
+  "missing_selected_atoms": [],
+  "altloc_policy": "All 76 selected C4 atoms have label_alt_id dot: no alternate selection needed.",
+  "modified_residues": [
+    {
+      "residue_id": 10,
+      "component_id": "2MG"
+    },
+    {
+      "residue_id": 16,
+      "component_id": "H2U"
+    },
+    {
+      "residue_id": 17,
+      "component_id": "H2U"
+    },
+    {
+      "residue_id": 26,
+      "component_id": "M2G"
+    },
+    {
+      "residue_id": 32,
+      "component_id": "OMC"
+    },
+    {
+      "residue_id": 34,
+      "component_id": "OMG"
+    },
+    {
+      "residue_id": 37,
+      "component_id": "YYG"
+    },
+    {
+      "residue_id": 39,
+      "component_id": "PSU"
+    },
+    {
+      "residue_id": 40,
+      "component_id": "5MC"
+    },
+    {
+      "residue_id": 46,
+      "component_id": "7MG"
+    },
+    {
+      "residue_id": 49,
+      "component_id": "5MC"
+    },
+    {
+      "residue_id": 54,
+      "component_id": "5MU"
+    },
+    {
+      "residue_id": 55,
+      "component_id": "PSU"
+    },
+    {
+      "residue_id": 58,
+      "component_id": "1MA"
+    }
+  ],
+  "notes": [
+    "Original Cartesian coordinates retained without altering any residue. Scene displays one marker per C4′ atom; straight segments between consecutive markers are a coarse backbone trace, not chemical bonds.",
+    "All 76 residues present; all 75 O3′(i)–P(i+1) distances checked, range 1.5692–1.6457 Å.",
+    "14 modified residues retain deposited component IDs. Anticodon residues 34–36 are OMG/A/A; CCA is C74/C75/A76.",
+    "The 2D cloverleaf coordinates and screen interpolation are authored; they are not an inferred folding trajectory.",
+    "The deposited structure includes ions and waters which the scene omits."
+  ],
+  "view_basis_rows": [
+    [
+      -0.704858062764348,
+      -0.41373289261369006,
+      0.5761945894622744
+    ],
+    [
+      -0.23042024713417378,
+      -0.6346941460188456,
+      -0.7376109074031069
+    ],
+    [
+      0.6708812272427337,
+      -0.6526778949672779,
+      0.35203685084713265
+    ]
+  ],
+  "view_origin_angstrom": [
+    79.92,
+    68.3735,
+    33.5425
+  ],
+  "bond_validation": {
+    "o3prime_to_next_p_min_angstrom": 1.5691794033825484,
+    "o3prime_to_next_p_max_angstrom": 1.6457208147191904,
+    "c4prime_neighbor_min_angstrom": 5.018609369138026,
+    "c4prime_neighbor_max_angstrom": 7.0368568267373535
+  },
+  "residues": [
+    {
+      "id": 1,
+      "auth_id": 1,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        50.968,
+        49.231,
+        54.309
+      ]
+    },
+    {
+      "id": 2,
+      "auth_id": 2,
+      "component": "C",
+      "alt_id": ".",
+      "c4prime": [
+        56.836,
+        48.075,
+        56.049
+      ]
+    },
+    {
+      "id": 3,
+      "auth_id": 3,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        62.769,
+        46.443,
+        54.422
+      ]
+    },
+    {
+      "id": 4,
+      "auth_id": 4,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        66.749,
+        44.634,
+        50.114
+      ]
+    },
+    {
+      "id": 5,
+      "auth_id": 5,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        67.927,
+        42.844,
+        44.191
+      ]
+    },
+    {
+      "id": 6,
+      "auth_id": 6,
+      "component": "U",
+      "alt_id": ".",
+      "c4prime": [
+        66.579,
+        44.4,
+        38.565
+      ]
+    },
+    {
+      "id": 7,
+      "auth_id": 7,
+      "component": "U",
+      "alt_id": ".",
+      "c4prime": [
+        64.055,
+        47.852,
+        34.101
+      ]
+    },
+    {
+      "id": 8,
+      "auth_id": 8,
+      "component": "U",
+      "alt_id": ".",
+      "c4prime": [
+        66.105,
+        52.236,
+        29.628
+      ]
+    },
+    {
+      "id": 9,
+      "auth_id": 9,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        64.531,
+        52.215,
+        22.904
+      ]
+    },
+    {
+      "id": 10,
+      "auth_id": 10,
+      "component": "2MG",
+      "alt_id": ".",
+      "c4prime": [
+        59.058,
+        48.375,
+        20.709
+      ]
+    },
+    {
+      "id": 11,
+      "auth_id": 11,
+      "component": "C",
+      "alt_id": ".",
+      "c4prime": [
+        60.091,
+        42.608,
+        23.221
+      ]
+    },
+    {
+      "id": 12,
+      "auth_id": 12,
+      "component": "U",
+      "alt_id": ".",
+      "c4prime": [
+        64.121,
+        39.544,
+        26.594
+      ]
+    },
+    {
+      "id": 13,
+      "auth_id": 13,
+      "component": "C",
+      "alt_id": ".",
+      "c4prime": [
+        69.102,
+        41.516,
+        29.762
+      ]
+    },
+    {
+      "id": 14,
+      "auth_id": 14,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        74.612,
+        43.815,
+        30.626
+      ]
+    },
+    {
+      "id": 15,
+      "auth_id": 15,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        78.274,
+        48.248,
+        31.867
+      ]
+    },
+    {
+      "id": 16,
+      "auth_id": 16,
+      "component": "H2U",
+      "alt_id": ".",
+      "c4prime": [
+        80.514,
+        52.486,
+        33.353
+      ]
+    },
+    {
+      "id": 17,
+      "auth_id": 17,
+      "component": "H2U",
+      "alt_id": ".",
+      "c4prime": [
+        84.176,
+        55.886,
+        36.15
+      ]
+    },
+    {
+      "id": 18,
+      "auth_id": 18,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        80.1,
+        59.412,
+        35.902
+      ]
+    },
+    {
+      "id": 19,
+      "auth_id": 19,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        80.105,
+        62.508,
+        30.407
+      ]
+    },
+    {
+      "id": 20,
+      "auth_id": 20,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        80.529,
+        60.879,
+        23.849
+      ]
+    },
+    {
+      "id": 21,
+      "auth_id": 21,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        75.622,
+        58.001,
+        23.58
+      ]
+    },
+    {
+      "id": 22,
+      "auth_id": 22,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        76.292,
+        51.916,
+        21.581
+      ]
+    },
+    {
+      "id": 23,
+      "auth_id": 23,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        76.705,
+        45.975,
+        20.257
+      ]
+    },
+    {
+      "id": 24,
+      "auth_id": 24,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        74.313,
+        40.622,
+        18.747
+      ]
+    },
+    {
+      "id": 25,
+      "auth_id": 25,
+      "component": "C",
+      "alt_id": ".",
+      "c4prime": [
+        69.17,
+        38.275,
+        16.491
+      ]
+    },
+    {
+      "id": 26,
+      "auth_id": 26,
+      "component": "M2G",
+      "alt_id": ".",
+      "c4prime": [
+        63.938,
+        40.267,
+        14.143
+      ]
+    },
+    {
+      "id": 27,
+      "auth_id": 27,
+      "component": "C",
+      "alt_id": ".",
+      "c4prime": [
+        61.594,
+        44.378,
+        10.321
+      ]
+    },
+    {
+      "id": 28,
+      "auth_id": 28,
+      "component": "C",
+      "alt_id": ".",
+      "c4prime": [
+        62.918,
+        48.099,
+        5.246
+      ]
+    },
+    {
+      "id": 29,
+      "auth_id": 29,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        67.384,
+        49.009,
+        1.027
+      ]
+    },
+    {
+      "id": 30,
+      "auth_id": 30,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        72.933,
+        47.996,
+        -1.281
+      ]
+    },
+    {
+      "id": 31,
+      "auth_id": 31,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        77.346,
+        43.848,
+        -2.3
+      ]
+    },
+    {
+      "id": 32,
+      "auth_id": 32,
+      "component": "OMC",
+      "alt_id": ".",
+      "c4prime": [
+        77.712,
+        38.038,
+        -3.579
+      ]
+    },
+    {
+      "id": 33,
+      "auth_id": 33,
+      "component": "U",
+      "alt_id": ".",
+      "c4prime": [
+        74.457,
+        33.095,
+        -5.87
+      ]
+    },
+    {
+      "id": 34,
+      "auth_id": 34,
+      "component": "OMG",
+      "alt_id": ".",
+      "c4prime": [
+        70.295,
+        33.326,
+        -11.163
+      ]
+    },
+    {
+      "id": 35,
+      "auth_id": 35,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        65.999,
+        34.348,
+        -7.216
+      ]
+    },
+    {
+      "id": 36,
+      "auth_id": 36,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        65.801,
+        33.698,
+        -1.565
+      ]
+    },
+    {
+      "id": 37,
+      "auth_id": 37,
+      "component": "YYG",
+      "alt_id": ".",
+      "c4prime": [
+        66.976,
+        32.279,
+        4.107
+      ]
+    },
+    {
+      "id": 38,
+      "auth_id": 38,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        71.783,
+        31.31,
+        7.804
+      ]
+    },
+    {
+      "id": 39,
+      "auth_id": 39,
+      "component": "PSU",
+      "alt_id": ".",
+      "c4prime": [
+        77.034,
+        33.8,
+        8.726
+      ]
+    },
+    {
+      "id": 40,
+      "auth_id": 40,
+      "component": "5MC",
+      "alt_id": ".",
+      "c4prime": [
+        80.351,
+        38.97,
+        7.985
+      ]
+    },
+    {
+      "id": 41,
+      "auth_id": 41,
+      "component": "U",
+      "alt_id": ".",
+      "c4prime": [
+        80.498,
+        45.168,
+        6.953
+      ]
+    },
+    {
+      "id": 42,
+      "auth_id": 42,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        77.769,
+        50.433,
+        7.372
+      ]
+    },
+    {
+      "id": 43,
+      "auth_id": 43,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        73.059,
+        54.264,
+        8.204
+      ]
+    },
+    {
+      "id": 44,
+      "auth_id": 44,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        67.971,
+        56.191,
+        10.523
+      ]
+    },
+    {
+      "id": 45,
+      "auth_id": 45,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        64.255,
+        55.158,
+        15.248
+      ]
+    },
+    {
+      "id": 46,
+      "auth_id": 46,
+      "component": "7MG",
+      "alt_id": ".",
+      "c4prime": [
+        63.911,
+        55.833,
+        21.859
+      ]
+    },
+    {
+      "id": 47,
+      "auth_id": 47,
+      "component": "U",
+      "alt_id": ".",
+      "c4prime": [
+        62.482,
+        60.255,
+        26.545
+      ]
+    },
+    {
+      "id": 48,
+      "auth_id": 48,
+      "component": "C",
+      "alt_id": ".",
+      "c4prime": [
+        66.046,
+        56.424,
+        30.251
+      ]
+    },
+    {
+      "id": 49,
+      "auth_id": 49,
+      "component": "5MC",
+      "alt_id": ".",
+      "c4prime": [
+        61.796,
+        55.006,
+        32.81
+      ]
+    },
+    {
+      "id": 50,
+      "auth_id": 50,
+      "component": "U",
+      "alt_id": ".",
+      "c4prime": [
+        59.218,
+        60.444,
+        34.331
+      ]
+    },
+    {
+      "id": 51,
+      "auth_id": 51,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        59.365,
+        65.668,
+        37.334
+      ]
+    },
+    {
+      "id": 52,
+      "auth_id": 52,
+      "component": "U",
+      "alt_id": ".",
+      "c4prime": [
+        62.118,
+        69.559,
+        40.905
+      ]
+    },
+    {
+      "id": 53,
+      "auth_id": 53,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        67.174,
+        70.724,
+        43.912
+      ]
+    },
+    {
+      "id": 54,
+      "auth_id": 54,
+      "component": "5MU",
+      "alt_id": ".",
+      "c4prime": [
+        73.295,
+        70.03,
+        45.246
+      ]
+    },
+    {
+      "id": 55,
+      "auth_id": 55,
+      "component": "PSU",
+      "alt_id": ".",
+      "c4prime": [
+        78.398,
+        70.137,
+        41.999
+      ]
+    },
+    {
+      "id": 56,
+      "auth_id": 56,
+      "component": "C",
+      "alt_id": ".",
+      "c4prime": [
+        79.735,
+        74.239,
+        36.678
+      ]
+    },
+    {
+      "id": 57,
+      "auth_id": 57,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        76.829,
+        69.964,
+        33.385
+      ]
+    },
+    {
+      "id": 58,
+      "auth_id": 58,
+      "component": "1MA",
+      "alt_id": ".",
+      "c4prime": [
+        74.279,
+        63.972,
+        33.383
+      ]
+    },
+    {
+      "id": 59,
+      "auth_id": 59,
+      "component": "U",
+      "alt_id": ".",
+      "c4prime": [
+        70.618,
+        58.472,
+        33.026
+      ]
+    },
+    {
+      "id": 60,
+      "auth_id": 60,
+      "component": "C",
+      "alt_id": ".",
+      "c4prime": [
+        73.252,
+        56.436,
+        38.285
+      ]
+    },
+    {
+      "id": 61,
+      "auth_id": 61,
+      "component": "C",
+      "alt_id": ".",
+      "c4prime": [
+        75.643,
+        58.316,
+        43.84
+      ]
+    },
+    {
+      "id": 62,
+      "auth_id": 62,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        71.882,
+        60.684,
+        48.244
+      ]
+    },
+    {
+      "id": 63,
+      "auth_id": 63,
+      "component": "C",
+      "alt_id": ".",
+      "c4prime": [
+        66.263,
+        61.75,
+        50.244
+      ]
+    },
+    {
+      "id": 64,
+      "auth_id": 64,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        60.204,
+        61.569,
+        49.339
+      ]
+    },
+    {
+      "id": 65,
+      "auth_id": 65,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        55.988,
+        59.17,
+        46.06
+      ]
+    },
+    {
+      "id": 66,
+      "auth_id": 66,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        53.671,
+        55.677,
+        41.542
+      ]
+    },
+    {
+      "id": 67,
+      "auth_id": 67,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        53.319,
+        50.645,
+        38.32
+      ]
+    },
+    {
+      "id": 68,
+      "auth_id": 68,
+      "component": "U",
+      "alt_id": ".",
+      "c4prime": [
+        55.168,
+        44.94,
+        37.012
+      ]
+    },
+    {
+      "id": 69,
+      "auth_id": 69,
+      "component": "U",
+      "alt_id": ".",
+      "c4prime": [
+        57.582,
+        39.88,
+        39.4
+      ]
+    },
+    {
+      "id": 70,
+      "auth_id": 70,
+      "component": "C",
+      "alt_id": ".",
+      "c4prime": [
+        59.348,
+        35.925,
+        43.805
+      ]
+    },
+    {
+      "id": 71,
+      "auth_id": 71,
+      "component": "G",
+      "alt_id": ".",
+      "c4prime": [
+        59.688,
+        34.434,
+        49.701
+      ]
+    },
+    {
+      "id": 72,
+      "auth_id": 72,
+      "component": "C",
+      "alt_id": ".",
+      "c4prime": [
+        57.653,
+        35.834,
+        55.45
+      ]
+    },
+    {
+      "id": 73,
+      "auth_id": 73,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        53.508,
+        38.772,
+        58.837
+      ]
+    },
+    {
+      "id": 74,
+      "auth_id": 74,
+      "component": "C",
+      "alt_id": ".",
+      "c4prime": [
+        47.463,
+        40.541,
+        58.985
+      ]
+    },
+    {
+      "id": 75,
+      "auth_id": 75,
+      "component": "C",
+      "alt_id": ".",
+      "c4prime": [
+        42.564,
+        38.194,
+        56.568
+      ]
+    },
+    {
+      "id": 76,
+      "auth_id": 76,
+      "component": "A",
+      "alt_id": ".",
+      "c4prime": [
+        37.607,
+        38.379,
+        58.569
+      ]
+    }
+  ],
+  "display": {
+    "secondary_structure": "Authored 2D cloverleaf: 21 conventional stem pairs, nonmetric coordinates; no tertiary contacts drawn in 2D.",
+    "secondary_stem_pairs": [
+      [
+        1,
+        72
+      ],
+      [
+        2,
+        71
+      ],
+      [
+        3,
+        70
+      ],
+      [
+        4,
+        69
+      ],
+      [
+        5,
+        68
+      ],
+      [
+        6,
+        67
+      ],
+      [
+        7,
+        66
+      ],
+      [
+        10,
+        25
+      ],
+      [
+        11,
+        24
+      ],
+      [
+        12,
+        23
+      ],
+      [
+        13,
+        22
+      ],
+      [
+        27,
+        43
+      ],
+      [
+        28,
+        42
+      ],
+      [
+        29,
+        41
+      ],
+      [
+        30,
+        40
+      ],
+      [
+        31,
+        39
+      ],
+      [
+        49,
+        65
+      ],
+      [
+        50,
+        64
+      ],
+      [
+        51,
+        63
+      ],
+      [
+        52,
+        62
+      ],
+      [
+        53,
+        61
+      ]
+    ],
+    "transition": "Linear screen-coordinate interpolation for correspondence only; not a folding simulation or experimentally observed trajectory.",
+    "projection": "Orthographic projection of original C4-prime coordinates after an orthonormal basis change; final view rotates rigidly by 0.9 radians about the view vertical axis.",
+    "omitted": "All other RNA atoms, waters and ions. Marker glyphs are not atom van der Waals radii."
+  }
+}

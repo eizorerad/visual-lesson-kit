@@ -1,0 +1,29 @@
+{
+  "name": "visual-lesson-kit",
+  "version": "0.19.0",
+  "private": true,
+  "description": "Portable SVG lesson starter; Node dependencies are for development tests only.",
+  "scripts": {
+    "test": "node --test tests/*.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "30.0.1"
+  },
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
+  },
+  "author": {
+    "name": "Leonid Klarov",
+    "email": "eizonix@gmail.com",
+    "url": "https://github.com/eizorerad"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eizorerad/visual-lesson-kit.git"
+  },
+  "homepage": "https://github.com/eizorerad/visual-lesson-kit#readme",
+  "bugs": {
+    "url": "https://github.com/eizorerad/visual-lesson-kit/issues"
+  }
+}

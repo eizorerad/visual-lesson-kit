@@ -1,0 +1,197 @@
+/* The lesson shell: five fixed controls and one reading surface.
+   Fit reserves a deterministic 72px + safe inset; labels never size the canvas. */
+:root { --reading-width: 430px; --reading-font: var(--f-text); }
+.chrome,
+body:not(.bar-side) .chrome,
+body.is-narrow:not(.bar-side) .chrome,
+body.is-touch .chrome {
+  width: 328px; max-width: calc(100vw - 24px); height: 52px;
+  left: calc(50% - var(--notes-shift, 0px)); right: auto; top: auto;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%); display: grid;
+  grid-template-columns: 44px minmax(72px, 1fr) 44px 44px 44px;
+  gap: 2px; padding: 3px 5px; border: 1px solid var(--color-bg);
+  border-radius: 10px; background: color-mix(in srgb, var(--color-bg) 97.0%, transparent);
+  opacity: .88; overflow: visible; box-shadow: 0 4px 20px color-mix(in srgb, var(--color-bg) 33.3333%, transparent);
+}
+.chrome:hover, .chrome:focus-within, body.is-touch .chrome,
+body.is-presenting .chrome { opacity: 1; }
+.chrome button,
+body.is-narrow .chrome button,
+body.is-touch .chrome button {
+  min-width: 0; width: 100%; height: 44px; min-height: 44px;
+  margin: 0; padding: 0; border: 0; border-radius: 6px;
+  color: var(--color-text); font: 400 23px/1 var(--ui);
+  display: flex; align-items: center; justify-content: center;
+}
+.chrome button:hover { background: color-mix(in srgb, var(--color-text) 3.9216%, transparent); color: var(--color-text); }
+.chrome button.is-on { color: var(--color-focus); background: color-mix(in srgb, var(--color-text) 3.1373%, transparent); }
+.chrome button[data-action="more"] { letter-spacing: 2px; }
+.chrome button.scene-progress { position: relative; flex-direction: column; gap: 4px; padding: 4px 10px 9px; }
+.chrome .counter, body.is-narrow .counter { width: auto; color: var(--color-text); font-size: 13px; line-height: 14px; }
+.step-count { color: var(--color-muted); font: 400 10px/11px var(--ui); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.chrome .dots, body.is-narrow .chrome .dots { position: absolute; display: flex; bottom: 3px; left: 14px; right: 14px; height: 2px; min-width: 0; gap: 2px; padding: 0; }
+.chrome .dots i { flex: 1 1 0; min-width: 0; width: auto; height: 2px; border-radius: 0; background: color-mix(in srgb, var(--color-text) 14.1176%, transparent); }
+.chrome .dots i.is-done { background: var(--color-muted); }
+.progress { opacity: .45; }
+.chrome .act-tag, .chrome .spacer { display: none; }
+.more-menu {
+  position: fixed; z-index: 48; width: 224px; max-width: calc(100vw - 24px);
+  left: calc(50% - var(--notes-shift, 0px) + 52px);
+  bottom: calc(72px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+  padding: 6px; border: 1px solid var(--color-dim); border-radius: 10px;
+  background: var(--color-bg); box-shadow: 0 10px 35px color-mix(in srgb, var(--color-bg) 53.3333%, transparent);
+}
+.more-menu[hidden], .more-menu button[hidden] { display: none; }
+.more-menu button {
+  width: 100%; height: 44px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 13px; border: 0; border-radius: 5px; background: transparent;
+  color: var(--color-text); font: 400 14px/1.3 var(--ui); cursor: pointer;
+}
+.more-menu button:hover { background: color-mix(in srgb, var(--color-text) 3.1373%, transparent); }
+.more-menu button > :last-child { color: var(--color-muted); font-variant-numeric: tabular-nums; }
+.chrome button:focus-visible, .more-menu button:focus-visible,
+.reading-tabs button:focus-visible, .panel-close:focus-visible {
+  outline: 1px solid var(--color-focus); outline-offset: 2px;
+}
+.notes {
+  top: 0; bottom: 0; width: var(--reading-width); z-index: 42;
+  background: var(--color-bg); border-left: 1px solid color-mix(in srgb, var(--color-text) 7.451%, transparent);
+  transition: none; box-shadow: none;
+}
+.reading-header { flex: 0 0 68px; height: 68px; display: flex; align-items: center; padding: 10px 24px 0 30px; gap: 12px; }
+.notes-head { flex: 1; min-width: 0; padding: 0; color: var(--color-muted); font: 400 11px/1.5 var(--ui); letter-spacing: .035em; text-transform: none; }
+.panel-close {
+  flex: 0 0 40px; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 4px;
+  background: transparent; color: var(--color-muted); font: 400 27px/1 var(--ui); cursor: pointer;
+}
+.panel-close:hover { color: var(--color-text); background: color-mix(in srgb, var(--color-text) 3.1373%, transparent); }
+.reading-tabs { display: flex; flex: 0 0 43px; height: 43px; margin: 0 30px; border-bottom: 1px solid color-mix(in srgb, var(--color-text) 10.5882%, transparent); gap: 21px; }
+.reading-tabs button {
+  height: 43px; padding: 0 0 10px; border: 0; border-bottom: 2px solid transparent;
+  background: transparent; color: var(--color-muted); font: 400 16px/1 var(--reading-font); cursor: pointer;
+}
+.reading-tabs button[aria-selected="true"] { color: var(--color-text); border-bottom-color: var(--color-focus); }
+.notes-body, body.is-narrow .notes-body, body.is-touch .notes-body {
+  min-height: 0; padding: 26px 30px 42px; color: var(--color-text);
+  font: 400 18px/1.62 var(--reading-font); overflow-y: auto; overflow-x: hidden;
+  overscroll-behavior: contain; touch-action: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin; scrollbar-color: var(--color-dim) transparent;
+}
+.notes-body:focus { outline: none; }
+.note-block, .note-block.is-done, .note-block.is-now {
+  padding: 3px 0 3px 22px; margin: 0 0 23px; border-radius: 0;
+  background: transparent; box-shadow: none; color: var(--color-muted);
+  border-left: 1px solid transparent;
+}
+.note-block.is-now { border-left-color: var(--color-focus); color: var(--color-text); }
+.note-block p { margin: 0 0 12px; }
+.note-step { left: -10px; top: 7px; width: 12px; background: var(--color-bg); color: var(--color-muted); font: 400 10px/1.5 var(--ui); }
+.note-block.is-now .note-step { color: var(--color-focus); }
+.note-block em { color: inherit; font-style: italic; }
+.note-block b, .note-block strong { color: var(--color-text); font-weight: 600; }
+.notes .qa-scene-title { margin: 0 0 26px; color: var(--color-text); font: 600 25px/1.2 var(--reading-font); }
+.notes .qa-item { margin: 0 0 22px; padding: 0 0 22px; border-color: color-mix(in srgb, var(--color-text) 7.8431%, transparent); }
+.notes .qa-item > summary { font: 600 20px/1.35 var(--reading-font); color: var(--color-text); }
+.notes .qa-answer { margin-top: 12px; }
+.notes .qa-answer p { margin: 0 0 12px; }
+.notes a { color: var(--color-secondary); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.notes .qa-source { color: var(--color-muted); font: 400 14px/1.5 var(--reading-font); margin: 12px 0 0; }
+.notes .qa-guide-toggle, .notes .qa-scene-jump {
+  padding: 0 0 10px; margin: 6px 0 20px; border: 0; border-bottom: 1px solid color-mix(in srgb, var(--color-text) 14.1176%, transparent);
+  border-radius: 0; color: var(--color-focus); background: transparent; font: 400 21px/1.3 var(--reading-font);
+}
+.notes .qa-guide-toggle { font-size: 17px; }
+.notes .qa-scene-jump[aria-current="step"] { border-bottom-color: var(--color-focus); }
+.notes .qa-search-label { font: 400 15px/1.4 var(--reading-font); color: var(--color-muted); margin: 0 0 8px; }
+.notes .qa-search { font: 400 18px/1.3 var(--reading-font); border: 1px solid color-mix(in srgb, var(--color-text) 18.8235%, transparent); border-radius: 3px; background: var(--color-bg); padding: 12px; color: var(--color-text); }
+.notes .qa-result-count { font: 400 13px/1.4 var(--ui); margin: 12px 0 25px; color: var(--color-muted); }
+.notes .note-provenance {
+  font: 400 14px/1.55 var(--reading-font); color: var(--color-muted);
+  border: 0; border-top: 1px solid color-mix(in srgb, var(--color-text) 9.4118%, transparent); margin: 32px 0 0; padding: 18px 0 0;
+}
+.note-provenance summary { cursor: pointer; color: var(--color-muted); }
+.note-provenance p { margin: 12px 0 0; }
+.overview { background: color-mix(in srgb, var(--color-bg) 96.8627%, transparent); padding: 36px max(32px, calc((100vw - 900px) / 2)) 70px; }
+.overview-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 26px; }
+.overview h2 { margin: 0; font: 600 30px/1.2 var(--reading-font); }
+.overview-grid { grid-template-columns: 1fr; gap: 0; }
+.overview .ov-chapter { display: none; }
+.overview .ov-card { padding: 18px 2px; border: 0; border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8.2353%, transparent); border-radius: 0; background: transparent; font: 400 22px/1.3 var(--reading-font); gap: 20px; }
+.overview .ov-card:hover, .overview .ov-card.is-current { background: transparent; color: var(--color-focus); }
+.overview .ov-num { font: 400 13px/1.5 var(--ui); width: 28px; }
+.help-card { font-family: var(--reading-font); background: var(--color-bg); border-color: color-mix(in srgb, var(--color-text) 12.549%, transparent); }
+.help-card h2 { font: 600 25px/1.2 var(--reading-font); }
+.help-card dl { font: 400 16px/1.45 var(--reading-font); }
+.help-card dt { color: var(--color-focus); }
+.help-foot { font: 400 16px/1.5 var(--reading-font); }
+body.is-narrow .notes { width: 100% !important; border: 0; padding-bottom: env(safe-area-inset-bottom, 0px); }
+body.is-narrow .reading-header, body.is-narrow .reading-tabs, body.is-narrow .notes-body { width: min(100%, 700px); align-self: center; }
+body.is-narrow .reading-header { padding-left: 26px; padding-right: 20px; }
+body.is-narrow .reading-tabs { width: min(calc(100% - 52px), 648px); margin: 0 26px; }
+body.is-narrow .notes-body { padding: 26px 26px 38px; }
+body.is-narrow .notes-head { padding: 0; }
+body.is-narrow .overview { padding: 22px 26px 55px; }
+body.notes-open.is-narrow .chrome { visibility: hidden; }
+@media (max-width: 380px) {
+  .chrome, body:not(.bar-side) .chrome, body.is-narrow:not(.bar-side) .chrome, body.is-touch .chrome { width: calc(100vw - 16px); max-width: calc(100vw - 16px); }
+  .more-menu { left: auto; right: 10px; transform: none; }
+  .reading-tabs { gap: 18px; }
+}
+@media (max-height: 520px) {
+  .reading-header { flex-basis: 54px; height: 54px; padding-top: 2px; }
+  .notes-body, body.is-narrow .notes-body { padding-top: 22px; }
+}
+@media (prefers-reduced-motion: reduce) { .chrome, .progress span { transition: none; } }
+
+/* Explicit teaching bands: visual objects belong between heading and caption. */
+.film-title { top: 52px; min-height: 73px; max-height: 88px; margin: 0; font-size: 39px; line-height: 1.12; text-wrap: balance; }
+.film-caption { top: 624px; min-height: 64px; max-height: 66px; margin: 0; font-size: 25px; line-height: 1.25; text-wrap: balance; }
+.film-scene .lesson-slider { grid-template-columns: minmax(0, 1fr) auto; column-gap: 14px; row-gap: 5px; font-size: 21px; line-height: 1.2; align-items: start; }
+.film-scene .lesson-slider output { white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* Scene boundaries clear the old mount before this short opacity-only entry.
+   The frame's position/scale never participates; direct show() removes it. */
+@keyframes lesson-scene-enter { from { opacity: 0; } to { opacity: 1; } }
+.slide-frame.scene-enter { animation: lesson-scene-enter 240ms ease-out both; }
+@media (prefers-reduced-motion: reduce) { .slide-frame.scene-enter { animation: none; } }
+
+/* Reading is self-contained on a phone: language stays within reach. */
+.reading-header { justify-content: space-between; }
+.reading-header .notes-head {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.reading-language {
+  min-width: 44px; height: 40px; padding: 0 10px; border: 0; border-radius: 4px;
+  background: transparent; color: var(--color-muted); font: 400 12px/1 var(--ui);
+  letter-spacing: .06em; cursor: pointer;
+}
+.reading-language[hidden] { display: none; }
+.reading-language:hover { color: var(--color-text); background: color-mix(in srgb, var(--color-text) 3.1373%, transparent); }
+.reading-language:focus-visible { outline: 1px solid var(--color-focus); outline-offset: 2px; }
+
+/* Native form controls keep keyboard and touch gestures local to settings. */
+.more-menu {
+  max-height: calc(100dvh - 88px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  overflow-y: auto; overscroll-behavior: contain; touch-action: auto;
+}
+.appearance-settings { border-block: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent); }
+.appearance-settings summary {
+  min-height: 44px; padding: 12px 13px; color: var(--color-text);
+  font: 400 14px/1.4 var(--ui); cursor: pointer;
+}
+.appearance-settings label {
+  display: grid; grid-template-columns: minmax(54px, .8fr) minmax(0, 1.2fr); align-items: center;
+  gap: 8px; margin: 0; padding: 3px 8px; color: var(--color-muted); font: 400 13px/1.3 var(--ui);
+}
+.appearance-settings select {
+  width: 100%; min-width: 0; min-height: 44px; padding: 6px 4px;
+  background: var(--color-bg); color: var(--color-text); border: 1px solid var(--color-dim);
+  border-radius: 4px; font: 400 13px/1.3 var(--ui); touch-action: auto;
+}
+.appearance-settings label:last-child { padding-bottom: 10px; }
+.appearance-settings summary:focus-visible, .appearance-settings select:focus-visible {
+  outline: 2px solid var(--color-focus); outline-offset: -2px;
+}
+@media (max-width: 600px) { .more-menu { left: 50%; } }

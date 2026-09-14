@@ -1,0 +1,160 @@
+/* Common shell and authored English text for the mean-and-spread example only. */
+(function(){
+'use strict';
+const strings={
+  'Как устроен визуальный урок':'How a visual lesson works',
+  'Библиотека сцен · учебные примеры':'Scene library · teaching examples',
+  'Пошаговый визуальный урок: объекты, распределения, измерения и источники.':'A visual lesson, step by step: objects, distributions, measurements and sources.',
+  'Учебная сцена':'Lesson scene',
+  'Управление уроком':'Lesson controls',
+  'Предыдущий шаг':'Previous step',
+  'Следующий шаг':'Next step',
+  'Предыдущий шаг (←)':'Previous step (←)',
+  'Следующий шаг (→ / пробел)':'Next step (→ / space)',
+  'Шаги сцены':'Scene steps',
+  'Скорость анимации':'Animation speed',
+  'Все сцены (O / Щ)':'All scenes (O)',
+  'Пояснения к текущему шагу (N / Т)':'Notes for this step (N)',
+  'Вопросы к текущей сцене (Q / Й)':'Questions for this scene (Q)',
+  'Конспект с поиском (G / П)':'Searchable guide (G)',
+  'Полный экран (F / А)':'Fullscreen (F)',
+  'Клавиши и управление (?)':'Keys and controls (?)',
+  'Справка':'Help',
+  'Сцены':'Scenes',
+  'Пояснения':'Notes',
+  'Вопросы':'Questions',
+  'Конспект':'Guide',
+  'Экран':'Screen',
+  'Все сцены':'All scenes',
+  'Пояснения к сцене':'Scene notes',
+  'Пояснения · подсвечен текущий шаг':'Notes · current step highlighted',
+  'Нет пояснения к этой сцене.':'No notes for this scene.',
+  'Свайп — следующий или предыдущий шаг':'Swipe for the next or previous step',
+  'Поверните телефон':'Turn your phone sideways',
+  'Сцены имеют формат 16:9 и удобнее читаются в альбомной ориентации. Свайп влево открывает следующий шаг; кнопка «Пояснения» — текст к рисунку.':'The 16:9 scenes are easier to read in landscape. Swipe left for the next step; Notes opens the explanation.',
+  'Всё равно показать':'Show anyway',
+  'Как смотреть урок':'How to use this lesson',
+  '→ ↓ пробел':'→ ↓ space',
+  'Следующий шаг; во время анимации — завершить её.':'Next step; during an animation, finish it.',
+  'Вернуться на предыдущий шаг.':'Return to the previous step.',
+  'Следующая / предыдущая сцена.':'Next / previous scene.',
+  'Число, затем Enter':'Number, then Enter',
+  'Перейти к сцене по номеру.':'Jump to a scene by number.',
+  'Первая / последняя сцена.':'First / last scene.',
+  'R / К':'R',
+  'O / Щ':'O',
+  'N / Т':'N',
+  'Q / Й':'Q',
+  'G / П':'G',
+  'F / А':'F',
+  'L / Д':'L',
+  'Начать сцену заново.':'Restart this scene.',
+  'Оглавление.':'Scene overview.',
+  'Пояснения с выделением текущего шага.':'Notes with the current step highlighted.',
+  'Вопросы и ответы к текущей сцене.':'Questions and answers for this scene.',
+  'Конспект с поиском по вопросам всех сцен.':'Search questions from all scenes.',
+  'Сменить язык слайдов, заметок и вопросов.':'Switch the language of slides, notes and questions.',
+  'Полный экран.':'Fullscreen.',
+  'Свайп':'Swipe',
+  'Влево — следующий шаг, вправо — предыдущий.':'Left for the next step, right for the previous one.',
+  'Один палец на рисунке: влево — следующий шаг, вправо — предыдущий.':'One finger on the figure: swipe left for the next step, right for the previous one.',
+  'Два пальца':'Two fingers',
+  'Увеличение средствами браузера. При увеличении свайп перемещает страницу, а не меняет шаг.':'Use the browser to zoom. While zoomed in, swiping pans the page instead of changing steps.',
+  'Эта справка; щёлкните по ней, чтобы закрыть.':'This help; click it to close.',
+  'Следите за одним объектом, пока он меняет представление. Ползунки помогают проверить идею; кнопка источника открывает исходный рисунок и пояснение. Учебные схемы отмечены отдельно от данных источника.':'Follow one object as its representation changes. Use sliders to test an idea and the source button to inspect the original figure. Teaching diagrams are labelled separately from source data.',
+  'Язык':'Language',
+  'Язык урока':'Lesson language',
+  'Переключить язык':'Switch language',
+  'Сменить язык (L)':'Switch language (L)',
+  'Русский':'Russian',
+  'Английский':'English',
+  'Меню':'Menu',
+  'Ещё':'More',
+  'Открыть меню':'Open menu',
+  'Закрыть меню':'Close menu',
+  'Настройки':'Settings',
+  'Сведения об источнике':'Source details',
+  'Источник':'Source',
+  'Открыть источник':'Open source',
+  'Источник урока':'Lesson source',
+  'Закрыть':'Close',
+  'Закрыть ×':'Close ×',
+  'Учебная схема':'Teaching diagram',
+  'Учебная схема · данные иллюстративные':'Teaching diagram · illustrative data',
+  'Интерактивный урок':'Interactive lesson',
+  'Подсказка':'Hint',
+  'Ответ':'Answer',
+  'Скрыть подсказку':'Hide hint',
+  'Скрыть ответ':'Hide answer',
+  'Поиск по всем сценам':'Search all scenes',
+  'Вопрос, ответ или источник':'Question, answer or source',
+  'Нет вопросов по этому запросу.':'No questions match this search.',
+  'К этой сцене пока нет вопросов. Откройте пояснения или все вопросы урока.':'No questions for this scene yet. Open Notes or browse all questions.',
+  'Все вопросы урока · поиск':'All lesson questions · search',
+  'Все вопросы · поиск по уроку':'All questions · search the lesson',
+
+
+  "Почему среднее не рассказывает всё": "Why the mean does not tell the whole story",
+  "Что скрывает одно число": "What one number hides",
+  "Почему среднего недостаточно?": "Why is the mean not enough?",
+  "Один центр · два разных набора": "One center · two different sets",
+  "Придуманные наблюдения · условные единицы · внешнего источника нет": "Illustrative observations · arbitrary units · no external source",
+  "Пошаговый визуальный урок": "A visual lesson, step by step",
+  "Придуманные данные": "Illustrative data",
+  "Усл. ед.": "Arb. units",
+  "Группа A": "Group A",
+  "Группа B": "Group B",
+  "Среднее 4": "Mean 4",
+  "Размах: 5 − 3 = 2": "Range: 5 − 3 = 2",
+  "Размах: 7 − 1 = 6": "Range: 7 − 1 = 6",
+  "Диапазон от минимума до максимума": "Observed minimum to maximum",
+  "Учебные данные": "Teaching data",
+  "О данных": "About the data",
+  "Придуманные наборы: A = [3, 4, 5], B = [1, 4, 7]. Каждая точка — отдельное наблюдение в условных единицах.": "Illustrative sets: A = [3, 4, 5], B = [1, 4, 7]. Each point is one observation in arbitrary units.",
+  "Средние: 12 / 3 = 4. Наблюдаемый размах: A = 2, B = 6. Урок не использует статью или внешние данные.": "Means: 12 / 3 = 4. Observed ranges: A = 2, B = 6. The lesson uses no paper or external data.",
+  "Каждая точка — отдельное наблюдение. Сравните две группы на общей шкале.": "Each point is one observation. Compare the two groups on a shared scale.",
+  "Сумма 12, наблюдений 3: среднее равно 4 в обеих группах.": "Sum 12, three observations: the mean is 4 in both groups.",
+  "Среднее совпадает, но размах в B втрое больше: 6 против 2.": "The means agree, but B has three times the range: 6 versus 2."
+
+};
+const notes={
+  "mean-and-spread": [
+    "<p>Each point is one illustrative observation, not a mean. Group A contains 3, 4 and 5; group B contains 1, 4 and 7 arbitrary units. The data are invented for this lesson. Both groups use the same fixed vertical scale from 0 to 8. Small horizontal offsets only separate the points. Compare how closely the values lie together in each group.</p>",
+    "<p>Add the values within each group: both sums are 12. Divide by three observations: (3 + 4 + 5) / 3 = 4 and (1 + 4 + 7) / 3 = 4. The lavender mark shows the common arithmetic mean. The points stay in place: one number describes the center without listing the observations.</p>",
+    "<p>Group A has minimum 3 and maximum 5, so its range is 5 − 3 = 2 arbitrary units. Group B has minimum 1 and maximum 7, so its range is 7 − 1 = 6. B has three times the range although the means agree. The vertical segments show only the observed minimum-to-maximum range. They are not standard deviations or confidence intervals. For these illustrative sets, showing individual values or a suitable measure of spread alongside the mean reveals the difference.</p>"
+  ]
+};
+const qa={
+  "mean-and-spread": [
+    {
+      "q": "Why do the means agree when the groups differ?",
+      "a": "The three values sum to 12 in each group, so both means are 4. The mean describes the center without determining the spread.",
+      "source": "Explicit illustrative sets A = [3, 4, 5] and B = [1, 4, 7]."
+    },
+    {
+      "q": "Are the segments confidence intervals?",
+      "a": "No. Each segment connects the observed minimum and maximum. Their lengths are 2 and 6 arbitrary units: ranges of the data, not estimates of uncertainty in the mean.",
+      "source": "Range is the maximum minus the minimum of the illustrative set."
+    }
+  ]
+};
+D.i18n.pack('en',{label:'EN',ui:{notesHead:'Notes · current step highlighted',notesEmpty:'No notes for this scene.',swipeHint:'Swipe for the next or previous step'},strings,notes,qa,patterns:[
+{match:/^(\d+(?:\s*\/\s*\d+)?\s*·\s*)Что скрывает одно число$/,replace:'$1What one number hides'},
+{match:/^(\d+(?:\s*\/\s*\d+)?\s*·\s*)Почему среднего недостаточно\?$/,replace:'$1Why is the mean not enough?'},
+{match:/^(\d+(?:\s*\/\s*\d+)?\s*·\s*)Один центр · два разных набора$/,replace:'$1One center · two different sets'},
+{match:/^Найдено вопросов: (\d+)$/,replace:'Questions found: $1'},
+{match:/^Вопросы и ответы · сцена (\d+)$/,replace:'Questions and answers · scene $1'},
+{match:/^Язык: (RU|EN)$/,replace:'Language: $1'}
+]});
+})();
+
+D.i18n.pack('en', {strings: {
+  "Чтение": "Reading",
+  "Чтение: пояснения, вопросы и конспект": "Reading: notes, questions and guide",
+  "Закрыть чтение": "Close reading",
+  "Разделы чтения": "Reading sections",
+  "Закрыть обзор": "Close overview",
+  "Скорость": "Speed",
+  "Полный экран": "Fullscreen",
+  "Сцены имеют формат 16:9 и удобнее читаются в альбомной ориентации. Свайп влево открывает следующий шаг; кнопка с книгой — текст к рисунку.": "The 16:9 scenes are easier to read in landscape. Swipe left for the next step; the book button opens the explanation."
+}, patterns: [{match: /^Шаг (\d+) \/ (\d+)$/, replace: 'Step $1 / $2'}]});

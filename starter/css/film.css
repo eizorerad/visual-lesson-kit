@@ -1,0 +1,24 @@
+.film-scene{background:var(--color-bg);}
+.film-viz{position:absolute;inset:0;}
+.film-viz svg{overflow:hidden;}
+.film-kicker{position:absolute;top:29px;left:60px;font-family:var(--f-ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-muted);}
+.film-title{position:absolute;left:60px;right:60px;top:48px;margin:0;font-weight:600;font-size:39px;line-height:1.17;letter-spacing:-.005em;}
+.film-caption{position:absolute;left:90px;right:90px;top:624px;text-align:center;font-size:25px;line-height:1.25;}
+.film-caption b{font-weight:600;color:var(--color-focus);}.film-caption .blue{color:var(--color-primary);}.film-caption .red{color:var(--color-contrast);}
+.film-source{position:absolute;left:60px;bottom:12px;font-family:var(--f-ui);font-size:12px;color:var(--color-muted);}
+.film-kicker[hidden],.film-source[hidden],.lesson-source[hidden]{display:none;}
+.note-provenance{font-family:var(--f-ui);font-size:12px;line-height:1.45;color:var(--color-muted);margin:10px 0 20px;padding-bottom:12px;border-bottom:1px solid var(--color-dim);}
+.note-provenance strong{font-weight:500;color:var(--color-text);}
+.note-provenance p{margin:6px 0 0;}
+#languageToggle{min-width:40px;font-size:12px;}
+.film-scene svg text{font-family:var(--f-text);}
+.film-scene .lesson-slider{font-size:21px;}
+.film-scene .lesson-buttons button{font-size:20px;padding:8px 18px;border-radius:2px;}
+.film-scene .evidence-button{bottom:9px;right:30px;font-size:12px;border-color:var(--color-dim);}
+.film-scene .film-answer{font-family:var(--f-text);font-size:25px;position:absolute;text-align:center;}
+.chrome{background:color-mix(in srgb, var(--color-bg) 90.0%, transparent);border-color:var(--color-dim);opacity:.65;transition:opacity .2s;}
+.chrome:hover,.chrome:focus-within{opacity:1;}
+.speed-toggle{min-width:42px;font-variant-numeric:tabular-nums;}
+.slide-frame{box-shadow:none!important;border:none!important;}
+.film-scene .math-label{font-family:var(--f-math);}
+@media (hover:hover) and (pointer:fine){body.is-portrait .rotate{display:none;}}

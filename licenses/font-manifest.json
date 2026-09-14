@@ -1,0 +1,187 @@
+{
+  "description": "Unmodified upstream font binaries. Sources are pinned to Adobe commits or the official DejaVu 2.37 release. Complete upstream licenses are included separately and in css/fonts.css.",
+  "fonts": [
+    {
+      "family": "Source Sans 3",
+      "weight": 400,
+      "style": "normal",
+      "path": "assets/fonts/SourceSans3-Regular.otf.woff2",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-sans/87b37a2daaed80fcb8e8ccb0085c4d72ddade12e/WOFF2/OTF/SourceSans3-Regular.otf.woff2",
+      "sha256": "63de0da0cc05298e2e9c6e5cef506d8454ca665f6e668a99d94f51174b9256ed",
+      "bytes": 153800,
+      "modified": false
+    },
+    {
+      "family": "Source Sans 3",
+      "weight": 500,
+      "style": "normal",
+      "path": "assets/fonts/SourceSans3-Medium.otf.woff2",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-sans/87b37a2daaed80fcb8e8ccb0085c4d72ddade12e/WOFF2/OTF/SourceSans3-Medium.otf.woff2",
+      "sha256": "8a0c505a954dea762a41cb9f299b1623902a99e1f34456015313927721e2071f",
+      "bytes": 154300,
+      "modified": false
+    },
+    {
+      "family": "Source Sans 3",
+      "weight": 600,
+      "style": "normal",
+      "path": "assets/fonts/SourceSans3-Semibold.otf.woff2",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-sans/87b37a2daaed80fcb8e8ccb0085c4d72ddade12e/WOFF2/OTF/SourceSans3-Semibold.otf.woff2",
+      "sha256": "c248b0a178c362916db7c853ed640db77f184d19a0ed9fa5591fa707d3089635",
+      "bytes": 155624,
+      "modified": false
+    },
+    {
+      "family": "Source Sans 3",
+      "weight": 700,
+      "style": "normal",
+      "path": "assets/fonts/SourceSans3-Bold.otf.woff2",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-sans/87b37a2daaed80fcb8e8ccb0085c4d72ddade12e/WOFF2/OTF/SourceSans3-Bold.otf.woff2",
+      "sha256": "12954097ebbad6749ee1c81a143d555c263420115892211529fe6f51794b8439",
+      "bytes": 157348,
+      "modified": false
+    },
+    {
+      "family": "Source Sans 3",
+      "weight": 400,
+      "style": "italic",
+      "path": "assets/fonts/SourceSans3-It.otf.woff2",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-sans/87b37a2daaed80fcb8e8ccb0085c4d72ddade12e/WOFF2/OTF/SourceSans3-It.otf.woff2",
+      "sha256": "69c8e1806941beb7071e2cf0bc54ee03cf4d59eab07fcb5418b1c86c52d39a72",
+      "bytes": 121304,
+      "modified": false
+    },
+    {
+      "family": "Source Sans 3",
+      "weight": 700,
+      "style": "italic",
+      "path": "assets/fonts/SourceSans3-BoldIt.otf.woff2",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-sans/87b37a2daaed80fcb8e8ccb0085c4d72ddade12e/WOFF2/OTF/SourceSans3-BoldIt.otf.woff2",
+      "sha256": "9b7c4112e87b5c4c1bb59d4fd4ca741765c88e515538c7537875738070e9941f",
+      "bytes": 122532,
+      "modified": false
+    },
+    {
+      "family": "Source Serif 4",
+      "weight": 400,
+      "style": "normal",
+      "path": "assets/fonts/SourceSerif4-Regular.otf.woff2",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-serif/2823e993c53fca27c5c8749f529b56a5a7c77b6b/WOFF2/OTF/SourceSerif4-Regular.otf.woff2",
+      "sha256": "42aa010dbb82d90764a28f6cc7d809a9395999b7390eb3b212028c6975e97402",
+      "bytes": 107408,
+      "modified": false
+    },
+    {
+      "family": "Source Serif 4",
+      "weight": 600,
+      "style": "normal",
+      "path": "assets/fonts/SourceSerif4-Semibold.otf.woff2",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-serif/2823e993c53fca27c5c8749f529b56a5a7c77b6b/WOFF2/OTF/SourceSerif4-Semibold.otf.woff2",
+      "sha256": "7eff2d2fde32c42992e723eb24dcc6dc5b640ef0da97ce373cd38e0604202e30",
+      "bytes": 112092,
+      "modified": false
+    },
+    {
+      "family": "Source Serif 4",
+      "weight": 700,
+      "style": "normal",
+      "path": "assets/fonts/SourceSerif4-Bold.otf.woff2",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-serif/2823e993c53fca27c5c8749f529b56a5a7c77b6b/WOFF2/OTF/SourceSerif4-Bold.otf.woff2",
+      "sha256": "c1c3741a0292062e9694c927cf483fa24d725b4e5a64b5af73f411e2a0a631ce",
+      "bytes": 112824,
+      "modified": false
+    },
+    {
+      "family": "Source Serif 4",
+      "weight": 400,
+      "style": "italic",
+      "path": "assets/fonts/SourceSerif4-It.otf.woff2",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-serif/2823e993c53fca27c5c8749f529b56a5a7c77b6b/WOFF2/OTF/SourceSerif4-It.otf.woff2",
+      "sha256": "e65464583be3cb56b9fee2bff0f2f7d11706aba31435144f87f393e62ed316c8",
+      "bytes": 79940,
+      "modified": false
+    },
+    {
+      "family": "Source Serif 4",
+      "weight": 600,
+      "style": "italic",
+      "path": "assets/fonts/SourceSerif4-SemiboldIt.otf.woff2",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-serif/2823e993c53fca27c5c8749f529b56a5a7c77b6b/WOFF2/OTF/SourceSerif4-SemiboldIt.otf.woff2",
+      "sha256": "833f34eae9b4fa9cf23f7d39f4c7bb27c1ca7281629f16cc2d2c3b7c3851ccbc",
+      "bytes": 83488,
+      "modified": false
+    },
+    {
+      "family": "Source Serif 4",
+      "weight": 700,
+      "style": "italic",
+      "path": "assets/fonts/SourceSerif4-BoldIt.otf.woff2",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-serif/2823e993c53fca27c5c8749f529b56a5a7c77b6b/WOFF2/OTF/SourceSerif4-BoldIt.otf.woff2",
+      "sha256": "96e6a14dff163fae4031f5adb582357cdab55c9a3aad0cd7d72ac4181addf312",
+      "bytes": 83900,
+      "modified": false
+    },
+    {
+      "family": "Source Code Pro",
+      "weight": 400,
+      "style": "normal",
+      "path": "assets/fonts/SourceCodePro-Regular.otf.woff2",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-code-pro/803b7e23ec97ae58b6232ea76519a76d428ba268/WOFF2/OTF/SourceCodePro-Regular.otf.woff2",
+      "sha256": "23a0d7981dc90c0a8ec7d8a6ca7ee5dc439c777f3e2aabcf1009fdcf0e821b79",
+      "bytes": 76348,
+      "modified": false
+    },
+    {
+      "family": "Source Code Pro",
+      "weight": 700,
+      "style": "normal",
+      "path": "assets/fonts/SourceCodePro-Bold.otf.woff2",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-code-pro/803b7e23ec97ae58b6232ea76519a76d428ba268/WOFF2/OTF/SourceCodePro-Bold.otf.woff2",
+      "sha256": "e5e15b262fa1b6cfe91ae9ff019adc3592398d9dedf63bed2827ad36de4cf63b",
+      "bytes": 77372,
+      "modified": false
+    },
+    {
+      "family": "DejaVu Sans",
+      "weight": 400,
+      "style": "normal",
+      "path": "assets/fonts/DejaVuSans.ttf",
+      "url": "https://github.com/dejavu-fonts/dejavu-fonts/releases/download/version_2_37/dejavu-fonts-ttf-2.37.tar.bz2",
+      "archive_member": "dejavu-fonts-ttf-2.37/ttf/DejaVuSans.ttf",
+      "archive_sha256": "fa9ca4d13871dd122f61258a80d01751d603b4d3ee14095d65453b4e846e17d7",
+      "archive_checksum_source": "https://dejavu-fonts.github.io/Download.html",
+      "sha256": "7da195a74c55bef988d0d48f9508bd5d849425c1770dba5d7bfc6ce9ed848954",
+      "bytes": 757076,
+      "modified": false
+    }
+  ],
+  "licenses": [
+    {
+      "family": "Source Sans 3",
+      "path": "licenses/SourceSans3-OFL.md",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-sans/87b37a2daaed80fcb8e8ccb0085c4d72ddade12e/LICENSE.md",
+      "kind": "OFL-1.1"
+    },
+    {
+      "family": "Source Serif 4",
+      "path": "licenses/SourceSerif4-OFL.md",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-serif/2823e993c53fca27c5c8749f529b56a5a7c77b6b/LICENSE.md",
+      "kind": "OFL-1.1",
+      "sha256": "75784a295293a8992f5a8d99210566e0064a012e6dab6731305e3787f15896c7",
+      "bytes": 4492
+    },
+    {
+      "family": "Source Code Pro",
+      "path": "licenses/SourceCodePro-OFL.md",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-code-pro/803b7e23ec97ae58b6232ea76519a76d428ba268/LICENSE.md",
+      "kind": "OFL-1.1"
+    },
+    {
+      "family": "DejaVu Sans",
+      "kind": "Bitstream-Vera-and-Arev; DejaVu changes public domain",
+      "path": "licenses/DejaVuSans-LICENSE.txt",
+      "url": "https://github.com/dejavu-fonts/dejavu-fonts/releases/download/version_2_37/dejavu-fonts-ttf-2.37.tar.bz2",
+      "archive_member": "dejavu-fonts-ttf-2.37/LICENSE"
+    }
+  ]
+}

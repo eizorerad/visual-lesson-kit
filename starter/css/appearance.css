@@ -1,0 +1,9 @@
+/* Black is the fallback while the synchronous head script selects the saved theme. */
+:root {
+  --color-bg: #000000; --color-text: #F0ECE6; --color-muted: #AAA3AD; --color-dim: #716A76;
+  --color-primary: #F29F87; --color-secondary: #ACB978; --color-focus: #BDA9E2;
+  --color-contrast: #E07D92; --color-auxiliary: #82ABC4;
+  --source-image-bg: #FFFFFF; /* Preserve a paper backing for transparent source images. */
+  color-scheme: dark;
+}
+html, body { background: var(--color-bg); color: var(--color-text); }

@@ -1,0 +1,200 @@
+/* Phones and tablets: everything that changes when the pointer is a finger.
+
+   Two classes drive this file, both set from JS: `is-touch` on the first touch
+   event, `is-narrow` (and `is-portrait`) whenever the window is phone-sized.
+   The canvas itself is never restyled — it is one fixed 1280×720 drawing that
+   the deck scales — so the work here is hit areas, the bar, and the panels
+   around it. Hit areas grow with negative margins that cancel the growth, so a
+   control gets a finger-sized target without moving anything on the slide. */
+
+/* ---------- page behaviour ---------- */
+
+html, body {
+  touch-action: auto;              /* keep browser pinch/double-tap accessibility */
+  overscroll-behavior: none;       /* no pull-to-refresh over the deck */
+  -webkit-text-size-adjust: 100%;
+}
+
+.stage { height: 100dvh; }
+
+body.is-touch .scene {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;     /* long-press on a draggable must not pop a menu */
+}
+
+/* ---------- the bottom bar ---------- */
+
+/* There is no hover on a finger, so the bar cannot hide behind one. */
+body.is-touch .chrome {
+  opacity: 0.9;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  gap: 2px;
+}
+
+body.is-touch.is-presenting .chrome { opacity: 0.5; }
+body.is-touch.chrome-lit .chrome,
+body.is-touch.is-presenting.chrome-lit .chrome { opacity: 1; }
+
+body.is-touch .chrome button {
+  padding: 11px 12px;              /* 38px tall: a finger-sized target */
+  font-size: 13.5px;
+}
+
+/* On a phone the bar has to fit across the short side of the screen. */
+body.is-narrow .act-tag,
+body.is-narrow .dots { display: none; }
+body.is-narrow .counter { width: 54px; }
+body.is-narrow .chrome { max-width: calc(100vw - 16px); }
+body.is-narrow .chrome button[data-action="help"] { display: none; }
+
+/* Phone held sideways: the bar stands in the margin beside the slide, where it
+   costs no height. Written after deck.css so it wins over the centring rule. */
+body.bar-side .chrome {
+  left: auto;
+  right: calc(5px + env(safe-area-inset-right, 0px));
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  flex-direction: column;
+  gap: 1px;
+  padding: 5px 4px;
+  max-width: none;
+}
+
+body.bar-side .counter { width: auto; padding: 2px 0; }
+body.bar-side .spacer { display: none; }
+body.bar-side .chrome button { padding: 10px 8px; width: 100%; }
+
+/* ---------- notes ---------- */
+
+/* Too little room to put the narration beside the slide: it becomes a sheet
+   over it, and the Notes button flips between the two. */
+body.is-narrow .notes {
+  width: 100% !important;
+  border-left: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+body.is-narrow .notes-head { padding: 12px 16px 6px; }
+body.is-narrow .notes-body { padding: 4px 16px 76px; font-size: 15px; }
+/* The side bar sits above the sheet, so the text keeps clear of it. */
+body.bar-side .notes-head { padding-right: max(76px, var(--toolbar-side-space, 76px)); }
+body.bar-side .notes-body { padding-right: max(76px, var(--toolbar-side-space, 76px)); padding-bottom: 24px; }
+body.is-touch .notes-body { -webkit-overflow-scrolling: touch; }
+
+/* ---------- controls on the slide ---------- */
+
+/* The slide is drawn at 1280×720 and then scaled down, so a 14px slider thumb
+   can end up 7 physical px wide. These rules grow the target and take the
+   growth straight back out with negative margins: layout does not move. */
+body.is-touch .scene input[type="range"] {
+  height: 34px;
+  margin: -8px 0;
+  touch-action: none;
+}
+
+body.is-touch .scene input[type="range"]::-webkit-slider-thumb {
+  width: 22px;
+  height: 22px;
+  margin-top: -10px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-focus) 16.0%, transparent);
+}
+
+body.is-touch .scene input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; }
+
+/* Buttons keep their exact box: some scenes pack sixteen of them into a
+   wrapping row, where a wider button would re-wrap the row and squeeze the
+   labels. The target grows as an absolutely positioned child instead, which
+   takes part in hit-testing but not in layout. */
+body.is-touch .btns button,
+body.is-touch .act,
+body.is-touch .toggle { position: relative; }
+
+body.is-touch .btns button::after,
+body.is-touch .act::after,
+body.is-touch .toggle::after {
+  content: '';
+  position: absolute;
+  left: -7px;
+  right: -7px;
+  top: 50%;
+  height: 40px;
+  transform: translateY(-50%);
+}
+
+body.is-touch .toggle input { width: 20px; height: 20px; margin: -2px -3px; }
+
+/* A tooltip opened by a tap is read, not hovered: give it room and let it go
+   under the finger rather than off the edge of the slide. */
+body.is-touch .tip { max-width: 420px; font-size: 15px; padding: 10px 14px; }
+
+/* ---------- overlays ---------- */
+
+body.is-narrow .overview { padding: 24px 16px 90px; }
+body.is-narrow .overview-grid { grid-template-columns: 1fr; }
+body.is-touch .ov-card { padding: 13px 12px; }
+
+@media (max-width: 640px), (max-height: 460px) {
+  .help-card { min-width: 0; width: calc(100vw - 28px); max-height: 82vh; overflow: auto; padding: 18px 20px; }
+  .help-card dl { grid-template-columns: 104px 1fr; font-size: 13px; }
+  .jump-badge { font-size: 34px; padding: 10px 20px; }
+}
+
+/* ---------- turn the phone ---------- */
+
+.rotate {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: var(--deck-bg);
+  text-align: center;
+}
+
+body.is-portrait .rotate { display: flex; }
+body.rotate-dismissed .rotate { display: none; }
+
+.rotate-card { max-width: 320px; }
+.rotate-glyph { display: block; margin: 0 auto 20px; color: var(--deck-ink-dim); }
+.rotate-glyph .is-target { color: var(--deck-accent); }
+.rotate-card h2 { margin: 0 0 10px; font-size: 19px; font-weight: 600; }
+.rotate-card p { margin: 0 0 20px; font-size: 14.5px; line-height: 1.5; color: var(--deck-ink-dim); }
+
+.rotate-card button {
+  font: 500 14px/1 var(--ui);
+  color: var(--deck-ink);
+  background: transparent;
+  border: 1px solid var(--deck-border);
+  border-radius: 6px;
+  padding: 12px 18px;
+  cursor: pointer;
+}
+
+/* ---------- the one hint ---------- */
+
+.touch-hint {
+  position: fixed;
+  left: 50%;
+  bottom: calc(66px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 45;
+  padding: 9px 16px;
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--color-bg) 92.0%, transparent);
+  border: 1px solid var(--deck-border);
+  color: var(--deck-ink-dim);
+  font: 500 13px/1 var(--ui);
+  pointer-events: none;
+  transition: opacity 600ms ease-out;
+}
+
+.touch-hint.is-out { opacity: 0; }
+
+/* One-finger canvas swipes coexist with native scrolling/pinch. At browser zoom,
+   panning belongs to the browser and D.touch suppresses deck navigation. */
+.film-viz,[data-swipe-canvas]{touch-action:pan-y pinch-zoom;}
+body.is-zoomed .film-viz,body.is-zoomed [data-swipe-canvas]{touch-action:auto;}

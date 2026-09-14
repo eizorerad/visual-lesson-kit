@@ -1,0 +1,98 @@
+{
+  "pdb_id": "7BG9",
+  "source_url": "https://files.rcsb.org/download/7BG9.pdb",
+  "model": 1,
+  "altloc": "",
+  "traces": [
+    {
+      "chain": "A",
+      "atom": "CA",
+      "max_link_distance": 5
+    },
+    {
+      "chain": "M",
+      "atom": "CA",
+      "max_link_distance": 5
+    },
+    {
+      "chain": "L",
+      "atom": "CA",
+      "max_link_distance": 5
+    },
+    {
+      "chain": "B",
+      "atom": "P",
+      "max_link_distance": 8
+    },
+    {
+      "chain": "N",
+      "atom": "P",
+      "max_link_distance": 8
+    }
+  ],
+  "fragments": {
+    "rna": {
+      "chain": "B",
+      "polymer": "RNA",
+      "residues": [
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56
+      ],
+      "max_link_distance": 2
+    },
+    "dna": {
+      "chain": "N",
+      "polymer": "DNA",
+      "residues": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "max_link_distance": 2
+    }
+  },
+  "frame": {
+    "anchors": {
+      "x": [
+        {
+          "chain": "N",
+          "residue": 13,
+          "atom": "P"
+        },
+        {
+          "chain": "N",
+          "residue": 18,
+          "atom": "P"
+        }
+      ],
+      "y": [
+        {
+          "chain": "N",
+          "residue": 16,
+          "atom": "P"
+        },
+        {
+          "chain": "B",
+          "residue": 51,
+          "atom": "P"
+        }
+      ]
+    }
+  },
+  "records": [
+    "ATOM",
+    "HETATM"
+  ]
+}
