@@ -18,8 +18,8 @@ def create(destination, title, source_url='', source_label='Источник', l
         raise ValueError('Название урока не может быть пустым.')
     if lang not in ('ru', 'en'):
         raise ValueError('Начальный язык должен быть ru или en.')
-    if template not in ('gallery', 'methods', 'explanations', 'synthesis', 'molecular', 'molecular-check', 'chemistry-bridge', 'rna-folding', 'molecular-views'):
-        raise ValueError('Шаблон должен быть gallery, methods, explanations, synthesis, molecular, molecular-check, chemistry-bridge, rna-folding или molecular-views.')
+    if template not in ('gallery', 'methods', 'explanations', 'synthesis', 'molecular', 'molecular-check', 'chemistry-bridge', 'rna-folding', 'molecular-views', 'spatial-biology'):
+        raise ValueError('Шаблон должен быть gallery, methods, explanations, synthesis, molecular, molecular-check, chemistry-bridge, rna-folding, molecular-views или spatial-biology.')
     for field, value, choices in (
         ('Фон', background, ('black', 'white')),
         ('Палитра', palette, ('warm', 'ocean', 'botanical')),
@@ -43,7 +43,7 @@ def create(destination, title, source_url='', source_label='Источник', l
         raise ValueError('Не найден starter/index.html рядом с create.py.')
     shutil.copytree(starter, dest, dirs_exist_ok=True,
                     ignore=shutil.ignore_patterns('__pycache__', '.DS_Store', 'dist', 'node_modules'))
-    if template in ('methods', 'explanations', 'synthesis', 'molecular', 'molecular-check', 'chemistry-bridge', 'rna-folding', 'molecular-views'):
+    if template in ('methods', 'explanations', 'synthesis', 'molecular', 'molecular-check', 'chemistry-bridge', 'rna-folding', 'molecular-views', 'spatial-biology'):
         shutil.copy2(dest / (template + '.html'), dest / 'index.html')
         # The methods use calculated SVG only; gallery images are not their evidence.
         for asset in (dest / 'assets').iterdir():
@@ -69,7 +69,7 @@ def create(destination, title, source_url='', source_label='Источник', l
                  'statistics.md', 'biology.md', 'molecular.md', 'molecular-expression-references.md', 'molecular-regulation.md',
                  'molecular-rna-processing.md', 'molecular-inspection.md', 'molecular-check.md', 'geometry.md', 'distributions.md',
                  'chemistry.md', 'physical-chemistry.md', 'chemistry-bridge.md', 'rna-folding.md', 'molecular-coordinates.md',
-                 'molecular-views.md', 'molecular-views-api.md', 'molecular-data.md',
+                 'molecular-views.md', 'molecular-views-api.md', 'molecular-data.md', 'three-dimensional.md',
                  'explanation-geometry.md', 'explanation-design.md',
                  'interaction-regions.md', 'hit-region-audit.md', 'pipeline-synthesis.md'):
         source = ROOT / 'docs' / name
@@ -94,7 +94,7 @@ def main():
     parser.add_argument('destination', help='Новая папка урока; существующая должна быть пустой')
     parser.add_argument('--title', default=None)
     parser.add_argument('--lang', choices=('ru', 'en'), default='ru', help='Начальный язык; обе локали входят в HTML')
-    parser.add_argument('--template', choices=('gallery', 'methods', 'explanations', 'synthesis', 'molecular', 'molecular-check', 'chemistry-bridge', 'rna-folding', 'molecular-views'), default='gallery', help='Галерея, научные методы, связное объяснение, общая карта, молекулярный атлас, проверка молекулярных элементов мост от химии к биологии укладка РНК или молекулярный конструктор')
+    parser.add_argument('--template', choices=('gallery', 'methods', 'explanations', 'synthesis', 'molecular', 'molecular-check', 'chemistry-bridge', 'rna-folding', 'molecular-views', 'spatial-biology'), default='gallery', help='Галерея, научные методы, связное объяснение, общая карта, молекулярный атлас, проверка молекулярных элементов мост от химии к биологии укладка РНК молекулярный конструктор или пространственная биология')
     parser.add_argument('--source-url', default='')
     parser.add_argument('--source-label', default='Источник')
     parser.add_argument('--background', choices=('black', 'white'), default='black', help='Начальный фон; зритель может переключить его')

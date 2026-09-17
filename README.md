@@ -4,7 +4,7 @@ Build scientific explanations as animated, interactive HTML lessons. Start from 
 
 **[Подробное описание на русском](README.ru.md)** · **[Connect to Codex](docs/codex-setup.md)** · **[Authoring guide](docs/START.md)** · **[Examples](examples/README.md)**
 
-Version **0.19.0**. Vanilla JavaScript and SVG at runtime; Python for project generation and export. No runtime package installation or server is required to view an exported lesson.
+Version **0.19.0**. Vanilla JavaScript and SVG at runtime, with WebGL and a Canvas 2D fallback for procedural 3D scenes; Python for project generation and export. No runtime package installation or server is required to view an exported lesson.
 
 ## Start with a working lesson
 
@@ -62,6 +62,7 @@ Read the [complete setup guide](docs/codex-setup.md) for installation scope, rel
 
 | Template | Starting point |
 | --- | --- |
+| `spatial-biology` | Procedural 3D cell labelling, antibody close-up, bead/droplet capture and cell barcode–feature–UMI explanation |
 | `molecular-views` | Coordinate-backed complex overview and atomic detail, fitted camera, rotation, shared depth ordering and source provenance |
 | `rna-folding` | Connected 17-scene explanation of RNA structure and folding concepts |
 | `molecular` | Schematic DNA, proteins, CRISPR, chromatin and RNA-processing actors |
@@ -73,6 +74,8 @@ Read the [complete setup guide](docs/codex-setup.md) for installation scope, rel
 | `gallery` | General component gallery and teaching patterns |
 
 The shared shell provides Russian/English switching, black/white backgrounds, three palettes, two text fonts, step navigation, reading notes and questions. Motion utilities preserve object identity; layout and interaction audits help find problems before export.
+
+The separate [3D biology section](docs/three-dimensional.md) provides reusable `V3` molecule meshes, cell surfaces, capture beads, primers, droplets and barcode records. Start with `python3 create.py ../my-3d-lesson --template spatial-biology --lang en --palette ocean` for two complete editable scenes (16 states); [open the standalone example locally](examples/spatial-biology.html). Geometry, visible molecule counts and trajectories are illustrative. The template follows the original solid-bead Drop-seq CITE-seq workflow and distinguishes co-capture from later synthesis. All components and recipes travel with new projects; other templates do not load these scenes.
 
 The molecular constructor combines two high-level presets—`MolecularScenes.overview` and `MolecularScenes.detail`—with lower-level trace, fragment, camera, locator and control components. Follow the [assembly recipe](docs/molecular-views.md), [API](docs/molecular-views-api.md) and [PDB import guide](docs/molecular-data.md). Rotating source coordinates changes the view; it does not compute a folding trajectory or molecular dynamics.
 

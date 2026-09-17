@@ -1,0 +1,6 @@
+/* Scoped typography for the optional procedural 3D biology lesson. */
+.spatial-biology .film-title{font-size:38px;}
+.spatial-biology .film-caption{font-size:24px;}
+.spatial-biology [role="button"]{cursor:pointer;}
+.spatial-biology .lesson-slider{padding:0;}
+.spatial-biology svg text{font-variant-numeric:tabular-nums;}

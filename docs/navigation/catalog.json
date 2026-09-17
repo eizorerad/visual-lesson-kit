@@ -27,6 +27,11 @@
       "summary": "Explain molecular structures, gene expression, observed counts, aggregation, normalization and alleles."
     },
     {
+      "id": "three-dimensional",
+      "title": "3D scenes and surfaces / 3D-сцены и поверхности",
+      "summary": "Compose procedural biological surfaces, molecules, capture chemistry and barcode records; choose source coordinates when atomic evidence is required."
+    },
+    {
       "id": "chemistry",
       "title": "Chemistry and physical models / Химия и физические модели",
       "summary": "Connect atoms, bonds and chemical reactions to biological processes through explicit schematic and numerical models."
@@ -2403,7 +2408,8 @@
         "molecular-simulation",
         "provenance",
         "clearance",
-        "motion"
+        "motion",
+        "three-dimensional"
       ]
     },
     {
@@ -2456,6 +2462,107 @@
       ],
       "caveat": "Camera-based source coordinates, explicit trace connectivity and selected RNA/DNA atoms; no molecular surfaces, automatic biological assembly, folding physics or measured trajectory. Bounded PDB importer rejects unsupported identities.",
       "related": [
+        "molecular-coordinates",
+        "perspective",
+        "motion",
+        "clearance",
+        "languages",
+        "export-qa",
+        "molecular-simulation",
+        "three-dimensional"
+      ]
+    },
+    {
+      "id": "three-dimensional",
+      "branch": "three-dimensional",
+      "title": "Reusable 3D biology components / Компоненты 3D-биологии",
+      "summary": "Reuse V3 molecule meshes, a depth-tested cell surface, solid capture beads and primers, aqueous droplets, RNA/tag strands and three-code records. Compose authored camera, binding, wash, lysis and hybridization states without replacing object identity.",
+      "keywords": [
+        "three-dimensional",
+        "V3.MoleculeMesh",
+        "V3.CellSurface",
+        "V3.CaptureMesh",
+        "V3.CodesMesh",
+        "3D components",
+        "3D поверхности",
+        "объёмная клетка",
+        "трёхмерные компоненты",
+        "antibody mesh",
+        "клеточная поверхность",
+        "solid bead primers",
+        "поверхность бусины",
+        "три кода"
+      ],
+      "status": "ready",
+      "guides": [
+        {
+          "path": "three-dimensional.md"
+        }
+      ],
+      "sources": [
+        "js/three/molecule-mesh.js",
+        "js/three/cell-surface.js",
+        "js/three/capture-mesh.js",
+        "js/three/codes-mesh.js"
+      ],
+      "examples": [
+        "js/recipes/spatial-biology/01-surface.js",
+        "js/recipes/spatial-biology/02-codes.js"
+      ],
+      "caveat": "Original procedural illustrative geometry, not atomic source coordinates, a protein-count measurement, molecular dynamics, hydrodynamics or kinetic simulation. Camera changes preserve object identity; barcode records are logical fields, not exact library sequence architecture.",
+      "related": [
+        "spatial-biology",
+        "molecular-views",
+        "molecular-coordinates",
+        "perspective",
+        "motion",
+        "clearance",
+        "languages",
+        "export-qa",
+        "molecular-simulation"
+      ]
+    },
+    {
+      "id": "spatial-biology",
+      "branch": "three-dimensional",
+      "title": "Spatial biology template / Пространственная биология",
+      "summary": "Build an editable two-scene RU/EN 3D lesson: antibody labelling, rotation and close-up, washing, one-cell/one-bead droplet, lysis and co-capture, then the distinct cell barcode, feature identity and UMI roles. Optional --template spatial-biology includes reusable V3 components and Bio3D recipes.",
+      "keywords": [
+        "spatial-biology",
+        "spatial biology",
+        "пространственная биология",
+        "CITE-seq",
+        "CITE-seq cell bead droplet",
+        "цитометрия ДНК метки",
+        "antibody staining capture",
+        "мечение и совместный захват",
+        "poly(A) oligo-dT",
+        "cell barcode feature UMI",
+        "клеточный штрихкод UMI признак",
+        "капля бусина лизис",
+        "droplet bead lysis",
+        "co-capture"
+      ],
+      "status": "ready",
+      "guides": [
+        {
+          "path": "three-dimensional.md"
+        }
+      ],
+      "sources": [
+        "spatial-biology.html",
+        "css/spatial-biology.css",
+        "js/recipes/spatial-biology/common.js",
+        "js/recipes/spatial-biology/capture-stage.js"
+      ],
+      "examples": [
+        "js/recipes/spatial-biology/01-surface.js",
+        "js/recipes/spatial-biology/02-codes.js"
+      ],
+      "caveat": "Editable teaching schematic for the original solid-bead Drop-seq CITE-seq workflow; geometry, colours, visible molecule counts and trajectories are illustrative. Co-capture precedes synthesis; the source RNA and antibody tag do not acquire a cell barcode at hybridization. Recipes are copied into other templates without being loaded.",
+      "related": [
+        "three-dimensional",
+        "molecular-views",
         "molecular-coordinates",
         "perspective",
         "motion",
