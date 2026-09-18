@@ -9,7 +9,7 @@ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypt
 const {pathToFileURL}=require('node:url');
 const artifact=path.resolve(__dirname,'../examples/spatial-biology.html');
 
-test('spatial biology standalone: 128 styled states, 28 midpoints, retained controls and offline rendering',
+test('spatial biology standalone: 144 styled states, 32 midpoints, retained controls and offline rendering',
  {skip:process.env.V3_BROWSER_TESTS!=='1',timeout:300000},async t=>{
  const {chromium}=require('playwright');
  assert.ok(fs.existsSync(artifact),'Build examples/spatial-biology.html first');
@@ -27,7 +27,7 @@ test('spatial biology standalone: 128 styled states, 28 midpoints, retained cont
  await page.waitForFunction(()=>window.D?.deck?.count()===2&&window.V3?.CellSurface);
  await page.evaluate(()=>document.fonts.ready);
  const scenes=await page.evaluate(()=>D.deck.scenes());
- assert.deepEqual(scenes.map(s=>[s.id,s.notes]),[['surface',12],['three-codes',4]]);
+ assert.deepEqual(scenes.map(s=>[s.id,s.notes]),[['surface',12],['three-codes',6]]);
  await page.evaluate(()=>{
   // Retain the real renderer API so pixels can be read immediately after paint,
   // before Chrome clears its non-preserved drawing buffer for presentation.
@@ -76,18 +76,18 @@ test('spatial biology standalone: 128 styled states, 28 midpoints, retained cont
   await page.evaluate(options=>{D.i18n.setLang(options.lang);D.appearance.set({...options,palette:'ocean'});},{lang,background,font});
   for(let index=0;index<2;index++){
    await go(index,0);const steps=await page.evaluate(()=>D.deck.current().steps);
-   assert.equal(steps,index===0?11:3,'All authored states are navigable');
+   assert.equal(steps,index===0?11:5,'All authored states are navigable');
    for(let step=0;step<=steps;step++){
     await go(index,step);await capture({lang,background,font,index,step},states);
     if((index===0&&[3,10,11].includes(step))||index===1)await screenshot(`${lang}-${background}-${font}-${index+1}-${step}`);
    }
   }
-  t.diagnostic(`Checked 16 states: ${lang}/${background}/${font}`);
+  t.diagnostic(`Checked 18 states: ${lang}/${background}/${font}`);
  }
  await page.emulateMedia({reducedMotion:'no-preference'});
  for(const [lang,background,font] of [['ru','black','sans'],['en','white','serif']]){
   await page.evaluate(options=>{D.i18n.setLang(options.lang);D.appearance.set({...options,palette:'ocean'});},{lang,background,font});
-  for(let index=0;index<2;index++)for(let step=1;step<=(index===0?11:3);step++){
+  for(let index=0;index<2;index++)for(let step=1;step<=(index===0?11:5);step++){
    await go(index,step-1);
    await page.evaluate(()=>{
     window.spatialBefore={root:D.deck.root(),canvas:spatialRenderer.g.querySelector('canvas'),state:spatialFrame().state};
@@ -125,9 +125,9 @@ test('spatial biology standalone: 128 styled states, 28 midpoints, retained cont
  const failures=[...states,...midpoints].filter(f=>f.audit.issues.length||f.audit.unmeasured||f.audit.uncontractedText.length||f.collisions.length||f.cyrillic.length||f.nonfinite||f.renderer!=='webgl'||f.nonempty<100||f.glError!==0||f.canvasCount!==1);
  const report={artifact:path.relative(path.resolve(__dirname,'..'),artifact),sha256:artifactSha256,browser:browser.version(),scenes,states,midpoints,retention,failures,errors,requests,physicalGesturesTested:false};
  if(output)fs.writeFileSync(path.join(output,'report.json'),JSON.stringify(report,null,2));
- assert.equal(states.length,128);assert.equal(midpoints.length,28);
+ assert.equal(states.length,144);assert.equal(midpoints.length,32);
  assert.deepEqual(retention.map(x=>[x.sameRoot,x.sameCanvas,x.sameState,x.sameStep]),[[true,true,true,true],[true,true,true,true]]);
  assert.deepEqual(errors,[],'No JavaScript or console errors');assert.deepEqual(requests,[],'The standalone lesson makes no HTTP requests');
  assert.equal(failures.length,0,JSON.stringify(failures.map(f=>({lang:f.lang,background:f.background,font:f.font,index:f.index,step:f.step,progress:f.progress,issues:f.audit.issues,collisions:f.collisions,cyrillic:f.cyrillic,renderer:f.renderer,nonempty:f.nonempty,glError:f.glError})),null,2));
- t.diagnostic(`Chrome ${browser.version()}: 128 states, 28 deterministic midpoints, retained input/language/theme, no external requests`);
+ t.diagnostic(`Chrome ${browser.version()}: 144 states, 32 deterministic midpoints, retained input/language/theme, no external requests`);
 });

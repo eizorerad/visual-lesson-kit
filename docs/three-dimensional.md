@@ -172,6 +172,8 @@ Each call owns independent typed arrays, so editing a custom product cannot chan
 - `anchors`: local positions named `cell`, `umi`, `feature` and `end`, on the corresponding first DNA strand.
 - `curve(t)` and `strand(t, phase=0)`: centerline and helical-strand points for finite `t` in `[0,1]`; phase `Math.PI` selects the partner strand.
 
+The assembled template introduces the two original DNA products first, explains cell barcode, feature and UMI separately, then reveals a PCR copy and groups duplicate records into one count. The three mesh definitions persist throughout; data deduplication does not remove or fuse physical DNA molecules.
+
 Custom products use the same local geometry layout, so the cached example's `anchors` and the appropriate RNA/ADT `bounds` can also locate their labels. Tube caps retain separate vertex normals for flat cap lighting; the surfaces are closed when coincident rim positions are welded for topology analysis.
 
 `V3.CodesMesh.pose(center, yaw, pitch, parts={})` returns a renderer pose with opacity one. `center` is a finite world-space placement point and the angles are degrees. It applies inverse rotation to the pre-rotation offset so a product turns about its own origin while staying at the authored center. Pass the optional `parts` object for absolute material overrides under the `CellSurface` contract.
@@ -218,7 +220,7 @@ V3_BROWSER_TESTS=1 V3_BROWSER_CHANNEL=chrome node --test tests/three-dimensional
 
 Browser checks instrument actual WebGL calls, inspect pixel coverage, and exercise shared projection, independent cell/environment frames, per-part release, no idle redraw, no repeated buffer upload, disposal, light/dark adaptation, two-pass transparent interfaces, context-loss fallback, and progressive cell opening in both renderers. They use portable `require('playwright')`; ordinary geometry tests do not require a browser. They do not certify complete lesson layout, wording, accessibility or physical-device gestures.
 
-The optional assembled-template check covers all 16 states in both languages,
+The optional assembled-template check covers all 18 states in both languages,
 backgrounds and fonts, transition midpoints, live controls, visible text pairs,
 layout contracts, nonempty WebGL output and offline requests:
 

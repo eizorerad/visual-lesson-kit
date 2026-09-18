@@ -1,6 +1,6 @@
 /* Enlarged DNA teaching meshes. Segment positions and base rungs are
  * schematic functional fields, not a literal library sequence or atomic model.
- * Each product keeps its mesh buffers throughout all four scene states. */
+ * Each product keeps its mesh buffers throughout all authored scene states. */
 (function(global){
 'use strict';
 const TAU=Math.PI*2,add=(a,b)=>a.map((v,i)=>v+b[i]),sub=(a,b)=>a.map((v,i)=>v-b[i]);
