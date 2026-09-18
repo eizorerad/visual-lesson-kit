@@ -13,6 +13,37 @@ const identity={pdb_id:'SYNTHETIC-TEST',model:2,coordinate_units:'Å',source_sha
 const trace=()=>({...structuredClone(identity),traces:[{chain:'Z9',atom:'CA',rows:[{id:'z-1',residue:1,xyz:[-11,2,3]},{id:'z-2',residue:2,xyz:[-3,7,8]},{id:'z-8',residue:8,xyz:[23,11,-4]}],bonds:[['z-1','z-2']]},{chain:'Q',atom:'P',rows:[{id:'q-20',residue:20,xyz:[12,-3,9]},{id:'q-21',residue:21,xyz:[8,-7,3]}],bonds:[['q-20','q-21']]}]});
 const fragment=()=>JSON.parse(fs.readFileSync(path.join(root,'assets/rna-folding/tertiary-v4-1hr2.json'),'utf8'));
 const camera={cx:500,cy:350,scale:7,angle:18,pitch:25};
+test('assembly changes emphasis without rewriting geometry or moving source actors',t=>{
+ const {w,MV,s}=setup(t),v=MV.assembly(s,trace());v.paint(camera);
+ const nodes=[...v.g.children],observer=new w.MutationObserver(()=>{});observer.observe(v.g,{subtree:true,childList:true,attributes:true});
+ v.paint({...camera});assert.equal(observer.takeRecords().length,0,'an unchanged view does not invalidate SVG or translations');
+ v.paint({...camera},{opacity:{Z9:.25},highlight:{Q:['q-20','q-21']}});
+ const changes=observer.takeRecords();assert.ok(changes.length>0);
+ assert.ok(changes.every(c=>c.type==='attributes'&&['style','stroke','stroke-opacity'].includes(c.attributeName)),'emphasis changes appearance only');
+ assert.deepEqual([...v.g.children],nodes);assert.equal(nodes.find(n=>n.dataset.mvChain==='Z9').getAttribute('stroke-opacity'),'0.25');observer.disconnect();
+});
+test('assembly transparency belongs to its single stroke without per-line opacity compositing',t=>{
+ const {MV,s}=setup(t),v=MV.assembly(s,trace()),line=v.g.querySelector('[data-mv-chain="Z9"]');
+ for(const alpha of [0,.005,.2,.72,1]){
+  v.paint(camera,{opacity:{Z9:alpha}});
+  assert.equal(+line.getAttribute('stroke-opacity'),alpha);
+  assert.ok(line.style.opacity===''||line.style.opacity==='1','a line must not create a translucent SVG group');
+  assert.equal(line.style.pointerEvents,alpha>.01?'':'none');
+ }
+ assert.ok(line.querySelector('title').textContent.includes('SYNTHETIC-TEST'));
+});
+test('assembly camera cache follows mutable origin values, preserves exact projection and recovers after invalid paints',t=>{
+ const {MV,MC,s}=setup(t),d=trace(),v=MV.assembly(s,d),cam={...camera,origin:[4,5,6]};
+ for(const angle of [0,38,-87,180,0]){
+  cam.angle=angle;cam.origin[0]+=2;v.paint(cam);
+  const expected=d.traces.flatMap(tr=>tr.bonds.map(ids=>({chain:tr.chain,ids,ps:ids.map(id=>MC.project(d,tr.rows.find(r=>r.id===id).xyz,cam))})));
+  for(const e of expected){const n=[...v.g.children].find(n=>n.dataset.mvChain===e.chain);for(const [key,value] of Object.entries({x1:e.ps[0].x,y1:e.ps[0].y,x2:e.ps[1].x,y2:e.ps[1].y}))assert.equal(+n.getAttribute(key),value);}
+  expected.sort((a,b)=>(a.ps[0].depth+a.ps[1].depth)-(b.ps[0].depth+b.ps[1].depth));assert.deepEqual([...v.g.children].map(n=>n.dataset.mvChain),expected.map(e=>e.chain));
+  const before=s.innerHTML;
+  for(const bad of [{scale:1e308},{origin:[Infinity,0,0]},{angle:NaN}]){assert.throws(()=>v.paint({...cam,...bad}));assert.equal(s.innerHTML,before);}
+  assert.throws(()=>v.paint(cam,{opacity:{Q:2}}));assert.equal(s.innerHTML,before);v.paint({...cam,origin:[...cam.origin]});assert.equal(s.innerHTML,before);
+ }
+});
 test('assembly preserves explicit source gaps, IDs, nodes and a frozen independent coordinate snapshot',t=>{
  const {MV,s}=setup(t),d=trace(),before=JSON.stringify(d),v=MV.assembly(s,d,{chains:{Z9:{color:'blue'},Q:{color:'gold',width:4}}});
  v.paint(camera);const nodes=new Set(v.g.querySelectorAll('*'));
@@ -22,8 +53,8 @@ test('assembly preserves explicit source gaps, IDs, nodes and a frozen independe
  for(const angle of [35,75,-25])v.paint({...camera,angle},{opacity:{Z9:.2},highlight:{Q:['q-20','q-21']}});
  assert.deepEqual(new Set(v.g.querySelectorAll('*')),nodes);assert.equal(JSON.stringify(v.row('Z9','z-1').xyz),atom);
  assert.ok(Object.isFrozen(v.data.traces[0].rows[0].xyz));assert.equal(JSON.stringify(v.data),before);
- assert.equal(v.g.querySelector('[data-mv-chain="Z9"]').style.opacity,'0.2');
- assert.equal(v.g.querySelector('[data-mv-chain="Q"]').style.opacity,'1');
+ assert.equal(v.g.querySelector('[data-mv-chain="Z9"]').getAttribute('stroke-opacity'),'0.2');
+ assert.equal(v.g.querySelector('[data-mv-chain="Q"]').getAttribute('stroke-opacity'),'1');
  const order=[...v.g.children].map(n=>+n.dataset.mvDepth);assert.deepEqual(order,[...order].sort((a,b)=>a-b));
 });
 test('assembly rejects invalid source/links/options before scene mutation; bad paint is atomic',t=>{

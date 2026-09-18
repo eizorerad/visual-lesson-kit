@@ -88,6 +88,7 @@ function register(c,build){
 }
 function connect(ctx,v,c,view,states,keys,kind,controlDefaults){
  const state={...states[0]},captions=c.states.map(s=>s.caption.ru);
+ let caption;
  const rig=MV.rig(ctx,{state,duration:c.duration===undefined?1900:c.duration,
   steps:states.slice(1).map((to,i)=>({to,duration:c.states[i+1].duration===undefined?(c.duration===undefined?1900:c.duration):c.states[i+1].duration})),
   control:c.control===false?undefined:{root:v.root,...controlDefaults,...c.control,label:tx(c.control?.label||{ru:'Ракурс',en:'View angle'}),key:'angle',suffix:'°'},
@@ -95,7 +96,9 @@ function connect(ctx,v,c,view,states,keys,kind,controlDefaults){
    const opacity=Object.fromEntries(keys.map((k,i)=>[k,s['alpha'+i]]));
    if(kind==='overview')view.paint(readCamera(s),{opacity,highlight:c.highlight||{}});
    else view.paint(readCamera(s),{parts:Object.fromEntries(keys.map(k=>[k,{opacity:opacity[k]}]))});
-   v.caption(captions[Math.min(captions.length-1,Math.floor(s.phase+1e-6))]);
+   const nextCaption=captions[Math.min(captions.length-1,Math.floor(s.phase+1e-6))];
+   // Remember the authored string, since i18n may have translated the live node.
+   if(nextCaption!==caption){v.caption(nextCaption);caption=nextCaption;}
    v.root.dataset.state=JSON.stringify(s);
   }
  });

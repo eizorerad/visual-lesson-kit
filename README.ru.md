@@ -119,3 +119,12 @@ Node/jsdom нужны только для разработки. При гото�
 ## Автор и лицензия
 
 Автор Visual Lesson Kit — **Leonid Klarov** ([eizorerad](https://github.com/eizorerad), [eizonix@gmail.com](mailto:eizonix@gmail.com)). Библиотека выпущена под [лицензией MIT](LICENSE). Для встроенных шрифтов и структурных данных сохранены отдельные условия и научные ссылки: [уведомления о сторонних материалах](THIRD_PARTY_NOTICES.md), [происхождение](docs/provenance.md).
+
+## Повторить фильм о тРНК и собрать свой вариант
+
+```sh
+python3 create.py ../my-trna-film --template trna-journey --palette ocean
+python3 ../my-trna-film/build/bundle.py
+```
+
+[Готовый пример](examples/trna-journey.html) содержит 39 кадров и длится 6:38. В `js/trna-config.js` можно выбирать и переставлять эпизоды, менять время движения, паузы и RU/EN-подписи. [Руководство](docs/trna-journey.md) содержит полный пример короткой версии и карту компонентов. [Временная шкала](docs/cinema-timeline.md) применима и к другим темам. Данные, источники и проверки входят в создаваемый проект.

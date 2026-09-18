@@ -9,6 +9,7 @@ venv/
 /qa-output/
 /docs/superpowers/
 /starter/dist/
+/starter/qa-output/
 /dist/
 /coverage/
 /playwright-report/

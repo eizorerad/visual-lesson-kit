@@ -1,0 +1,21 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const file=path.resolve(__dirname,'../../js/trna-magnesium-story.js');
+test('magnesium source poses retain charge and hydration context and clear the ion layers on returning to the whole molecule',()=>{
+ assert.ok(fs.existsSync(file),'The approved magnesium episode must be included in the film');
+ const w={};vm.runInNewContext(fs.readFileSync(file,'utf8'),{window:w});const story=w.TrnaMagnesiumStory;
+ const rows=story.cues;assert.equal(rows.length,6);
+ let state={...story.baseline,model:1,elbowZoom:1,elbowAtoms:1,elbowSecond:1,elbowStack:1,elbowExplain:1};
+ const snapshots=rows.map(r=>{state={...state,...r[1]};return {...state};});
+ for(const key of ['elbowZoom','elbowAtoms','elbowSecond','elbowStack','elbowExplain'])assert.equal(snapshots[0][key],0,'Charge view clears '+key);
+ assert.ok(snapshots.some(s=>s.mgAtmosphere===1&&s.mgCharge===1),'Screening preserves negative phosphate markers');
+ assert.ok(snapshots.some(s=>s.mgSelect===1&&s.mgZoom===0),'The selected experimental site is located before magnification');
+ assert.ok(snapshots.some(s=>s.mgZoom===1&&s.mgWater===1&&s.mgBridge===0),'The water shell is readable before phosphate contacts appear');
+ assert.ok(snapshots.some(s=>s.mgBridge===1&&s.mgWater===1),'Water remains visible when RNA contacts are explained');
+ for(const [key,value] of Object.entries(story.baseline))assert.equal(snapshots.at(-1)[key],value,'Whole-molecule return must not retain '+key);
+ assert.equal(snapshots.at(-1).model,1,'The molecular source remains in 3D throughout this episode');
+ assert.match(story.sourceFor(rows[0][0])[0],/Bai/);
+ assert.match(story.sourceFor(rows[3][0])[0],/1EHZ/);
+ assert.match(story.sourceFor(rows[5][0])[0],/Schauss/);
+ for(const row of story.cues)for(const i of [2,3,4,5,6,7])assert.ok(typeof row[i]==='string'&&row[i].length>5,'Each cue needs completeRU/EN title,caption,note');
+});

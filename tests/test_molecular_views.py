@@ -23,7 +23,7 @@ class MolecularViewsTests(unittest.TestCase):
             r = subprocess.run([sys.executable, str(ROOT/'create.py'), str(src), '--template', 'molecular-views', '--lang', 'en'], capture_output=True, text=True)
             self.assertEqual(r.returncode, 0, r.stderr)
             shutil.move(src, project)
-            for f in ['js/molecular-views.js', 'js/molecular-scenes.js', 'js/recipes/molecular-views.js', 'guide/molecular-views.md', 'guide/molecular-views-api.md', 'guide/molecular-data.md', 'assets/molecular-views/7BG9.pdb', 'build/molecular-data.py', 'qa/molecular-views/verify.cjs']:
+            for f in ['js/molecular-views.js', 'js/molecular-scenes.js', 'js/recipes/molecular-views.js', 'guide/molecular-views.md', 'guide/molecular-views-api.md', 'guide/molecular-data.md', 'assets/molecular-views/7BG9.pdb', 'build/molecular-data.py', 'qa/molecular-views/verify.cjs', 'qa/molecular-views/performance.cjs']:
                 self.assertTrue((project/f).is_file(), f)
             command = [sys.executable, str(project/'build/molecular-data.py'), '--source', 'assets/molecular-views/7BG9.pdb', '--config', 'assets/molecular-views/7BG9.config.json', '--json', 'assets/molecular-views/7BG9.json', '--js', 'js/molecular-views-data.js', '--global', 'MOLECULAR_VIEW_DATA', '--check']
             r = subprocess.run(command, cwd=project, capture_output=True, text=True)

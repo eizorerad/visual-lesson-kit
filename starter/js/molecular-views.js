@@ -31,7 +31,7 @@ function explicitBonds(bonds,rows,label){
 function boxValue(value,defaults){const b={...defaults,...value};for(const k of ['x','y','width','height'])finite(b[k],'box '+k);if(b.width<=0||b.height<=0)throw new RangeError('box dimensions must be positive');return b;}
 function colorFunction(color,fallback){if(color===undefined)return ()=>fallback;if(typeof color==='string'&&color.trim())return ()=>color;if(typeof color==='function')return color;throw new TypeError('color must be a CSS color string or function');}
 function resolvedColors(rows,color){const colors=new Map();for(const row of rows){const c=color(row.id);if(typeof c!=='string'||!c.trim())throw new TypeError('color must return a CSS color string');colors.set(row.id,c);}return id=>colors.get(id);}
-function projectAll(data,points,camera){return points.map(p=>{const out=MC.project(data,p,camera);['x','y','depth'].forEach(k=>finite(out[k],'projected '+k));return out;});}
+function projectAll(data,points,camera){return MC.projectMany(data,points,camera);}
 
 function assembly(parent,input,{chains={}}={}){
  identity(input);list(input.traces,'traces');object(chains,'chains');const traceMap=new Map();
@@ -53,18 +53,44 @@ function assembly(parent,input,{chains={}}={}){
   const title=D.dom.s('title');title.textContent=data.pdb_id+' · '+trace.chain+' · '+a+'–'+b+' · '+trace.atom;node.append(title);
   actors.push({node,chain:trace.chain,ids:[a,b],coords:[rows.get(trace.chain).get(a).xyz,rows.get(trace.chain).get(b).xyz]});
  }}
+ // Adjacent bonds share source rows. Project each endpoint once, not once per bond.
+ const points=[...new Set(actors.flatMap(a=>a.coords))],pointIndex=new Map(points.map((p,i)=>[p,i]));
+ actors.forEach(a=>{a.indices=a.coords.map(p=>pointIndex.get(p));});
+ let previousCamera=null;
  parent.append(q);
  function paint(camera={},emphasis={}){
   object(emphasis,'assembly emphasis');const opacity=emphasis.opacity||{},highlight=emphasis.highlight||{};object(opacity,'opacity');object(highlight,'highlight');
   for(const [chain,value] of Object.entries(opacity)){if(!rows.has(chain))throw new RangeError('Unknown opacity chain '+chain);unit(value,'chain opacity');}
   const selected=new Map();for(const [chain,ids] of Object.entries(highlight)){if(!rows.has(chain)||!Array.isArray(ids)||ids.some(id=>!rows.get(chain).has(id)))throw new RangeError('highlight must name existing trace row IDs');selected.set(chain,new Set(ids));}
-  // Project and validate every actor before changing the first visible attribute.
-  geometry(data);MC.project(data,data.origin,camera);
-  const projected=actors.map(a=>({a,points:projectAll(data,a.coords,camera)}));
-  for(const {a,points} of projected){const style=styles.get(a.chain),sel=selected.get(a.chain),isSelected=sel&&a.ids.every(id=>sel.has(id)),alpha=isSelected?1:(own(opacity,a.chain)?opacity[a.chain]:style.opacity);
-   F.seg(a.node,points[0].x,points[0].y,points[1].x,points[1].y);a.node.setAttribute('stroke',isSelected?style.highlightColor(a.ids[0]):style.color(a.ids[0]));F.opacity(a.node,alpha);a.node.dataset.mvDepth=(points[0].depth+points[1].depth)/2;
+  // Validate even on a cache hit. Copy scalar values: callers may mutate origin.
+  MC.project(data,data.origin,camera);
+  const values=[...(camera.origin||data.origin),...['cx','cy','scale','angle','pitch'].map(k=>camera[k]===undefined?(k==='scale'?1:0):camera[k])];
+  const changed=!previousCamera||values.some((n,i)=>n!==previousCamera[i]),cameraJSON=JSON.stringify(camera);
+  let projected;
+  if(changed){
+   // Prepare the complete frame before its first visible write.
+   const ps=projectAll(data,points,camera);
+   projected=actors.map(a=>{const [p,r]=a.indices.map(i=>ps[i]);return {a,p,r,z:finite((p.depth+r.depth)/2,'bond depth')};});
   }
-  projected.sort((a,b)=>(a.points[0].depth+a.points[1].depth)-(b.points[0].depth+b.points[1].depth)).forEach(({a})=>q.append(a.node));q.dataset.camera=JSON.stringify(camera);
+  for(const a of actors){const style=styles.get(a.chain),sel=selected.get(a.chain),isSelected=sel&&a.ids.every(id=>sel.has(id)),alpha=isSelected?1:(own(opacity,a.chain)?opacity[a.chain]:style.opacity),stroke=isSelected?style.highlightColor(a.ids[0]):style.color(a.ids[0]);
+   if(stroke!==a.stroke){a.node.setAttribute('stroke',stroke);a.stroke=stroke;}
+   if(alpha!==a.alpha){
+    // These actors contain one stroked line and a title, with no fill or markers.
+    // Stroke alpha gives the same blending without a compositing layer per line.
+    a.node.setAttribute('stroke-opacity',alpha);const pointerEvents=alpha>.01?'':'none';
+    if(a.node.style.pointerEvents!==pointerEvents)a.node.style.pointerEvents=pointerEvents;
+    a.alpha=alpha;
+   }
+  }
+  if(changed){
+   for(const {a,p,r,z} of projected){F.seg(a.node,p.x,p.y,r.x,r.y);a.node.dataset.mvDepth=z;}
+   // Stable source order breaks equal-depth ties. Leave correctly placed nodes alone:
+   // moving an SVG line also makes i18n inspect its title in a mutation microtask.
+   let cursor=q.firstChild;
+   for(const {a} of projected.sort((a,b)=>a.z-b.z)){if(a.node===cursor)cursor=cursor.nextSibling;else q.insertBefore(a.node,cursor);}
+   previousCamera=values;
+  }
+  if(q.dataset.camera!==cameraJSON)q.dataset.camera=cameraJSON;
   return {project:point=>MC.project(data,point,camera),row:(chain,id)=>rows.get(chain)?.get(id)};
  }
  return {g:q,data,paint,row:(chain,id)=>rows.get(chain)?.get(id)};
@@ -144,7 +170,7 @@ function rig(ctx,{state,paint,steps=[],duration=1900,control:options}={}){
   if([state[key],...script.filter(s=>own(s.to,key)).map(s=>s.to[key])].some(n=>n<min||n>max))throw new RangeError('control range must contain initial and guided values');config={...options,key,min,max,step,x,y,width,suffix};
  }
  let disposed=false,control=null;
- function render(){if(disposed)return;if(control){control.input.value=String(state[config.key]);control.output.textContent=String(Math.round(state[config.key]*100)/100)+config.suffix;}paint(state);}
+ function render(){if(disposed)return;if(control){const value=String(state[config.key]),label=String(Math.round(state[config.key]*100)/100)+config.suffix;if(control.input.value!==value)control.input.value=value;if(control.output.textContent!==label)control.output.textContent=label;}paint(state);}
  const inner=F.driver(state,render);
  function checkRange(patch){if(config&&own(patch,config.key)&&(patch[config.key]<config.min||patch[config.key]>config.max))throw new RangeError('camera value exceeds control range');}
  function dispose(){if(disposed)return;disposed=true;inner.dispose();if(control)control.input.disabled=true;}

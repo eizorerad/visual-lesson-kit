@@ -44,3 +44,13 @@ test('preset angle controls show degrees while retaining numeric input',t=>{
  const {w,build}=setup(t),c=config();c.control={min:-45,max:120};w.MolecularScenes.overview(c);const scene=build(),rig=scene.el.__molecular.rig;
  rig.driver.set({angle:38});assert.equal(+rig.control.input.value,38);assert.equal(rig.state.angle,38);assert.equal(rig.control.output.textContent,'38°');scene.dispose();
 });
+test('unchanged caption keeps its node and current language through motion and opacity changes',async t=>{
+ const {w,build}=setup(t),c=config();w.MolecularScenes.overview(c);const scene=build(),rig=scene.el.__molecular.rig;
+ w.D.i18n.observe(scene.el);w.D.i18n.setLang('en');
+ const caption=scene.el.querySelector('.film-caption'),node=caption.firstChild;
+ assert.equal(caption.textContent,'Start');rig.driver.set({phase:.5,angle:45,alpha0:.7});await Promise.resolve();
+ assert.equal(caption.firstChild,node);assert.equal(caption.textContent,'Start');
+ rig.driver.set({phase:1});await Promise.resolve();assert.equal(caption.textContent,'Rotation');
+ const next=caption.firstChild;w.D.i18n.setLang('ru');rig.driver.set({alpha0:.2});await Promise.resolve();assert.equal(caption.textContent,'Поворот');assert.equal(caption.firstChild,next);
+ scene.dispose();
+});

@@ -11,6 +11,18 @@ function setup(){
 }
 const data=()=>JSON.parse(fs.readFileSync(path.join(root,'assets/rna-folding/tertiary-v4-1hr2.json'),'utf8'));
 const view={origin:[0,0,0],basis:[[1,0,0],[0,1,0],[0,0,1]]};
+test('batch projection matches the orthographic reference across source bases and camera rotations',()=>{
+ const {w,MC}=setup(),points=[[2,-3,9],[-8,5,0],[1,1,1]],source={origin:[1,2,3],basis:[[0,1,0],[-1,0,0],[0,0,1]]};
+ for(const angle of [-80,0,137,1e308])for(const pitch of [-45,0,63,1e308]){
+  const camera={cx:450,cy:330,scale:4.5,angle,pitch},got=MC.projectMany(source,points,camera),a=(angle%360)*Math.PI/180;
+  points.forEach((p,i)=>{const d=p.map((n,j)=>n-source.origin[j]),q=source.basis.map(row=>row.reduce((s,n,j)=>s+n*d[j],0));
+   const expected=w.K.project3D([q[0]*Math.cos(a)+q[2]*Math.sin(a),q[1],-q[0]*Math.sin(a)+q[2]*Math.cos(a)],{cx:450,cy:330,scale:4.5,pitch});
+   for(const key of ['x','y','depth'])assert.ok(Math.abs(got[i][key]-expected[key])<1e-10);});
+ }
+ for(const camera of [{scale:-1},{scale:1e308},{origin:[0,1]},{pitch:NaN}])assert.throws(()=>MC.projectMany(source,points,camera));
+ assert.throws(()=>MC.projectMany(source,[[0,0,0],[0,NaN,0]]));assert.throws(()=>MC.projectMany(source,null));
+ assert.equal(MC.projectMany(source,[]).length,0);assert.throws(()=>MC.projectMany(source,[],{scale:0}));w.close();
+});
 test('coordinate projection is rigid, uses degrees and reports unscaled depth',()=>{
  const {MC}=setup(),camera={origin:[1,2,3],cx:100,cy:200,scale:2,angle:90,pitch:0};
  const p=MC.project(view,[2,2,3],camera);

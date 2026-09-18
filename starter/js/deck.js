@@ -65,7 +65,9 @@
     var stageHeight = Math.max(120, view.height);
     var margin = stageWidth > 620 ? 32 : 8;
     var reserveTop = stageHeight > 460 ? 10 : 4;
-    var reserveBottom = 72 + safeBottom();
+    var cinemaReserve = parseFloat(window.getComputedStyle(document.body).getPropertyValue('--cinema-bottom-reserve'));
+    cinemaReserve = Number.isFinite(cinemaReserve) ? Math.max(0, cinemaReserve) : 0;
+    var reserveBottom = 72 + safeBottom() + cinemaReserve;
     document.body.style.setProperty('--toolbar-bottom-space', reserveBottom + 'px');
     var usable = Math.max(1, stageHeight - reserveTop - reserveBottom);
     var scale = Math.min((stageWidth - margin) / CANVAS.width, usable / CANVAS.height);
@@ -326,6 +328,17 @@
     buildScene(next, step === undefined ? 0 : step);
     state = Object.assign({}, state, { index: next });
     updateChrome();
+  }
+
+  /* An authored continuous film may move between registered cue notes without
+     rebuilding its persistent actors. Only an attached active root may sync. */
+  function syncPlaybackStep(step) {
+    if (!mount || !mount.root.isConnected) return false;
+    if (!Number.isInteger(step) || step < 0 || step > mount.steps.length) throw new RangeError('Playback step must name a registered cue');
+    if (mount.step === step) return false;
+    mount.step = step;
+    updateChrome();
+    return true;
   }
 
   function playStep() {
@@ -680,7 +693,7 @@
   }
 
   global.D.deck = {
-    register: register, boot: boot, show: show, jump: jump, next: next, prev: prev, refit: fit,
+    register: register, boot: boot, show: show, jump: jump, next: next, prev: prev, refit: fit, syncPlaybackStep: syncPlaybackStep,
     count: function () { return registry.length; },
     scale: function () { return currentScale; },
     current: function () { return mount ? { index: mount.index, step: mount.step, steps: mount.steps.length, busy: state.busy } : null; },

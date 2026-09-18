@@ -101,7 +101,7 @@ The default layout run checks RU/sans/black and EN/serif/white; `--full` checks 
 
 Use the checks together:
 
-- `science.py` checks source-coordinate and molecular-identity invariants. Re-run it whenever coordinates, selections, bonds or embedded data change.
+- `science.py` checks source-coordinate and molecular-identity invariants in the local scripts loaded by `index.html`, so inactive template recipes do not produce duplicate data. Use `--scripts DIRECTORY` for an explicit directory scan. Re-run it whenever coordinates, selections, bonds or embedded data change.
 - `layout.cjs` measures registered text after fonts load and records rendered frames. Inspect overview/detail separation, labels, bonds, base-plane clarity and donor/receptor visibility in the images; text containment alone does not check art overlap.
 - `motion.cjs` samples actual intermediate playback. Verify visible atom and camera changes, retained source context and the selected pair, rather than accepting endpoint screenshots or hidden persistent nodes as evidence of a clear transition.
 - `interaction.cjs` checks the affected controls and state transitions. Also review manual interruption, language/appearance changes and navigation during motion in the built artifact.

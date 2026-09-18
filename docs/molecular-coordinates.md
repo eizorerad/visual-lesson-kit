@@ -43,7 +43,8 @@ This is the view layer for a scene registered with the normal kit shell. Use ful
 
 | Call | Contract |
 |---|---|
-| `MC.project(data, xyz, camera)` | Returns `{x, y, depth}`. Subtract `camera.origin` (default `data.origin`), resolve in `data.basis`, turn about the local vertical axis by `angle`, then apply `K.project3D` with `pitch`. Angles are **degrees**; positive screen y points down. `scale` is stage units per source unit; depth is unscaled. |
+| `MC.project(data, xyz, camera)` | Returns `{x, y, depth}`. Subtract `camera.origin` (default `data.origin`), resolve in `data.basis`, turn about the local vertical axis by `angle`, then apply the orthographic pitch convention of `K.project3D`. Angles are **degrees**; positive screen y points down. `scale` is stage units per source unit; depth is unscaled. |
+| `MC.projectMany(data, points, camera)` | Projects an array of finite `[x,y,z]` points in input order. Validates the basis/camera and computes rotation coefficients once for the batch; each point and projected result is checked. Returns an array of `{x,y,depth}`; an empty input returns `[]` after camera validation. Use for many anchors in the same frame. |
 | `MC.centroid(points)` | Mean of a nonempty array of finite `[x,y,z]` points. |
 | `MC.rnaFragment(parent, data, {color, focusIds})` | Creates actors once; returns `{g, q, row(id), paint(camera, {focus, detail})}`. `g` and `q` refer to the same group. The renderer owns a frozen copy of input data. `color(id)` defaults to `C.blue`; focus defaults to all residues. |
 | `model.paint(camera, {focus=0, detail=1})` | Projects atoms, ring faces and explicit bonds, reorders the same nodes by depth, and updates emphasis. `focus`/`detail` are in `[0,1]`; focus fades non-selected residues. Returns `{project(xyz), row(id)}` for labels and contact geometry. It does not change any source coordinate. |

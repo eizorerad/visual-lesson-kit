@@ -29,7 +29,7 @@
     {
       "id": "three-dimensional",
       "title": "3D scenes and surfaces / 3D-сцены и поверхности",
-      "summary": "Compose procedural biological surfaces, molecules, capture chemistry and barcode records; choose source coordinates when atomic evidence is required."
+      "summary": "Assemble source-coordinate molecular overviews and atomic close-ups, or procedural biological surfaces, capture chemistry and barcode records; choose the representation that supports the scientific claim."
     },
     {
       "id": "chemistry",
@@ -2414,7 +2414,7 @@
     },
     {
       "id": "molecular-views",
-      "branch": "biology",
+      "branch": "three-dimensional",
       "title": "Molecular construction kit / Конструктор 3D-комплекса",
       "summary": "Assemble an editable protein–RNA overview and connected atomic close-up with a retained context locator. Two ready scene presets over reusable MV assembly, detail, fit and rig bricks; portable PDB preparation and verified 7BG9 example.",
       "keywords": [
@@ -2621,6 +2621,232 @@
         "languages",
         "export-qa",
         "molecular-simulation"
+      ]
+    },
+    {
+      "id": "rna-prediction",
+      "branch": "biology",
+      "title": "RNA prediction narrative / Предсказание структуры РНК",
+      "summary": "Reuse the 20-scene, 91-state RNA prediction lesson: motif energies become a formula, real candidate scores select pairs, MSA observations become arcs, and the same indexed chain morphs from sequence to 2D and schematic 3D. Includes verified ViennaRNA99-structure data and portable QA.",
+      "keywords": [
+        "rna-prediction",
+        "RNA secondary structure prediction",
+        "RNAfold ViennaRNA MFE",
+        "термодинамика РНК выравнивание",
+        "предсказание структуры РНК",
+        "модель Тёрнера",
+        "RNA alignment covariation",
+        "ковариация MSA",
+        "RNA ensemble probability",
+        "энергия мотивов РНК"
+      ],
+      "status": "ready",
+      "guides": [
+        {
+          "path": "rna-prediction.md"
+        }
+      ],
+      "sources": [
+        "rna-prediction.html",
+        "js/rna-pair-molecule.js",
+        "build/rna-prediction-data.py",
+        "assets/rna-prediction/thermo-example.json",
+        "assets/rna-prediction/SOURCES.md",
+        "assets/rna-prediction/COMPUTATION.md",
+        "qa/rna-prediction/science.cjs",
+        "qa/rna-prediction/layout.cjs",
+        "qa/rna-prediction/motion.cjs",
+        "qa/rna-prediction/interaction.cjs"
+      ],
+      "examples": [
+        "js/recipes/rna-prediction/prediction-thermo-story.js",
+        "js/recipes/rna-prediction/prediction-alignment-story.js",
+        "js/recipes/rna-prediction/prediction-ensemble-story.js"
+      ],
+      "caveat": "Real thermodynamic values belong to one fixed13-nt teaching sequence and model. Invented MSA is not a significance test. Pair-compatible3D geometry and animation are authored, not predicted atoms or folding kinetics.",
+      "related": [
+        "rna-pair-molecule",
+        "cinematic-explanation",
+        "rna-folding",
+        "molecular-coordinates",
+        "motion",
+        "clearance",
+        "export-qa"
+      ]
+    },
+    {
+      "id": "rna-pair-molecule",
+      "branch": "three-dimensional",
+      "title": "Indexed RNA morph / Цепь РНК с сохранением индексов",
+      "summary": "Use standalone PM.create to keep the same bases, backbone and pair endpoints while morphing a linear sequence and arcs into a hairpin and a readable right-handed schematic helix. Highlight motifs, turn the camera and vary only the unpaired loop.",
+      "keywords": [
+        "rna-pair-molecule",
+        "PM.create",
+        "RNA sequence arcs hairpin helix",
+        "цепь дуги шпилька спираль",
+        "2D 3D РНК переход",
+        "нумерация нуклеотидов",
+        "парные ограничения РНК"
+      ],
+      "status": "ready",
+      "guides": [
+        {
+          "path": "rna-pair-molecule.md"
+        }
+      ],
+      "sources": [
+        "js/rna-pair-molecule.js"
+      ],
+      "examples": [
+        "js/recipes/rna-prediction/prediction-thermo-story.js",
+        "js/recipes/rna-prediction/prediction-alignment-story.js"
+      ],
+      "caveat": "One contiguous nested stem with a hairpin and optional outer tails. Schematic coordinates; not metric A-form or a folding solver. Pair indices in API are zero-based; display labels are one-based.",
+      "related": [
+        "rna-prediction",
+        "molecular-coordinates",
+        "motion",
+        "clearance",
+        "cinematic-explanation"
+      ]
+    },
+    {
+      "id": "cinematic-explanation",
+      "branch": "motion",
+      "title": "Causal motion and pacing / Смысл движения и ритм",
+      "summary": "Reproduce the approved RNA lesson’s visual style with the existing quintic driver easing, cubic phase windows, retained actors, semantic colors, staged emphasis, reading pauses and collision-free transfer of evidence into results. Portable authoring recipe for other topics.",
+      "keywords": [
+        "cinematic-explanation",
+        "ритм ускорение анимации",
+        "стиль презентации РНК",
+        "плавное ускорение замедление",
+        "временные кривые",
+        "smoothstep smootherstep",
+        "animation pacing",
+        "causal motion",
+        "timing evidence transfer"
+      ],
+      "status": "compose",
+      "guides": [
+        {
+          "path": "cinematic-explanation.md"
+        }
+      ],
+      "sources": [
+        "js/film.js",
+        "js/lib/anim.js"
+      ],
+      "examples": [
+        "js/recipes/rna-prediction/prediction-thermo-story.js",
+        "js/recipes/rna-prediction/prediction-alignment-story.js",
+        "js/recipes/rna-prediction/prediction-ensemble-story.js"
+      ],
+      "caveat": "An authoring recipe over existing APIs, not a new global easing engine. Phase windows operate on eased state, not necessarily linear elapsed time. Motion conveys reasoning, not measured physical dynamics.",
+      "related": [
+        "rna-prediction",
+        "motion",
+        "scene",
+        "story",
+        "clearance",
+        "languages",
+        "export-qa",
+        "cinema-timeline",
+        "trna-journey"
+      ]
+    },
+    {
+      "id": "trna-journey",
+      "branch": "three-dimensional",
+      "title": "Continuous tRNA film / Непрерывный фильм о тРНК",
+      "summary": "Repeat the 39-cue tRNA film and remix named episodes, timings and bilingual captions. Sequence, cloverleaf, source-coordinate L shape, atomic stem, D/T elbow, Mg/water and per-pixel depth atom spheres.",
+      "keywords": [
+        "trna-journey",
+        "тРНК фильм",
+        "тРНК последовательность атомы",
+        "tRNA journey",
+        "trna film remix",
+        "атомная упаковка тРНК",
+        "Mg вода локоть",
+        "повторить фильм тРНК"
+      ],
+      "status": "ready",
+      "guides": [
+        {
+          "path": "trna-journey.md",
+          "section": "Повторить одной командой"
+        },
+        {
+          "path": "trna-journey.md",
+          "section": "Собрать свой маршрут"
+        },
+        {
+          "path": "trna-journey.md",
+          "section": "Компоненты отдельно"
+        },
+        {
+          "path": "trna-journey.md",
+          "section": "Проверить после изменений"
+        }
+      ],
+      "sources": [
+        "trna-journey.html",
+        "js/trna-config.js",
+        "js/trna-story.js",
+        "js/trna-world.js",
+        "js/trna-sphere-renderer.js",
+        "assets/trna/SOURCES.md",
+        "build/trna-data.py",
+        "qa/trna/remix.cjs"
+      ],
+      "examples": [
+        "js/trna-journey.js"
+      ],
+      "caveat": "Curated for yeast tRNA(Phe) 1EHZ, not a generic RNA importer or folding simulator. Camera motion preserves source coordinates; author order and captions still need scientific review.",
+      "related": [
+        "cinema-timeline",
+        "cinematic-explanation",
+        "molecular-views",
+        "rna-folding",
+        "export-qa"
+      ]
+    },
+    {
+      "id": "cinema-timeline",
+      "branch": "motion",
+      "title": "Continuous film timeline / Шкала непрерывного фильма",
+      "summary": "Compile numeric poses into motion and explicit reading holds, sample deterministic state and caption phases, and assemble new routes by stable keys.",
+      "keywords": [
+        "cinema-timeline",
+        "непрерывная временная шкала",
+        "пауза для чтения",
+        "continuous film timeline",
+        "caption readiness",
+        "монтаж эпизодов",
+        "перемотка фильма"
+      ],
+      "status": "ready",
+      "guides": [
+        {
+          "path": "cinema-timeline.md"
+        }
+      ],
+      "sources": [
+        "js/cinema-timeline.js",
+        "js/trna-cinema.js",
+        "css/trna-cinema.css"
+      ],
+      "examples": [
+        "js/trna-story.js",
+        "js/trna-config.js"
+      ],
+      "caveat": "Pure authored numeric interpolation, not physical dynamics. Caption thresholds do not automatically prove visual legibility. Use complete finite target states and dispose the driver and controls.",
+      "related": [
+        "trna-journey",
+        "cinematic-explanation",
+        "motion",
+        "shell",
+        "languages",
+        "export-qa"
       ]
     }
   ]

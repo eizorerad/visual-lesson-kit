@@ -17,10 +17,21 @@ function basis(rows){
 function projector(data,cam={}){
  const origin=vector(cam.origin||data.origin,'origin'),axes=basis(data.basis),cx=finite(cam.cx===undefined?0:cam.cx,'cx'),cy=finite(cam.cy===undefined?0:cam.cy,'cy'),scale=finite(cam.scale===undefined?1:cam.scale,'scale'),angle=finite(cam.angle===undefined?0:cam.angle,'angle'),pitch=finite(cam.pitch===undefined?0:cam.pitch,'pitch');
  if(scale<=0)throw new RangeError('scale must be positive');
- const a=(angle%360)*Math.PI/180,c=Math.cos(a),s=Math.sin(a);
- return xyz=>{const d=xyz.map((v,i)=>v-origin[i]),p=axes.map(r=>r.reduce((n,v,i)=>n+v*d[i],0));return K.project3D([p[0]*c+p[2]*s,p[1],-p[0]*s+p[2]*c],{cx,cy,scale,pitch});};
+ const a=(angle%360)*Math.PI/180,c=Math.cos(a),s=Math.sin(a),b=(pitch%360)*Math.PI/180,cp=Math.cos(b),sp=Math.sin(b);
+ // Compile the same orthographic transform as K.project3D once per camera.
+ // Keep overflow checks before any SVG mutation, including intermediate axes.
+ return xyz=>{
+  const d=xyz.map((v,i)=>v-origin[i]),p=axes.map(r=>r.reduce((n,v,i)=>n+v*d[i],0));
+  const x=finite(p[0]*c+p[2]*s,'rotated x'),y=finite(p[1],'rotated y'),z=finite(-p[0]*s+p[2]*c,'rotated z');
+  const up=finite(cp*y-sp*z,'rotated up'),depth=finite(sp*y+cp*z,'depth');
+  return {x:finite(cx+scale*x,'projected x'),y:finite(cy-scale*up,'projected y'),depth};
+ };
 }
 function point(data,xyz,cam){vector(xyz,'xyz');return projector(data,cam)(xyz);}
+function projectMany(data,points,cam){
+ if(!Array.isArray(points))throw new TypeError('points must be an array');
+ const project=projector(data,cam);return Array.from(points,p=>project(vector(p,'xyz')));
+}
 function average(xs){if(!Array.isArray(xs)||!xs.length)throw new RangeError('centroid requires points');xs.forEach(p=>vector(p,'point'));return [0,1,2].map(i=>xs.reduce((s,a)=>s+a[i],0)/xs.length);}
 function freeze(x){if(x&&typeof x==='object'){Object.values(x).forEach(freeze);Object.freeze(x);}return x;}
 function glycosidic(r){
@@ -96,5 +107,5 @@ function molecule(parent,input,{color=()=>C.blue,focusIds=input.residues.map(r=>
  return{g:q,q,paint,row:id=>rows.get(id)};
 }
 
-g.MC=Object.freeze({project:point,centroid:average,rnaFragment:molecule,context:sourceContext,validateRNA});
+g.MC=Object.freeze({project:point,projectMany,centroid:average,rnaFragment:molecule,context:sourceContext,validateRNA});
 })(window);

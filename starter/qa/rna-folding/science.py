@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Offline RNA source, chemical-graph and fragment audit; Python standard library only."""
 import argparse, hashlib, json, math, re, shlex, sys
+from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
 
 
 def require(ok, message):
@@ -80,9 +82,35 @@ def normalize_paths(data):
     return data
 
 
+def active_scripts(root):
+    """Audit the selected lesson, excluding other shipped template recipes."""
+    class Scripts(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.paths = set()
+
+        def handle_starttag(self, tag, attrs):
+            if tag != 'script':
+                return
+            src = dict(attrs).get('src')
+            if not src:
+                return
+            url = urlsplit(src)
+            if url.scheme or url.netloc:
+                return
+            path = (root / unquote(url.path)).resolve()
+            require(path.is_relative_to(root), 'Script outside project: ' + src)
+            self.paths.add(path)
+
+    parser = Scripts()
+    parser.feed((root / 'index.html').read_text())
+    require(parser.paths, 'No local scripts in index.html; use --scripts for an explicit search directory')
+    return parser.paths
+
+
 def literal(scripts, pattern, filename=None):
     candidates = []
-    for file in sorted(scripts.rglob('*.js')):
+    for file in sorted(scripts.rglob('*.js') if isinstance(scripts, Path) else scripts):
         if filename and file.name != filename:
             continue
         text = file.read_text()
@@ -221,18 +249,18 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--project', type=Path, default=Path.cwd())
     parser.add_argument('--assets', type=Path, help='Override asset directory relative to project (default assets/rna-folding)')
-    parser.add_argument('--scripts', type=Path, help='Override JS search directory relative to project (default js)')
+    parser.add_argument('--scripts', type=Path, help='Override JS search directory relative to project (default: local scripts loaded by index.html)')
     parser.add_argument('--out', type=Path, help='Output directory relative to project (default qa-output/rna-folding)')
     parser.add_argument('--legacy-inline', action='store_true', help='Migration comparison only: allow pre-registry inline STEM/MOTIF data')
     args = parser.parse_args()
     root = args.project.resolve()
     assets = (root / (args.assets or 'assets/rna-folding')).resolve()
-    scripts = (root / (args.scripts or 'js')).resolve()
     out = (root / (args.out or 'qa-output/rna-folding')).resolve()
     require(Path(__file__).resolve().parent not in [out, *out.parents], 'Output must be outside QA source directory')
     out.mkdir(parents=True, exist_ok=True)
     result = {'ok': False, 'checks': {}, 'errors': [], 'limitations': ['These checks validate supplied source coordinates, chemical adjacency and known selections; they do not infer hydrogen bonds, energy or a folding pathway.', 'The curated A-minor assignment remains a literature claim; this offline audit does not re-review the paper.', 'Camera projections, label legibility, hidden-surface behavior and physical-device gestures require separate browser/visual checks.']}
     try:
+        scripts = (root / args.scripts).resolve() if args.scripts else active_scripts(root)
         load = lambda name: json.loads((assets / name).read_text())
         raw1, raw2 = assets / 'tertiary-1ehz.cif', assets / 'motif-1hr2.pdb'
         s1, s2 = read_cif(raw1), read_pdb(raw2)

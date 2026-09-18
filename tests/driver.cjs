@@ -10,6 +10,14 @@ function fixture(t,deck=false){
  for(const file of ['js/lib/dom.js','js/lib/i18n.js','js/lib/touch.js','js/lib/anim.js',...(deck?['js/deck.js']:[]),'js/film.js'])w.eval(fs.readFileSync(path.join(starter,file),'utf8'));
  return w;
 }
+test('fields with equal endpoints stay bit-exact throughout a transition',async t=>{
+ const w=fixture(t),frames=[],initial={scale:2.45,origin:137.273,large:1e308,angle:32},state={...initial,alpha:1};
+ w.requestAnimationFrame=fn=>{frames.push(fn);return frames.length;};
+ const values=[],driver=w.F.driver(state,()=>values.push({...state})),active=driver.to({...initial,alpha:.18},{duration:1000,ease:'linear'});
+ for(let time=0;time<=1000;time+=10)frames.shift()(time);
+ assert.equal((await active).completed,true);for(const row of values)for(const key of Object.keys(initial))assert.equal(row[key],initial[key],key+' must not drift when only opacity changes');
+ assert.equal(state.alpha,.18);
+});
 test('manual input invalidates old frames and completion, without completing another driver',async t=>{
  const w=fixture(t),a={x:0},b={x:0};let completed=0;
  const one=w.F.driver(a,()=>{}),two=w.F.driver(b,()=>{});

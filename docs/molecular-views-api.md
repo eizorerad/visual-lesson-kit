@@ -65,6 +65,12 @@ Chain styles support `color`, `width`, `opacity`, and `highlightColor`. Colors m
 
 Returns `{g, data, row(chain,id), paint}`; `data` is a frozen independent source snapshot. Each paint returns `{project(xyz), row(chain,id)}`. Missing rows return `undefined`; check an optional selection before reading it. Line nodes persist and are sorted by average source depth each frame, with `data-mv-chain`, `data-mv-source-bond` (JSON endpoint IDs), and `data-mv-depth` for inspection. A trace is a skeletal representation, not a molecular surface.
 
+The assembly renderer projects shared endpoints once per camera update and moves only the nodes needed to restore depth order. Equal-depth ties retain source order. Repainting an unchanged camera reuses its geometry; opacity/highlight changes update appearance without rewriting coordinates or reordering actors. Camera values, including mutable origin components, and emphasis are still validated on every call. Keep changes inside `paint` rather than editing its owned SVG actors directly.
+
+Assembly actors are single unfilled SVG lines, so their alpha is stored as `stroke-opacity`, with pointer hit testing disabled below the usual visibility threshold. Applying CSS `opacity` to thousands of individual lines can create expensive compositing work; do not reintroduce it for these actors. `MV.detail` contains compound atomic shapes and keeps its separate opacity handling.
+
+For new animated scenes, create the view once and drive it with `MV.rig`; avoid rebuilding SVG, replacing unchanged caption HTML, or appending every actor on every animation frame. `MolecularScenes` already preserves unchanged captions and numeric control readouts. Profile real transitions separately from layout audits and mutation-counting runs, since those instruments add work of their own. Frame rates depend on the browser, machine and source size; coordinate fidelity is not reduced to meet a timing target.
+
 ## Detail and context
 
 ```js

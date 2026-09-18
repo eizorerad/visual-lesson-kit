@@ -1,8 +1,20 @@
-# Procedural 3D scientific components
+# 3D scientific scenes and components
+
+The `three-dimensional` navigation branch groups both source-coordinate molecular scenes and procedural scientific geometry. Choose by the evidence the scene needs:
+
+| Need to explain | Start with | Representation |
+| --- | --- | --- |
+| A protein–RNA complex, chain identity and an atomic close-up with a retained locator | [`molecular-views`](molecular-views.md): `MolecularScenes.overview` / `detail`, then `MV` bricks | Preserved source coordinates, SVG projection and explicit connectivity |
+| A custom RNA atomic fragment or contact | [`molecular-coordinates`](molecular-coordinates.md): `MC` | Curated source atoms, bonds and molecular context |
+| Cell surfaces, antibody labelling, bead capture and barcode records | `spatial-biology`, using `V3` below | Authored mesh geometry, WebGL with Canvas fallback |
+
+Create the editable molecular constructor with `python3 create.py ../my-molecular-lesson --template molecular-views`. Its [guide](molecular-views.md) covers the two presets, data import and verification. Biological searches and the `molecular-coordinates` card still lead to it. This is a navigation grouping: existing template names, runtime paths and the `MC`, `MV`, `MolecularScenes` and `V3` APIs stay unchanged.
+
+## Procedural geometry
 
 `V3` contains reusable, genuinely three-dimensional teaching geometry and a small WebGL renderer. The cell, immunoglobulin domains, strands, bead and droplet have object-space vertices, normals and depth. They are procedural scientific diagrams with illustrative sizes and counts. They are not atomic coordinates, molecular simulations, ray tracing, or measured surfaces.
 
-This directory is separate from coordinate-backed `MC` / `MV` views. Use [molecular coordinates](molecular-coordinates.md) or [molecular views](molecular-views-api.md) when the claim depends on a supplied experimental structure, chain identity or atomic contacts.
+`V3` uses its own runtime files in `js/three/`. Coordinate-backed `MC` / `MV` scenes share the 3D navigation group while retaining their own rendering and data contracts. Use [molecular coordinates](molecular-coordinates.md) or [molecular views](molecular-views-api.md) when the claim depends on a supplied experimental structure, chain identity or atomic contacts.
 
 ## Load and compose
 

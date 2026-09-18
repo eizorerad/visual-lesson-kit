@@ -78,7 +78,9 @@ function driver(state,paint){
    pending={resolve};
    A.run(t=>{
     if(disposed||id!==version)return;
-    try{keys.forEach(k=>state[k]=t===1?target[k]:(1-t)*initial[k]+t*target[k]);paint();}
+    // An unchanged field must not drift by floating-point rounding: cached camera
+    // geometry and anchored labels rely on an actually stationary view.
+    try{keys.forEach(k=>state[k]=t===1||initial[k]===target[k]?target[k]:(1-t)*initial[k]+t*target[k]);paint();}
     catch(error){if(id===version){version++;pending=null;}reject(error);}
    },{duration,...(ease===undefined?{}:{ease})}).then(()=>{
     if(disposed||id!==version)return;

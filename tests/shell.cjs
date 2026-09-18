@@ -99,3 +99,38 @@ test('reading header switches both locales without losing disclosure, query, scr
  assert.equal(d.activeElement,language);assert.match(language.getAttribute('aria-label'),/Язык: RU/);assert.equal(w.D.deck.root(),root);assert.equal(w.D.deck.current().step,1);
  const ids=Array.from(d.querySelectorAll('[id]'),el=>el.id);assert.equal(new Set(ids).size,ids.length,'reading language has no duplicate IDs');
 });
+
+test('continuous playback synchronizes notes and hash without replaying or replacing scene actors',async t=>{
+ const {w,d,builds,click}=fixture(t),root=w.D.deck.root(),input=root.querySelector('input'),count=builds();
+ input.value='41';
+ assert.equal(typeof w.D.deck.syncPlaybackStep,'function');
+ assert.equal(w.D.deck.syncPlaybackStep(2),true);
+ assert.equal(w.D.deck.root(),root);assert.equal(builds(),count);assert.equal(input.value,'41');
+ assert.equal(root.dataset.replayedStep,undefined,'sync must not execute ordinary step callbacks');
+ assert.equal(w.D.deck.current().step,2);assert.equal(w.location.hash,'#1.2');
+ assert.equal(d.querySelector('#notesBody .is-now').textContent,'3Третий');
+ assert.equal(d.querySelector('#stepCount').textContent,'Шаг 3 / 3');
+ assert.equal(w.D.deck.syncPlaybackStep(2),false);
+ click('language');await settle();
+ assert.equal(w.D.deck.root(),root);assert.equal(w.D.deck.current().step,2);
+ assert.equal(d.querySelector('#notesBody .is-now').textContent,'3Third');
+ assert.equal(d.querySelector('#stepCount').textContent,'Step 3 / 3');
+ for(const bad of [-1,3,1.5,NaN,Infinity,'1'])assert.throws(()=>w.D.deck.syncPlaybackStep(bad),w.RangeError);
+ assert.equal(w.D.deck.current().step,2);assert.equal(w.location.hash,'#1.2');
+ assert.equal(w.D.deck.syncPlaybackStep(0),true);assert.equal(w.location.hash,'#1');
+ root.remove();assert.equal(w.D.deck.syncPlaybackStep(1),false,'detached mount cannot publish another cue');
+ assert.equal(w.D.deck.current().step,0);
+});
+
+test('cinema timeline reserve reduces fitted stage height and resets without changing normal layouts',t=>{
+ const {w,d}=fixture(t);w.innerWidth=1600;w.innerHeight=900;w.D.deck.refit();
+ const original=w.D.deck.scale();assert.equal(d.body.style.getPropertyValue('--toolbar-bottom-space'),'72px');
+ d.body.style.setProperty('--cinema-bottom-reserve','96px');w.D.deck.refit();
+ assert.equal(d.body.style.getPropertyValue('--toolbar-bottom-space'),'168px');
+ assert.ok(Math.abs(w.D.deck.scale()-(900-10-168)/720)<1e-12);assert.ok(w.D.deck.scale()<original);
+ for(const value of ['', '-40px', 'not-a-number', 'Infinity']){
+  d.body.style.setProperty('--cinema-bottom-reserve',value);w.D.deck.refit();
+  assert.equal(d.body.style.getPropertyValue('--toolbar-bottom-space'),'72px');assert.equal(w.D.deck.scale(),original);
+  assert.doesNotMatch(d.querySelector('#frame').style.transform,/NaN|Infinity/);
+ }
+});

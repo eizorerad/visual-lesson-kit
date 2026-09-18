@@ -83,3 +83,18 @@ test('author presets are bounded, contrast-checked, safely named and cannot repl
  assert.deepEqual(plain(w.D.appearance.get()),{background:'white',palette:'custom',font:'custom'});assert.equal(w.D.appearance.presets.palettes.bad,undefined);assert.equal(w.D.appearance.presets.palettes.duplicates,undefined);assert.equal(w.D.appearance.presets.fonts.bad,undefined);
  assert.match(w.document.documentElement.style.getPropertyValue('--f-text'),/"Local Serif"/);w.D.appearance.set({font:'serif'});assert.equal(w.document.documentElement.style.getPropertyValue('--f-text'),'');
 });
+
+test('appearance round trips preserve source-image data, links and inline source colors',async t=>{
+ const w=fixture(t),d=w.document,container=d.createElement('section');
+ const png='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==';
+ const sourceSvg='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg"><rect width="10" height="10" fill="#cc3300"/></svg>');
+ container.innerHTML='<img alt="Unmodified paper figure"><svg xmlns="http://www.w3.org/2000/svg"><image width="10" height="10"/><g data-source-artwork=""><rect width="10" height="10" fill="#cc3300" stroke="#0033aa"/></g></svg>';
+ const image=container.querySelector('img'),svgImage=container.querySelector('image');image.src=png;svgImage.setAttribute('href',sourceSvg);
+ d.body.append(container);const nodes=[...container.querySelectorAll('*')],before=container.innerHTML;
+ for(const background of ['white','black'])for(const palette of ['ocean','botanical','warm'])for(const font of ['serif','sans']){
+  w.D.appearance.set({background,palette,font});await settle();
+  assert.equal(container.innerHTML,before,'theme updates cannot recolor or rewrite source markup');
+  assert.deepEqual([...container.querySelectorAll('*')],nodes,'source nodes retain identity');
+  assert.equal(image.src,png);assert.equal(svgImage.getAttribute('href'),sourceSvg);
+ }
+});
