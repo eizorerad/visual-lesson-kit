@@ -67,6 +67,23 @@ function tile(id,featureRole){
   parts:[box('linker',[5.8,.72,.208],[0,0,-.006],.035),box('primer',[.20,.54,.016],[-2.54,0,.102],.006),box(featureRole,[.20,.54,.016],[2.54,0,.102],.006)]};
 }
 
+function readout(id,featureRole){
+ // Enlarged abstract read records expose the cell, UMI and sequence fields.
+ // This is a data display, not a sequencing instrument. The centered body is
+ // .16 deep; thin face markings extend its front surface from z=.08 to .09.
+ return {id,space:'environment',center:[0,0,0],kind:'abstract-read-record',
+  dimensions:[10.6,1.05,.17],bodyDimensions:[10.6,1.05,.16],
+  anchors:{cell:[-4,0,.10],umi:[-1.35,0,.10],sequence:[2.5,0,.10]},
+  parts:[
+   box('linker',[10.6,1.05,.16],[0,0,0],.035),
+   box('linker',[.018,.78,.010],[-2.55,0,.085],.004),
+   box('linker',[.018,.78,.010],[-.15,0,.085],.004),
+   box('primer',[2.2,.035,.010],[-4,.46,.085],.004),
+   box('umi',[2.2,.035,.010],[-1.35,.46,.085],.004),
+   box(featureRole,[4.9,.035,.010],[2.5,.46,.085],.004)
+  ]};
+}
+
 function marker(id,role){
  // Faceted read indicators are symbols for information moving to a record.
  // Their radius is a local drawing scale, not a molecular measurement.
@@ -89,8 +106,10 @@ function create(){
  // Public ordering: RNA support, ADT support, RNA card, ADT card. Markers are
  // separate so callers can append them without changing these four indices.
  const tiles=[tile('data-rna','rna'),tile('data-adt','tag')],molecules=[...libraries,...tiles];
- const markers=[marker('read-rna','rna'),marker('read-adt','tag')],actors=[...molecules,...markers];
- const stats={molecules:molecules.length,markers:markers.length,parts:0,vertices:0,triangles:0};
+ const markers=[marker('read-rna','rna'),marker('read-adt','tag')];
+ // Expanded readouts remain separate, preserving the existing actor ordering.
+ const readouts=[readout('readout-rna','rna'),readout('readout-adt','tag')],actors=[...molecules,...markers,...readouts];
+ const stats={molecules:molecules.length,markers:markers.length,readouts:readouts.length,parts:0,vertices:0,triangles:0};
  const bounds={};
  actors.forEach(m=>{
   const min=[Infinity,Infinity,Infinity],max=[-Infinity,-Infinity,-Infinity];
@@ -100,7 +119,7 @@ function create(){
   });
   bounds[m.id]={min,max};
  });
- cached={molecules,markers,libraries,tiles,stats,bounds,anchors:Object.fromEntries(actors.map(m=>[m.id,m.anchors])),schematic:true};
+ cached={molecules,markers,readouts,libraries,tiles,stats,bounds,anchors:Object.fromEntries(actors.map(m=>[m.id,m.anchors])),schematic:true};
  return cached;
 }
 (global.V3=global.V3||{}).LibrariesMesh={create};

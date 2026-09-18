@@ -13,7 +13,18 @@ test('LibrariesMesh loads without a DOM, retains cached identities, and exposes 
  assert.deepEqual(Array.from(model.molecules,m=>m.id),['library-rna','library-adt','data-rna','data-adt']);
  assert.deepEqual(Array.from(model.markers,m=>m.id),['read-rna','read-adt']);
  assert.equal(model.libraries[0],model.molecules[0]);assert.equal(model.tiles[1],model.molecules[3]);
- const actors=[...model.molecules,...model.markers];
+ assert.deepEqual(Array.from(model.readouts,m=>m.id),['readout-rna','readout-adt']);
+ for(const card of model.readouts){
+  assert.equal(card.kind,'abstract-read-record');
+  assert.ok(card.anchors.cell[0]<card.anchors.umi[0]&&card.anchors.umi[0]<card.anchors.sequence[0],
+   'Cell, UMI and sequence fields remain separately addressable in reading order');
+  for(const key of ['cell','umi','sequence']){
+   const a=card.anchors[key],bounds=model.bounds[card.id];
+   assert.ok(a[0]>bounds.min[0]&&a[0]<bounds.max[0]&&a[1]>bounds.min[1]&&a[1]<bounds.max[1],
+    'Field labels anchor inside the readout face');
+  }
+ }
+ const actors=[...model.molecules,...model.markers,...model.readouts];
  assert.equal(new Set(actors.map(m=>m.id)).size,actors.length);
  let vertices=0,triangles=0,parts=0;
  for(const actor of actors){
@@ -43,6 +54,7 @@ test('LibrariesMesh loads without a DOM, retains cached identities, and exposes 
   }
  }
  assert.equal(model.stats.molecules,model.molecules.length);assert.equal(model.stats.markers,model.markers.length);
+ assert.equal(model.stats.readouts,model.readouts.length);
  assert.equal(model.stats.parts,parts);assert.equal(model.stats.vertices,vertices);assert.equal(model.stats.triangles,triangles);
  assert.ok(triangles<1000,'Shared library props have a small rendering budget');
 });

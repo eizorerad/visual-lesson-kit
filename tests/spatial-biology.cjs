@@ -106,7 +106,7 @@ test('spatial biology standalone: 192 styled states, 42 midpoints, retained cont
   }
  }
  // Real range input and live shell changes retain the scene, numeric state and canvas.
- for(const [index,step] of [[0,2],[1,2],[2,2]]){
+ for(const [index,step] of [[0,2],[1,2],[2,3]]){
   await go(index,step);
   if(index===0){
    const range=page.locator('.spatial-biology input[type=range]');
@@ -136,6 +136,14 @@ test('spatial biology standalone: 192 styled states, 42 midpoints, retained cont
  const report={artifact:path.relative(path.resolve(__dirname,'..'),artifact),sha256:artifactSha256,browser:browser.version(),scenes,states,midpoints,retention,continuity,failures,errors,requests,physicalGesturesTested:false};
  if(output)fs.writeFileSync(path.join(output,'report.json'),JSON.stringify(report,null,2));
  assert.equal(states.length,192);assert.equal(midpoints.length,42);
+ for(const frame of states.filter(f=>f.index===2&&f.step>=3)){
+  const state=frame.state;
+  assert.equal(state.librariesRnaFocus,frame.step===3?'1':'0','RNA has its own close-up');
+  assert.equal(state.librariesAdtFocus,frame.step===4?'1':'0','ADT has its own close-up');
+  assert.equal(state.librariesRecords,frame.step===3?'1':'2','The two reads become separate records');
+  assert.equal(state.librariesRnaBases,'1');assert.equal(state.librariesRnaMapped,'1');
+  if(frame.step>=4){assert.equal(state.librariesAdtBases,'1');assert.equal(state.librariesAdtMapped,'1');}
+ }
  assert.deepEqual(retention.map(x=>[x.sameRoot,x.sameCanvas,x.sameState,x.sameStep]),[[true,true,true,true],[true,true,true,true],[true,true,true,true]]);
  assert.deepEqual(errors,[],'No JavaScript or console errors');assert.deepEqual(requests,[],'The standalone lesson makes no HTTP requests');
  assert.equal(failures.length,0,JSON.stringify(failures.map(f=>({lang:f.lang,background:f.background,font:f.font,index:f.index,step:f.step,progress:f.progress,issues:f.audit.issues,collisions:f.collisions,cyrillic:f.cyrillic,renderer:f.renderer,nonempty:f.nonempty,glError:f.glError})),null,2));

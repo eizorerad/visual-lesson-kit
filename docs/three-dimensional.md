@@ -185,7 +185,7 @@ Custom products use the same local geometry layout, so the cached example's `anc
 
 ## V3.LibrariesMesh
 
-`V3.LibrariesMesh.create()` returns cached procedural supports, record tiles and read markers for paired RNA/ADT library explanations. It needs no DOM or external assets. Load it after `codes-mesh.js` when combining its props with DNA products and the `CodesMesh.pose`/`project` helpers.
+`V3.LibrariesMesh.create()` returns cached procedural supports, record tiles, read markers and enlarged readout cards for paired RNA/ADT library explanations. It needs no DOM or external assets. Load it after `codes-mesh.js` when combining its props with DNA products and the `CodesMesh.pose`/`project` helpers.
 
 The result exposes:
 
@@ -193,13 +193,14 @@ The result exposes:
 - `tiles`: two record tiles, `data-rna` and `data-adt`.
 - `molecules`: the four definitions above, in that order.
 - `markers`: separate `read-rna` and `read-adt` definitions; append these after `molecules` when creating a renderer.
+- `readouts`: `readout-rna` and `readout-adt`, two enlarged data-field cards of kind `abstract-read-record`. Their `cell`, `umi` and `sequence` anchors run from left to right. Append these actors independently when the composition needs a close-up.
 - `bounds`: local `min`/`max` geometry bounds keyed by actor ID.
 - `anchors`: each actor's named local label and layout anchors, keyed by actor ID.
-- `stats`: molecule, marker, part, vertex and triangle counts; `schematic: true` labels the complete model.
+- `stats`: molecule, marker, readout, part, vertex and triangle counts. Geometry totals include all actors in `molecules`, `markers` and `readouts`; the original four-item `molecules` and two-item `markers` arrays retain their order. `schematic: true` labels the complete model.
 
-Every actor uses environment coordinates and supplies typed mesh parts. Repeated calls share the same cached definitions and buffers; treat them as read-only. Use `V3.CellSurface.create` with `includeCell: false` and explicit poses to place the supports, DNA products, tiles and markers in a shared depth buffer. Use each actor's anchors for projected labels; a label anchor can intentionally sit above its surface.
+Every actor uses environment coordinates and supplies typed mesh parts. Repeated calls share the same cached definitions and buffers; treat them as read-only. Use `V3.CellSurface.create` with `includeCell: false` and explicit poses to place the supports, DNA products, tiles, markers and readout cards in a shared depth buffer. Use each actor's anchors for projected labels; a label anchor can intentionally sit above its surface.
 
-These props are explanatory symbols, not laboratory equipment or a reconstruction of a flow cell. Supports separate the two library channels; tiles represent data records; moving markers represent information being read. The recipe supplies barcode, feature and UMI identity. Splitting or preparing a library does not create a new cell barcode, and moving a read marker does not move or destroy the source DNA. See `js/recipes/spatial-biology/03-libraries.js` for the complete six-state composition and its RU/EN notes.
+These props are explanatory symbols, not laboratory equipment or a reconstruction of a flow cell. Supports separate the two library channels; tiles and readout cards represent data records; moving markers represent information being read. The recipe supplies barcode, feature and UMI identity. Its separate RNA and ADT read close-ups explain gene mapping and antibody-code lookup before returning to the paired overview. Splitting or preparing a library does not create a new cell barcode, and moving a read marker does not move or destroy the source DNA. See `js/recipes/spatial-biology/03-libraries.js` for the complete six-state composition and its RU/EN notes.
 
 ## Scientific and rendering limits
 
