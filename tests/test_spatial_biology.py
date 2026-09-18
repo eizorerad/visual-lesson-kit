@@ -10,9 +10,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CORE = [f'js/three/{name}.js' for name in
-        ('molecule-mesh', 'cell-surface', 'capture-mesh', 'codes-mesh')]
+        ('molecule-mesh', 'cell-surface', 'capture-mesh', 'codes-mesh', 'libraries-mesh')]
 RECIPES = [f'js/recipes/spatial-biology/{name}.js' for name in
-           ('common', 'capture-stage', '01-surface', '02-codes')]
+           ('common', 'capture-stage', '01-surface', '02-codes', '03-libraries')]
 
 
 class SpatialBiologyTests(unittest.TestCase):
@@ -24,7 +24,8 @@ class SpatialBiologyTests(unittest.TestCase):
 
     def test_discovery_keeps_a_separate_3d_branch_and_coordinate_routes(self):
         router = ROOT / 'docs/navigation/route.py'
-        for query in ('spatial-biology', 'пространственная биология', 'CITE-seq cell bead droplet'):
+        for query in ('spatial-biology', 'пространственная биология', 'CITE-seq cell bead droplet',
+                      'two libraries one cell barcode', 'две библиотеки один клеточный код'):
             data = json.loads(self.command(router, query, '--json'))
             self.assertEqual(data['results'][0]['id'], 'spatial-biology', query)
         catalog = json.loads((ROOT / 'docs/navigation/catalog.json').read_text())
@@ -44,7 +45,7 @@ class SpatialBiologyTests(unittest.TestCase):
             shutil.move(source, project)
             html = (project / 'index.html').read_text()
             scripts = re.findall(r'<script src="([^"]+)"', html)
-            required = ['js/film.js', 'js/layout.js', 'js/perspective.js', *CORE, *RECIPES,
+            required = ['js/film.js', 'js/motion.js', 'js/layout.js', 'js/perspective.js', *CORE, *RECIPES,
                         'js/player.js', 'js/boot.js']
             self.assertEqual([script for script in scripts if script in required], required)
             self.assertEqual(len(scripts), len(set(scripts)))
@@ -65,6 +66,8 @@ class SpatialBiologyTests(unittest.TestCase):
             self.assertNotIn('CiteCellSurface', artifact)
             self.assertIn('Bio3D.CaptureStage', artifact)
             self.assertIn('V3.CodesMesh', artifact)
+            self.assertIn('V3.LibrariesMesh', artifact)
+            self.assertIn('F.shared(', artifact)
             self.assertIn('Three codes', artifact)
 
     def test_existing_templates_receive_reusable_files_without_loading_them(self):

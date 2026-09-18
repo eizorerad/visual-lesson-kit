@@ -11,6 +11,7 @@ const v=Bio3D.stage(ctx,'Как три кода превращаются в от
 const st={cell:0,feature:0,umi:0,copy:0,dedup:0,chapter:0},model=V3.CodesMesh.create(),camera={cx:550,cy:399,scale:64};
 const surface=V3.CellSurface.create(v.svg,camera,{frame:{x:60,y:147,width:1160,height:427},molecules:model.molecules,includeCell:false});
 ctx.onDispose(surface.dispose);surface.g.dataset.codesProducts='3';
+if(F.shared)F.shared(surface.g,{id:'cite-dna-products',kind:'3d-dna-product-ancestry',label:'A: RNA GCT; ADT TGA and PCR copy',source:'Stoeckius 2017; schematic products'});
 const p=F.group(v.svg),lines=F.group(p),labels=F.group(p);
 Bio3D.text(labels,70,147,1140,32,'Схема ДНК-продуктов: прослеживаем происхождение кодов','Schematic DNA products: tracing where their codes came from',21,C.grey);
 const headers=[Bio3D.text(labels,274,187,190,32,'Клеточный код','Cell barcode',21,C.gold),Bio3D.text(labels,436,187,100,32,'UMI','UMI',23,C.purple),Bio3D.text(labels,549,187,238,32,'Какой признак?','Which feature?',22,C.teal)];

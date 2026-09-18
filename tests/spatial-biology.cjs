@@ -9,7 +9,7 @@ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypt
 const {pathToFileURL}=require('node:url');
 const artifact=path.resolve(__dirname,'../examples/spatial-biology.html');
 
-test('spatial biology standalone: 144 styled states, 32 midpoints, retained controls and offline rendering',
+test('spatial biology standalone: 192 styled states, 42 midpoints, retained controls and offline rendering',
  {skip:process.env.V3_BROWSER_TESTS!=='1',timeout:300000},async t=>{
  const {chromium}=require('playwright');
  assert.ok(fs.existsSync(artifact),'Build examples/spatial-biology.html first');
@@ -24,10 +24,10 @@ test('spatial biology standalone: 144 styled states, 32 midpoints, retained cont
  page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
  page.on('request',request=>{if(/^https?:/.test(request.url()))requests.push(request.url());});
  await page.goto(pathToFileURL(artifact).href);
- await page.waitForFunction(()=>window.D?.deck?.count()===2&&window.V3?.CellSurface);
+ await page.waitForFunction(()=>window.D?.deck?.count()===3&&window.V3?.CellSurface);
  await page.evaluate(()=>document.fonts.ready);
  const scenes=await page.evaluate(()=>D.deck.scenes());
- assert.deepEqual(scenes.map(s=>[s.id,s.notes]),[['surface',12],['three-codes',6]]);
+ assert.deepEqual(scenes.map(s=>[s.id,s.notes]),[['surface',12],['three-codes',6],['libraries',6]]);
  await page.evaluate(()=>{
   // Retain the real renderer API so pixels can be read immediately after paint,
   // before Chrome clears its non-preserved drawing buffer for presentation.
@@ -64,7 +64,7 @@ test('spatial biology standalone: 144 styled states, 32 midpoints, retained cont
     current:D.deck.current(),audit:{checked:audit.checked,issues:audit.issues,unmeasured:audit.unmeasured,uncontractedText:audit.uncontractedText},
     collisions,cyrillic:D.i18n.lang()==='en'?[...texts.map(t=>t.text),...reading].filter(text=>/[А-Яа-яЁё]/.test(text)):[],
     nonfinite,renderer:spatialRenderer.g.dataset.surfaceRenderer,nonempty,glError,canvasCount:root.querySelectorAll('canvas').length,
-    state:Object.fromEntries(Object.entries(root.dataset).filter(([key])=>/^(surface|capture|codes|freeMolecules)/.test(key)))
+    state:Object.fromEntries(Object.entries(root.dataset).filter(([key])=>/^(surface|capture|codes|libraries|freeMolecules)/.test(key)))
    };
   };
  });
@@ -74,20 +74,20 @@ test('spatial biology standalone: 144 styled states, 32 midpoints, retained cont
  async function screenshot(name){if(output)await page.screenshot({path:path.join(output,name+'.png')});}
  for(const lang of ['ru','en'])for(const background of ['black','white'])for(const font of ['sans','serif']){
   await page.evaluate(options=>{D.i18n.setLang(options.lang);D.appearance.set({...options,palette:'ocean'});},{lang,background,font});
-  for(let index=0;index<2;index++){
+  for(let index=0;index<3;index++){
    await go(index,0);const steps=await page.evaluate(()=>D.deck.current().steps);
    assert.equal(steps,index===0?11:5,'All authored states are navigable');
    for(let step=0;step<=steps;step++){
     await go(index,step);await capture({lang,background,font,index,step},states);
-    if((index===0&&[3,10,11].includes(step))||index===1)await screenshot(`${lang}-${background}-${font}-${index+1}-${step}`);
+    if((index===0&&[3,10,11].includes(step))||index>0)await screenshot(`${lang}-${background}-${font}-${index+1}-${step}`);
    }
   }
-  t.diagnostic(`Checked 18 states: ${lang}/${background}/${font}`);
+  t.diagnostic(`Checked 24 states: ${lang}/${background}/${font}`);
  }
  await page.emulateMedia({reducedMotion:'no-preference'});
  for(const [lang,background,font] of [['ru','black','sans'],['en','white','serif']]){
   await page.evaluate(options=>{D.i18n.setLang(options.lang);D.appearance.set({...options,palette:'ocean'});},{lang,background,font});
-  for(let index=0;index<2;index++)for(let step=1;step<=(index===0?11:5);step++){
+  for(let index=0;index<3;index++)for(let step=1;step<=(index===0?11:5);step++){
    await go(index,step-1);
    await page.evaluate(()=>{
     window.spatialBefore={root:D.deck.root(),canvas:spatialRenderer.g.querySelector('canvas'),state:spatialFrame().state};
@@ -106,7 +106,7 @@ test('spatial biology standalone: 144 styled states, 32 midpoints, retained cont
   }
  }
  // Real range input and live shell changes retain the scene, numeric state and canvas.
- for(const [index,step] of [[0,2],[1,2]]){
+ for(const [index,step] of [[0,2],[1,2],[2,2]]){
   await go(index,step);
   if(index===0){
    const range=page.locator('.spatial-biology input[type=range]');
@@ -122,12 +122,22 @@ test('spatial biology standalone: 144 styled states, 32 midpoints, retained cont
   await ready();
   retention.push(await page.evaluate(()=>({index:D.deck.current().index,sameRoot:spatialRetained.root===D.deck.root(),sameCanvas:spatialRetained.canvas===spatialRenderer.g.querySelector('canvas'),sameState:JSON.stringify(spatialRetained.state)===JSON.stringify(spatialFrame().state),sameStep:spatialRetained.step===D.deck.current().step})));
  }
+ // Normal next-scene navigation uses the declared molecular identity bridge.
+ await go(1,5);
+ const sharedBefore=await page.evaluate(()=>[...F.motionBridge.capture(D.deck.root()).keys()]);
+ assert.ok(sharedBefore.includes('cite-dna-products'),'The code scene declares the DNA products for continuity');
+ await page.evaluate(()=>D.deck.next());
+ await page.waitForFunction(()=>D.deck.current().index===2&&D.deck.root().dataset.motionBridgeActive==='true');
+ const continuity=await page.evaluate(()=>({index:D.deck.current().index,step:D.deck.current().step,shared:[...D.deck.root().querySelectorAll('[data-shared-id]')].map(node=>node.dataset.sharedId)}));
+ await page.waitForFunction(()=>!D.deck.root().dataset.motionBridgeActive);
+ await ready();
+ assert.equal(continuity.step,0);assert.ok(continuity.shared.includes('cite-dna-products'));
  const failures=[...states,...midpoints].filter(f=>f.audit.issues.length||f.audit.unmeasured||f.audit.uncontractedText.length||f.collisions.length||f.cyrillic.length||f.nonfinite||f.renderer!=='webgl'||f.nonempty<100||f.glError!==0||f.canvasCount!==1);
- const report={artifact:path.relative(path.resolve(__dirname,'..'),artifact),sha256:artifactSha256,browser:browser.version(),scenes,states,midpoints,retention,failures,errors,requests,physicalGesturesTested:false};
+ const report={artifact:path.relative(path.resolve(__dirname,'..'),artifact),sha256:artifactSha256,browser:browser.version(),scenes,states,midpoints,retention,continuity,failures,errors,requests,physicalGesturesTested:false};
  if(output)fs.writeFileSync(path.join(output,'report.json'),JSON.stringify(report,null,2));
- assert.equal(states.length,144);assert.equal(midpoints.length,32);
- assert.deepEqual(retention.map(x=>[x.sameRoot,x.sameCanvas,x.sameState,x.sameStep]),[[true,true,true,true],[true,true,true,true]]);
+ assert.equal(states.length,192);assert.equal(midpoints.length,42);
+ assert.deepEqual(retention.map(x=>[x.sameRoot,x.sameCanvas,x.sameState,x.sameStep]),[[true,true,true,true],[true,true,true,true],[true,true,true,true]]);
  assert.deepEqual(errors,[],'No JavaScript or console errors');assert.deepEqual(requests,[],'The standalone lesson makes no HTTP requests');
  assert.equal(failures.length,0,JSON.stringify(failures.map(f=>({lang:f.lang,background:f.background,font:f.font,index:f.index,step:f.step,progress:f.progress,issues:f.audit.issues,collisions:f.collisions,cyrillic:f.cyrillic,renderer:f.renderer,nonempty:f.nonempty,glError:f.glError})),null,2));
- t.diagnostic(`Chrome ${browser.version()}: 144 states, 32 deterministic midpoints, retained input/language/theme, no external requests`);
+ t.diagnostic(`Chrome ${browser.version()}: 192 states, 42 deterministic midpoints, retained input/language/theme, no external requests`);
 });

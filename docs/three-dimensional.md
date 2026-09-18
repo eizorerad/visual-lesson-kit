@@ -6,11 +6,13 @@ This directory is separate from coordinate-backed `MC` / `MV` views. Use [molecu
 
 ## Load and compose
 
-For an editable cell-surface and molecular-record lesson assembled from these components, run:
+For an editable cell-surface, molecular-record and paired-library lesson assembled from these components, run:
 
 ```sh
 python3 create.py ../my-3d-lesson --template spatial-biology --lang en --palette ocean
 ```
+
+The optional template loads `js/motion.js` after `js/film.js` so the molecular-code and library recipes can retain a shared identity across the scene boundary.
 
 The template's recipe files live in `js/recipes/spatial-biology/`; customize their lesson data, controls and narration while reusing the `V3` geometry below.
 
@@ -20,6 +22,7 @@ The runtime files live in `js/three/`. Load the kit's `D.dom`, `D.appearance`, `
 <script src="js/three/molecule-mesh.js"></script>
 <script src="js/three/capture-mesh.js"></script>
 <script src="js/three/codes-mesh.js"></script>
+<script src="js/three/libraries-mesh.js"></script>
 <script src="js/three/cell-surface.js"></script>
 ```
 
@@ -180,6 +183,24 @@ Custom products use the same local geometry layout, so the cached example's `anc
 
 `V3.CodesMesh.project(point, pose, {cx,cy,scale})` projects a local anchor with that whole-product pose and the same orthographic convention as the renderer. It returns `{x,y,depth}`. Supply finite coordinates and positive scale. It does not apply material overrides, additional magnification or pan: for a moved material, project with its resolved part pose; for view zoom, use `cx = magnification*cx + panX`, `cy = magnification*cy + panY`, and `scale = magnification*scale` in the projection camera.
 
+## V3.LibrariesMesh
+
+`V3.LibrariesMesh.create()` returns cached procedural supports, record tiles and read markers for paired RNA/ADT library explanations. It needs no DOM or external assets. Load it after `codes-mesh.js` when combining its props with DNA products and the `CodesMesh.pose`/`project` helpers.
+
+The result exposes:
+
+- `libraries`: two supports, `library-rna` and `library-adt`.
+- `tiles`: two record tiles, `data-rna` and `data-adt`.
+- `molecules`: the four definitions above, in that order.
+- `markers`: separate `read-rna` and `read-adt` definitions; append these after `molecules` when creating a renderer.
+- `bounds`: local `min`/`max` geometry bounds keyed by actor ID.
+- `anchors`: each actor's named local label and layout anchors, keyed by actor ID.
+- `stats`: molecule, marker, part, vertex and triangle counts; `schematic: true` labels the complete model.
+
+Every actor uses environment coordinates and supplies typed mesh parts. Repeated calls share the same cached definitions and buffers; treat them as read-only. Use `V3.CellSurface.create` with `includeCell: false` and explicit poses to place the supports, DNA products, tiles and markers in a shared depth buffer. Use each actor's anchors for projected labels; a label anchor can intentionally sit above its surface.
+
+These props are explanatory symbols, not laboratory equipment or a reconstruction of a flow cell. Supports separate the two library channels; tiles represent data records; moving markers represent information being read. The recipe supplies barcode, feature and UMI identity. Splitting or preparing a library does not create a new cell barcode, and moving a read marker does not move or destroy the source DNA. See `js/recipes/spatial-biology/03-libraries.js` for the complete six-state composition and its RU/EN notes.
+
 ## Scientific and rendering limits
 
 The example follows [Stoeckius et al. (2017), original CITE-seq](https://doi.org/10.1038/nmeth.4380)
@@ -205,12 +226,14 @@ The procedural meshes do not copy figures or import those atomic coordinates.
 From the kit repository, run deterministic geometry tests with:
 
 ```sh
-node --test tests/three-dimensional.cjs
+node --test tests/three-dimensional.cjs tests/libraries-mesh.cjs
 ```
 
 The tests inspect finite vertices, index budgets, unit normals, closed surfaces with consistent edge winding and positive volume, retained IgG domain count/contact, primer endpoints, default bead containment, ellipsoid normals and configurable geometry. Record-strand tests additionally check cap-welded closure, functional anchors/bounds, independent custom products, metadata validation, fixed-center poses, and projection of rotated coordinates.
 
-The same file provides opt-in real-browser checks. Install Playwright as a development dependency in your environment and its Chromium browser, then run:
+The library-prop test also checks independent loading without a DOM, stable cached identities, exposed bounds and anchors, finite meshes, unit normals, nondegenerate faces and a bounded triangle budget.
+
+`three-dimensional.cjs` provides opt-in real-browser checks. Install Playwright as a development dependency in your environment and its Chromium browser, then run:
 
 ```sh
 V3_BROWSER_TESTS=1 node --test tests/three-dimensional.cjs
@@ -220,7 +243,7 @@ V3_BROWSER_TESTS=1 V3_BROWSER_CHANNEL=chrome node --test tests/three-dimensional
 
 Browser checks instrument actual WebGL calls, inspect pixel coverage, and exercise shared projection, independent cell/environment frames, per-part release, no idle redraw, no repeated buffer upload, disposal, light/dark adaptation, two-pass transparent interfaces, context-loss fallback, and progressive cell opening in both renderers. They use portable `require('playwright')`; ordinary geometry tests do not require a browser. They do not certify complete lesson layout, wording, accessibility or physical-device gestures.
 
-The optional assembled-template check covers all 18 states in both languages,
+The optional assembled-template check covers all 24 states in both languages,
 backgrounds and fonts, transition midpoints, live controls, visible text pairs,
 layout contracts, nonempty WebGL output and offline requests:
 

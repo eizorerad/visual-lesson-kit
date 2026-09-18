@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Пространственная биология: мечение клетки, совместный захват РНК и ДНК-меток, три кода." />
+    <meta name="description" content="Пространственная биология: мечение клетки, совместный захват РНК и ДНК-меток, три кода и две библиотеки." />
     <title>Клетка, захват и молекулярные коды</title>
     <script type="application/json" id="visual-lesson-kit-notices">
 {
@@ -4591,6 +4591,206 @@ g.F={phase,revealStroke,growArrow,stage,label,line,seg,dot,pos,at,arrow,path,gro
 })(window);
 
 </script>
+    <script>/* js/motion.js */
+/* Persistent keyed actors and explicitly declared scene continuity.
+   These helpers change layout, not the scientific identity of an observation. */
+(function (global) {
+  'use strict';
+  const F = global.F, own = (o, key) => Object.prototype.hasOwnProperty.call(o, key);
+  const finite = (v, name) => { if (typeof v !== 'number' || !Number.isFinite(v)) throw new TypeError(name + ' must be finite'); return v; };
+  const record = (v, name) => { if (!v || typeof v !== 'object' || Array.isArray(v)) throw new TypeError(name + ' must be an object'); return v; };
+  const text = (v, name) => { if (typeof v !== 'string' || !v.trim()) throw new TypeError(name + ' must be a nonempty string'); return v; };
+  const group = node => { if (!node || node.namespaceURI !== 'http://www.w3.org/2000/svg' || node.localName !== 'g') throw new TypeError('Use an existing SVG group as the actor wrapper'); return node; };
+  const mix = (a, b, t) => a * (1 - t) + b * t;
+  function pose(value) {
+    record(value, 'pose');
+    if (Object.keys(value).some(key => !['x', 'y', 'scale', 'opacity'].includes(key))) throw new TypeError('Unknown pose field');
+    const out = { x: finite(value.x, 'x'), y: finite(value.y, 'y'), scale: finite(value.scale === undefined ? 1 : value.scale, 'scale'), opacity: finite(value.opacity === undefined ? 1 : value.opacity, 'opacity') };
+    if (out.scale <= 0 || out.opacity < 0 || out.opacity > 1) throw new RangeError('scale must be positive and opacity in [0,1]');
+    return out;
+  }
+  function motionTrack(entries, options = {}) {
+    if (!Array.isArray(entries) || !entries.length) throw new TypeError('motionTrack needs a nonempty actor array');
+    record(options, 'options'); const actors = new Map(), nodes = new Set();
+    Array.from(entries).forEach(item => {
+      record(item, 'actor'); const id = text(item.id, 'id'), node = group(item.node);
+      if (actors.has(id) || nodes.has(node)) throw new RangeError('Each actor ID and wrapper must be unique');
+      for (const other of nodes) if (other.contains(node) || node.contains(other)) throw new RangeError('Motion actors must not be nested');
+      actors.set(id, node); nodes.add(node);
+    });
+    let current = null;
+    function layout(value) {
+      record(value, 'layout');
+      if (Object.keys(value).length !== actors.size || [...actors.keys()].some(id => !own(value, id))) throw new RangeError('Every layout needs exactly the same actor IDs');
+      return Object.fromEntries([...actors.keys()].map(id => [id, pose(value[id])]));
+    }
+    function paint(next) {
+      // A manual track update also ends any navigation effect on these actors.
+      if (bridgeActive && bridgeActive.moves.some(move => nodes.has(move.node))) cancelBridge();
+      for (const [id, node] of actors) {
+        const p = next[id]; node.dataset.motionId = id;
+        node.setAttribute('transform', 'translate(' + p.x + ' ' + p.y + ') scale(' + p.scale + ')'); F.opacity(node, p.opacity);
+      }
+      current = next; return api;
+    }
+    const api = {
+      set(value) { return paint(layout(value)); },
+      between(from, to, progress, options = {}) {
+        const a = layout(from), b = layout(to), t = Math.max(0, Math.min(1, finite(progress, 'progress')));
+        record(options, 'between options'); const via = options.via === undefined ? {} : record(options.via, 'via');
+        Object.keys(via).forEach(id => {
+          if (!actors.has(id)) throw new RangeError('Unknown waypoint ID: ' + id);
+          record(via[id], 'waypoint'); finite(via[id].x, 'waypoint x'); finite(via[id].y, 'waypoint y');
+        });
+        const next = Object.fromEntries([...actors.keys()].map(id => {
+          const p = Object.fromEntries(['x', 'y', 'scale', 'opacity'].map(key => [key, mix(a[id][key], b[id][key], t)]));
+          if (own(via, id) && t > 0 && t < 1) for (const key of ['x', 'y']) {
+            // Quadratic arc passing through the declared waypoint at t=1/2.
+            const control = finite(2 * via[id][key] - a[id][key] / 2 - b[id][key] / 2, 'path control');
+            p[key] = (1 - t) * (1 - t) * a[id][key] + 2 * (1 - t) * t * control + t * t * b[id][key];
+          }
+          return [id, pose(p)];
+        }));
+        return paint(next);
+      },
+      snapshot() { return current && Object.fromEntries(Object.entries(current).map(([id, p]) => [id, { ...p }])); }
+    };
+    if (options.initial !== undefined) api.set(options.initial);
+    return api;
+  }
+
+  const sharedActors = new WeakMap();
+  function shared(node, definition) {
+    group(node); record(definition, 'shared identity');
+    const identity = {};
+    for (const key of ['id', 'kind', 'label', 'source']) identity[key] = text(definition[key], 'shared.' + key);
+    const value = definition.value === undefined ? null : definition.value;
+    if (value !== null && typeof value !== 'string' && typeof value !== 'number') throw new TypeError('shared.value must be a string, finite number or null');
+    if (typeof value === 'number') finite(value, 'shared.value'); identity.value = value;
+    sharedActors.set(node, { id: identity.id, signature: JSON.stringify(identity) }); node.dataset.sharedId = identity.id;
+    return node;
+  }
+  const KEYS = ['a', 'b', 'c', 'd', 'e', 'f'], EPS = 1e-7;
+  function measured(node) {
+    if (!node || typeof node.getScreenCTM !== 'function') return null;
+    let matrix; try { matrix = node.getScreenCTM(); } catch (_) { return null; }
+    if (!matrix || KEYS.some(key => !Number.isFinite(matrix[key]))) return null;
+    // Small educational glyphs use upright translation and uniform scale.
+    // A rotated, reflected, skewed or singular transform falls back to entry.
+    if (matrix.a <= EPS || matrix.d <= EPS || Math.abs(matrix.b) > EPS || Math.abs(matrix.c) > EPS || Math.abs(matrix.a - matrix.d) > EPS * Math.max(1, matrix.a, matrix.d)) return null;
+    return Object.fromEntries(KEYS.map(key => [key, matrix[key]]));
+  }
+  function visible(node, root) {
+    let opacity = 1;
+    for (let p = node; p; p = p.parentElement) {
+      const style = global.getComputedStyle(p);
+      if (p.hidden || style.display === 'none' || style.visibility === 'hidden' || style.visibility === 'collapse') return false;
+      if (style.opacity !== '') opacity *= +style.opacity;
+      if (!Number.isFinite(opacity) || opacity <= .01) return false;
+      if (p === root) return true;
+    }
+    return false;
+  }
+  function ownsTransform(node) {
+    const style = global.getComputedStyle(node);
+    // Individual CSS transforms compose with the SVG attribute. Rewriting only
+    // the attribute would apply their measured displacement or scale twice.
+    if (['translate', 'rotate', 'scale'].some(key => style[key] && style[key] !== 'none')) return false;
+    if (node.style.transform) return false;
+    if (style.transformOrigin && style.transformOrigin.split(/\s+/).some(value => parseFloat(value) !== 0)) return false;
+    // Do not start a CSS transition while checking attribute ownership.
+    if (/(^|,)\s*(all|transform)\s*(,|$)/.test(style.transitionProperty || '') && (style.transitionDuration || '').split(',').some(value => parseFloat(value) > 0)) return false;
+    const authored = node.getAttribute('transform');
+    try {
+      // SVG presentation attributes themselves appear as computed matrices.
+      // Two synchronous probes distinguish them from a stylesheet override,
+      // including `none` or an override equal to the actor's authored pose.
+      // Restore before returning; neither probe reaches an animation frame.
+      for (const value of [[1, 0, 0, 1, 0, 0], [1, 0, 0, 1, 1, 2]]) {
+        node.setAttribute('transform', 'matrix(' + value.join(' ') + ')');
+        const match = /^matrix\(([^)]+)\)$/.exec(global.getComputedStyle(node).transform || '');
+        if (!match) return false;
+        const actual = match[1].trim().split(/[\s,]+/).map(Number);
+        if (actual.length !== 6 || actual.some((n, i) => !Number.isFinite(n) || Math.abs(n - value[i]) > EPS)) return false;
+      }
+      return true;
+    } finally {
+      if (authored === null) node.removeAttribute('transform'); else node.setAttribute('transform', authored);
+    }
+  }
+  function declared(root) {
+    const groups = new Map(); if (!root) return groups;
+    for (const node of root.querySelectorAll('[data-shared-id]')) {
+      const identity = sharedActors.get(node); if (!identity) continue;
+      const list = groups.get(identity.id) || []; list.push({ node, ...identity }); groups.set(identity.id, list);
+    }
+    const out = new Map();
+    for (const [id, list] of groups) {
+      if (list.length !== 1) continue; const item = list[0], node = item.node;
+      if (node.querySelector('[data-shared-id]') || node.parentElement.closest('[data-shared-id]')) continue;
+      if (!visible(node, root)) continue;
+      if (!ownsTransform(node)) continue;
+      const matrix = measured(node); if (matrix) out.set(id, { ...item, matrix });
+    }
+    return out;
+  }
+  function capture(root) {
+    return new Map([...declared(root)].map(([id, item]) => [id, { signature: item.signature, matrix: { ...item.matrix } }]));
+  }
+  let bridgeActive = null, bridgeVersion = 0, appearanceObserver = null;
+  const events = ['pointerdown', 'keydown', 'input', 'change'];
+  function restore(moves) {
+    moves.forEach(move => { if (move.transform === null) move.node.removeAttribute('transform'); else move.node.setAttribute('transform', move.transform); });
+  }
+  function cancelBridge() {
+    bridgeVersion++;
+    if (!bridgeActive) return;
+    const active = bridgeActive; bridgeActive = null;
+    try { restore(active.moves); }
+    finally {
+      active.root.removeAttribute('data-motion-bridge-active');
+      events.forEach(name => global.document.removeEventListener(name, cancelBridge, true));
+      global.removeEventListener('resize', cancelBridge);
+      if (appearanceObserver) { appearanceObserver.disconnect(); appearanceObserver = null; }
+      if (global.document.fonts) global.document.fonts.removeEventListener('loadingdone', cancelBridge);
+    }
+  }
+  function play(snapshot, root, options = {}) {
+    cancelBridge();
+    if (!(snapshot instanceof Map) || !root || (global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches)) return false;
+    const duration = options.duration === undefined ? 850 : finite(options.duration, 'duration'); if (duration < 0) throw new RangeError('duration must be nonnegative');
+    const moves = [];
+    for (const [id, incoming] of declared(root)) {
+      const previous = snapshot.get(id), parent = measured(incoming.node.parentElement);
+      if (!previous || previous.signature !== incoming.signature || !parent) continue;
+      const local = screen => ({ a: screen.a / parent.a, b: 0, c: 0, d: screen.d / parent.d, e: (screen.e - parent.e) / parent.a, f: (screen.f - parent.f) / parent.d });
+      const from = local(previous.matrix), to = local(incoming.matrix);
+      if ([from, to].some(m => KEYS.some(key => !Number.isFinite(m[key])))) continue;
+      moves.push({ node: incoming.node, transform: incoming.node.getAttribute('transform'), from, to });
+    }
+    if (!moves.length) return false;
+    if (duration === 0 || (global.A.isInstant && global.A.isInstant())) return true;
+    const version = bridgeVersion; bridgeActive = { moves, root };
+    function paint(t) {
+      if (version !== bridgeVersion || !bridgeActive) return;
+      if (t === 1) { cancelBridge(); return; }
+      moves.forEach(move => move.node.setAttribute('transform', 'matrix(' + KEYS.map(key => mix(move.from[key], move.to[key], t)).join(' ') + ')'));
+    }
+    try {
+      root.setAttribute('data-motion-bridge-active', 'true');
+      events.forEach(name => global.document.addEventListener(name, cancelBridge, true)); global.addEventListener('resize', cancelBridge);
+      appearanceObserver = new MutationObserver(cancelBridge);
+      appearanceObserver.observe(global.document.documentElement, { attributes: true, attributeFilter: ['style', 'data-lang', 'data-font', 'data-background', 'data-palette'] });
+      if (global.document.fonts) global.document.fonts.addEventListener('loadingdone', cancelBridge);
+      paint(0);
+      Promise.resolve(global.A.run(paint, { duration })).then(() => { if (version === bridgeVersion) cancelBridge(); }, error => { if (version === bridgeVersion) cancelBridge(); global.console.error(error); });
+    } catch (error) { if (version === bridgeVersion) cancelBridge(); throw error; }
+    return true;
+  }
+  F.motionTrack = motionTrack; F.shared = shared; F.motionBridge = { capture, play, cancel: cancelBridge };
+})(window);
+
+</script>
     <script>/* js/layout.js */
 /* Explicit local-coordinate text boxes. Geometry is measured after mounting;
    wrapping never shrinks, clips, truncates, or rebuilds the surrounding scene. */
@@ -5788,6 +5988,116 @@ global.V3.CodesMesh={create,product,pose,project};
 })(window);
 
 </script>
+    <script>/* js/three/libraries-mesh.js */
+/* Original abstract supports and data cards for the CITE-seq lesson.
+ * These stand for library membership and records, not flow cells, laboratory
+ * equipment, physical containers or a simulation of molecular processing.
+ * Coordinates are local and centered. The recipe owns position and opacity;
+ * create() reuses the same low-poly vertex/index arrays between scene states.
+ */
+(function(global){
+'use strict';
+let cached=null;
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const sub=(a,b)=>a.map((v,i)=>v-b[i]);
+const dot=(a,b)=>a.reduce((sum,v,i)=>sum+v*b[i],0);
+const unit=v=>{const length=Math.hypot(...v);return v.map(x=>x/length);};
+
+// A chamfered cuboid has six broad faces, twelve bevel strips and eight
+// triangular corners. Each face owns its vertices, giving exact flat normals
+// and clean bevel highlights without textures or a subdivision dependency.
+function box(role,size,offset=[0,0,0],bevel=.025){
+ const h=size.map(v=>v/2),b=Math.min(bevel,...h.map(v=>v*.45));
+ const vertices=[],indices=[];
+ function face(points,normal){
+  const n=unit(normal);
+  if(dot(cross(sub(points[1],points[0]),sub(points[2],points[0])),n)<0)points.reverse();
+  const start=vertices.length/8;
+  points.forEach((p,i)=>vertices.push(...p.map((v,j)=>v+offset[j]),...n,i===1||i===2?1:0,i>=2?1:0));
+  for(let i=1;i<points.length-1;i++)indices.push(start,start+i,start+i+1);
+ }
+ for(let axis=0;axis<3;axis++)for(const sign of [-1,1]){
+  const others=[0,1,2].filter(i=>i!==axis),normal=[0,0,0];normal[axis]=sign;
+  const points=[[-1,-1],[1,-1],[1,1],[-1,1]].map(signs=>{
+   const p=[0,0,0];p[axis]=sign*h[axis];others.forEach((j,k)=>p[j]=signs[k]*(h[j]-b));return p;
+  });
+  face(points,normal);
+ }
+ for(let a=0;a<3;a++)for(let c=a+1;c<3;c++)for(const sa of [-1,1])for(const sc of [-1,1]){
+  const along=3-a-c,normal=[0,0,0];normal[a]=sa;normal[c]=sc;
+  const points=[];
+  for(const [side,t] of [[0,-1],[0,1],[1,1],[1,-1]]){
+   const p=[0,0,0];p[a]=sa*(h[a]-(side?b:0));p[c]=sc*(h[c]-(side?0:b));p[along]=t*(h[along]-b);points.push(p);
+  }
+  face(points,normal);
+ }
+ for(const sx of [-1,1])for(const sy of [-1,1])for(const sz of [-1,1]){
+  const signs=[sx,sy,sz];
+  face([0,1,2].map(axis=>h.map((v,i)=>signs[i]*(v-(i===axis?0:b)))),signs);
+ }
+ return {role,vertices:new Float32Array(vertices),indices:new Uint16Array(indices)};
+}
+
+function support(id,featureRole){
+ // The colored back edge is the sole lip: front and both ends remain open.
+ // Total extent is 7.9 × .16 × 1.7; the broad support face is at y=.066.
+ // DNA can be placed above anchors.dna without hiding it behind a front wall.
+ return {id,space:'environment',center:[0,0,0],kind:'abstract-library-support',
+  dimensions:[7.9,.16,1.7],
+  anchors:{surface:[0,.066,0],dna:[0,.28,0],label:[0,-.12,.88],rim:[0,.08,-.77],left:[-3.95,0,0],right:[3.95,0,0]},
+  parts:[box('linker',[7.9,.146,1.7],[0,-.007,0],.035),box(featureRole,[7.58,.018,.12],[0,.071,-.77],.007)]};
+}
+
+function tile(id,featureRole){
+ // Two small inlaid stripes identify a shared cell field and modality.
+ // They are semantic marks on an abstract record card, not extra sequences.
+ // The body is recessed so the complete card remains .22 deep, centered at z=0.
+ return {id,space:'environment',center:[0,0,0],kind:'abstract-data-card',
+  dimensions:[5.8,.72,.22],
+  anchors:{label:[0,0,.125],cell:[-2.54,0,.11],feature:[2.54,0,.11],left:[-2.9,0,0],right:[2.9,0,0]},
+  parts:[box('linker',[5.8,.72,.208],[0,0,-.006],.035),box('primer',[.20,.54,.016],[-2.54,0,.102],.006),box(featureRole,[.20,.54,.016],[2.54,0,.102],.006)]};
+}
+
+function marker(id,role){
+ // Faceted read indicators are symbols for information moving to a record.
+ // Their radius is a local drawing scale, not a molecular measurement.
+ const radius=.09,top=[0,radius,0],bottom=[0,-radius,0];
+ const ring=[[radius,0,0],[0,0,radius],[-radius,0,0],[0,0,-radius]],vertices=[],indices=[];
+ for(let i=0;i<4;i++)for(const pole of [top,bottom]){
+  const points=[pole,ring[i],ring[(i+1)%4]];
+  let normal=cross(sub(points[1],points[0]),sub(points[2],points[0]));
+  if(dot(normal,pole)<0){points.reverse();normal=normal.map(v=>-v);}
+  normal=unit(normal);const start=vertices.length/8;
+  points.forEach((p,j)=>vertices.push(...p,...normal,j===1?1:0,j===2?1:0));indices.push(start,start+1,start+2);
+ }
+ return {id,space:'environment',center:[0,0,0],kind:'abstract-read-marker',radius,dimensions:[radius*2,radius*2,radius*2],anchors:{label:[0,0,0]},
+  parts:[{role,vertices:new Float32Array(vertices),indices:new Uint16Array(indices)}]};
+}
+
+function create(){
+ if(cached)return cached;
+ const libraries=[support('library-rna','rna'),support('library-adt','tag')];
+ // Public ordering: RNA support, ADT support, RNA card, ADT card. Markers are
+ // separate so callers can append them without changing these four indices.
+ const tiles=[tile('data-rna','rna'),tile('data-adt','tag')],molecules=[...libraries,...tiles];
+ const markers=[marker('read-rna','rna'),marker('read-adt','tag')],actors=[...molecules,...markers];
+ const stats={molecules:molecules.length,markers:markers.length,parts:0,vertices:0,triangles:0};
+ const bounds={};
+ actors.forEach(m=>{
+  const min=[Infinity,Infinity,Infinity],max=[-Infinity,-Infinity,-Infinity];
+  m.parts.forEach(p=>{
+   stats.parts++;stats.vertices+=p.vertices.length/8;stats.triangles+=p.indices.length/3;
+   for(let i=0;i<p.vertices.length;i+=8)for(let j=0;j<3;j++){min[j]=Math.min(min[j],p.vertices[i+j]);max[j]=Math.max(max[j],p.vertices[i+j]);}
+  });
+  bounds[m.id]={min,max};
+ });
+ cached={molecules,markers,libraries,tiles,stats,bounds,anchors:Object.fromEntries(actors.map(m=>[m.id,m.anchors])),schematic:true};
+ return cached;
+}
+(global.V3=global.V3||{}).LibrariesMesh={create};
+})(window);
+
+</script>
     <script>/* js/recipes/spatial-biology/common.js */
 /* Original CITE-seq teaching assets. All molecular positions are schematic. */
 (function(g){
@@ -6098,6 +6408,7 @@ const v=Bio3D.stage(ctx,'Как три кода превращаются в от
 const st={cell:0,feature:0,umi:0,copy:0,dedup:0,chapter:0},model=V3.CodesMesh.create(),camera={cx:550,cy:399,scale:64};
 const surface=V3.CellSurface.create(v.svg,camera,{frame:{x:60,y:147,width:1160,height:427},molecules:model.molecules,includeCell:false});
 ctx.onDispose(surface.dispose);surface.g.dataset.codesProducts='3';
+if(F.shared)F.shared(surface.g,{id:'cite-dna-products',kind:'3d-dna-product-ancestry',label:'A: RNA GCT; ADT TGA and PCR copy',source:'Stoeckius 2017; schematic products'});
 const p=F.group(v.svg),lines=F.group(p),labels=F.group(p);
 Bio3D.text(labels,70,147,1140,32,'Схема ДНК-продуктов: прослеживаем происхождение кодов','Schematic DNA products: tracing where their codes came from',21,C.grey);
 const headers=[Bio3D.text(labels,274,187,190,32,'Клеточный код','Cell barcode',21,C.gold),Bio3D.text(labels,436,187,100,32,'UMI','UMI',23,C.purple),Bio3D.text(labels,549,187,238,32,'Какой признак?','Which feature?',22,C.teal)];
@@ -6175,6 +6486,108 @@ Bio3D.motion(ctx,v,st,paint,[
  ['PCR-копия сохраняет A, anti-CD4 и TGA: нового захвата не было.','The PCR copy retains A, anti-CD4 and TGA: no new capture occurred.'],
  ['Два чтения с одним ключом дают один ADT-отсчёт.','Two reads with the same key yield one ADT count.']
 ],[{cell:1,chapter:1},{cell:0,feature:1,chapter:2},{feature:0,umi:1,chapter:3},{umi:0,copy:1,chapter:4},{dedup:1,chapter:5}],[2200,2400,2400,3400,3800]);paint();return v.root;}});
+})();
+
+</script>
+    <script>/* js/recipes/spatial-biology/03-libraries.js */
+/* Library preparation, sequencing and paired interpretation in a shared 3D view.
+ * The collection stands and data tiles are spatial teaching metaphors, not
+ * laboratory equipment. Products keep their identities; PCR copies are explicit. */
+(function(){'use strict';
+Bio3D.scene({id:'libraries',chapter:['Секвенирование','Sequencing'],title:['Две библиотеки. Один клеточный код.','Two libraries. One cell barcode.'],notes:[
+['Вернёмся от примера подсчёта к подготовке библиотек, до секвенирования. Перед нами те же три учебных ДНК-продукта: один из мРНК и два родственных ADT-продукта. Они не возникли из записей данных. В исходном CITE-seq после разрушения эмульсии и извлечения бусин выполняют синтез и общую начальную амплификацию. Двойные спирали обобщают ДНК-продукты, а не изображают конкретный промежуточный комплекс.','Return from the counting example to library preparation, before sequencing. These are the same three teaching DNA products: one from mRNA and two related ADT products. They did not arise from data records. Original CITE-seq breaks the emulsion, recovers beads, then performs synthesis and common initial amplification. The helices summarize DNA products rather than a specific intermediate complex.'],
+['После общей амплификации длинные продукты из мРНК и короткие ADT-продукты разделяют по размеру. Здесь они расходятся в две пространственные группы; это не физическое сито и не действие захватывающей бусины Drop-seq. Длины спиралей увеличены независимо от реальной длины: рисунок показывает принадлежность к фракциям, а не измеряет число нуклеотидов.','After common amplification, longer mRNA-derived products and shorter ADT products are separated by size. They move into two spatial groups here; this is neither a physical sieve nor the action of the Drop-seq capture bead. Helices are enlarged independently of sequence length: the view shows fraction membership, not nucleotide counts.'],
+['Ветви подготавливают отдельно. В исходном протоколе RNA-ветвь проходит тагментацию и подготовку библиотеки; ADT-ветвь — специальную PCR с праймерами для секвенирования. Появляющиеся спирали — условные PCR-потомки выбранных примеров, не новые захваченные молекулы. Все потомки сохраняют происхождение клеточного кода A; фиолетовые UMI выбранных семейств — GCT и TGA. Адаптеры и реальные размеры здесь не детализируются.','The branches are prepared separately. In the original protocol, the RNA branch undergoes tagmentation and library preparation; the ADT branch undergoes dedicated PCR with sequencing primers. Emerging helices are schematic PCR descendants of the selected examples, not newly captured molecules. Descendants retain cell barcode A; the selected families retain UMIs GCT and TGA. Adapters and actual fragment sizes are not detailed here.'],
+['Обе библиотеки секвенируют; их можно объединять в пул. Движущиеся объёмные маркеры показывают перенос информации от ДНК к чтениям. Это не изображение прибора, фотонов или полного цикла sequencing-by-synthesis. ДНК остаются в своих группах; снизу появляются отдельные объекты данных. Число маркеров условно.','Both libraries are sequenced and may be pooled. Moving 3D markers trace information from DNA to reads. They do not depict an instrument, photons or a full sequencing-by-synthesis cycle. DNA remains in its groups; distinct data objects appear below. Marker counts are schematic.'],
+['Признак RNA определяют картированием последовательности на транскрипт или ген: здесь CD4. ADT-признак определяют поиском искусственного кода в словаре антител: здесь anti-CD4. Это два разных типа измерений. Клеточный код считывают из соответствующего участка библиотечной молекулы; размер молекулы не определяет клетку.','RNA identity is determined by mapping sequence to a transcript or gene, CD4 here. ADT identity comes from matching a synthetic code to the antibody dictionary, anti-CD4 here. These are different measurements. The cell barcode is read from its library segment; molecule size does not identify the cell.'],
+['Один клеточный код A связывает два результата. После контроля качества, коррекции кодов и UMI-дедупликации внутри клетки и признака получают RNA- и ADT-профили. Библиотеки и UMI из разных каналов не сливают в один молекулярный отсчёт. Следующий слайд показывает отдельный вымышленный пример двух матриц для нескольких клеток.','Shared cell barcode A links the two results. Quality control, barcode correction and UMI deduplication within cell and feature yield RNA and ADT profiles. Libraries and UMIs from different modalities are not merged into one molecular count. The next slide shows a separate invented example of two matrices for several cells.']
+],qa:[['Почему разделение не теряет адрес клетки?','Why does separation preserve the cell address?','Клеточный код уже включён в ДНК-продукты. Разделение и подготовка библиотек сохраняют эту информацию.','The cell barcode is already incorporated into the DNA products. Separation and library preparation retain that information.'],['Здесь показан реальный размер молекул?','Are molecular sizes shown to scale?','Нет. Геометрия увеличена для чтения кодов; в исходном протоколе фракции разделяют по реальной длине продуктов.','No. Geometry is enlarged to inspect codes; the original protocol separates fractions by actual product length.']],build(ctx){
+const v=Bio3D.stage(ctx,'Две библиотеки. Один клеточный код.','Two libraries. One cell barcode.'),st={split:0,prep:0,read:0,decode:0,pair:0};
+const dna=V3.CodesMesh.create(),props=V3.LibrariesMesh.create(),camera={cx:550,cy:399,scale:64};
+const clones=[0,0,2].map((i,j)=>({...dna.molecules[i],id:['rna-cd4-gct-pcr-1','rna-cd4-gct-pcr-2','adt-cd4-tga-pcr-2'][j],parentId:dna.molecules[i].id}));
+const products=[...dna.molecules,...clones],definitions=[...products,...props.molecules,...props.markers];
+const surface=V3.CellSurface.create(v.svg,camera,{frame:{x:60,y:147,width:1160,height:463},molecules:definitions,includeCell:false});ctx.onDispose(surface.dispose);
+if(F.shared)F.shared(surface.g,{id:'cite-dna-products',kind:'3d-dna-product-ancestry',label:'A: RNA GCT; ADT TGA and PCR copy',source:'Stoeckius 2017; schematic products'});
+surface.g.dataset.libraries3d='';
+const p=F.group(v.svg),leaders=F.group(p),labels=F.group(p);
+const preamble=Bio3D.text(labels,65,148,1150,36,'Вернёмся к подготовке: после общей амплификации, до секвенирования.','Back to preparation: after common amplification, before sequencing.',21,C.grey);
+const dataPreamble=Bio3D.text(labels,65,148,1150,36,'От двух ДНК-библиотек — к двум типам данных.','From two DNA libraries to two types of data.',21,C.grey);
+const initial=F.group(labels);
+[['Клеточный код','Cell barcode',274,190,C.gold],['UMI','UMI',436,100,C.purple],['Какой признак?','Which feature?',549,238,C.teal]].forEach(a=>Bio3D.text(initial,a[2],187,a[3],32,a[0],a[1],21,a[4]));
+const initialValues=products.slice(0,3).map((m,i)=>{
+ const y=[300,409,518][i],g=F.group(initial),color=i?C.teal:C.blue;
+ Bio3D.text(g,65,y-20,197,40,i===0?'ДНК из мРНК':i===1?'ДНК из ADT':'PCR-копия ADT',i===0?'DNA from mRNA':i===1?'DNA from ADT':'ADT PCR copy',21,color);
+ [['A','A',368,80,C.gold],[m.umi,m.umi,485,90,C.purple],[i?'код anti-CD4':'фрагмент CD4',i?'anti-CD4 code':'CD4-derived fragment',667,220,color]].forEach(a=>Bio3D.text(g,a[2]-a[3]/2,y-63,a[3],32,a[0],a[1],21,a[4]));return g;
+});
+const intro=Bio3D.text(initial,855,260,342,184,'Коды уже внутри ДНК.\nТеперь проследим две библиотеки.','The codes are already in DNA.\nNow follow the two libraries.',27,C.white);
+const headings=[Bio3D.text(labels,95,178,490,42,'RNA-библиотека','RNA library',31,C.blue),Bio3D.text(labels,695,178,490,42,'ADT-библиотека','ADT library',31,C.teal)];
+const status=[0,1].map(i=>{
+ const g=F.group(labels),x=95+i*600,color=i?C.teal:C.blue;
+ return {g,split:Bio3D.text(g,x,475,490,32,i?'Фракция коротких ADT':'Фракция длинной кДНК',i?'Short ADT fraction':'Long cDNA fraction',23,color),prep:Bio3D.text(g,x,475,490,32,i?'Отдельная PCR → библиотека':'Тагментация + PCR → библиотека',i?'Dedicated PCR → library':'Tagmentation + PCR → library',23,color),decode:Bio3D.text(g,x,475,490,32,i?'Код → словарь антител':'Последовательность → ген',i?'Code → antibody dictionary':'Sequence → gene',22,color)};
+});
+const fields=[0,1].map(i=>{
+ const g=F.group(labels);g.dataset.libraryFields=i?'adt':'rna';
+ return {g,texts:[Bio3D.text(g,0,0,50,30,'A','A',23,C.gold),Bio3D.text(g,0,0,66,30,i?'TGA':'GCT',i?'TGA':'GCT',20,C.purple),Bio3D.text(g,0,0,205,30,i?'код anti-CD4':'фрагмент CD4',i?'anti-CD4 code':'CD4-derived fragment',20,i?C.teal:C.blue)],lines:[C.gold,C.purple,i?C.teal:C.blue].map(c=>Bio3D.path(leaders,'M0 0',c,1.3))};
+});
+const records=[0,1].map(i=>{
+ const g=F.group(labels);g.dataset.libraryRecord=i?'adt':'rna';
+ const raw=Bio3D.text(g,0,0,370,34,i?'Чтения ADT':'Чтения RNA',i?'ADT reads':'RNA reads',23,i?C.teal:C.blue);
+ const decoded=Bio3D.text(g,0,0,370,34,i?'A · anti-CD4 · TGA':'A · CD4 · GCT',i?'A · anti-CD4 · TGA':'A · CD4 · GCT',23,i?C.teal:C.blue);
+ return {g,raw,decoded};
+});
+const paired=Bio3D.text(labels,330,572,620,36,'Клетка A → два согласованных профиля','Cell A → two paired profiles',25,C.gold);
+const connector=Bio3D.path(leaders,'M340 553 L340 563 L940 563 L940 553',C.gold,2);
+const foot=Bio3D.text(labels,65,572,1150,36,'Длины спиралей не сравниваются. Подставки — группы, плитки — данные.','Helix lengths are not comparable. Stands group products; tiles represent data.',19,C.grey);
+const sequencing=Bio3D.text(labels,285,515,710,42,'Секвенирование → чтения данных','Sequencing → read data',26,C.white);
+const poses=[];
+function paint(){
+ const s=st.split,b=st.prep,r=st.read,d=st.decode,k=st.pair,zoom=1-14/64*s,cam={cx:550+90*s,cy:399,scale:64*zoom};
+ const rows=[300-20*b,300-20*b,380-40*b,300+40*b,300+100*b,380+20*b];
+ const centers=[];
+ products.forEach((m,i)=>{
+  const right=[1,2,5].includes(i),source=i<3?i:i===5?2:0,startY=[300,409,518][source],x=550+((right?940:340)-550)*s,y=startY+(rows[i]-startY)*s;
+  const visibility=i<3?1:F.phase(b,.08,.28),context=i===0?(1-.56*(1-F.phase(s,0,.4))):1;
+  const alpha=visibility*context,parts=Object.fromEntries(m.parts.map(part=>[part.role,{opacity:alpha*(part.role==='linker'?.7:1)}]));
+  poses[i]=V3.CodesMesh.pose([(x-cam.cx)/cam.scale,(cam.cy-y)/cam.scale,i===0?-.28:i<3?.34:(i-3)*.25],(right?4:-4)*s,14+20*s,parts);poses[i].opacity=visibility;
+  centers.push({x,y});
+ });
+ const propVisible=F.phase(s,.55,1),tileOpacity=F.phase(r,.78,.98);
+ props.molecules.forEach((m,j)=>{
+  const side=j%2,x=340+600*side,y=j<2?446:529,visible=j<2?propVisible:tileOpacity;
+  poses[6+j]=V3.CodesMesh.pose([(x-cam.cx)/cam.scale,(cam.cy-y)/cam.scale,j<2?-1.2:0],j<2?(side?4:-4):0,j<2?34:12,Object.fromEntries(m.parts.map(part=>[part.role,{opacity:visible*(part.role==='linker'?.18:1)}])));
+ });
+ // The 3D information markers are not molecules and never change product identity.
+ const travel=F.phase(r,.12,.78);
+ props.markers.forEach((m,j)=>{
+  const side=j%2,start=V3.CodesMesh.project(dna.anchors.end,poses[side],cam),target={x:340+600*side,y:529};
+  const x=start.x+(target.x-start.x)*travel,y=start.y+(target.y-start.y)*travel;
+  poses[6+props.molecules.length+j]=V3.CodesMesh.pose([(x-cam.cx)/cam.scale,(cam.cy-y)/cam.scale,.5+Math.sin(Math.PI*travel)*1.4],0,20,{[side?'tag':'rna']:{opacity:F.phase(r,0,.12)*(1-F.phase(r,.78,.95))}});
+ });
+ surface.paint({cellOpacity:0,magnification:zoom,panX:cam.cx-camera.cx*zoom,panY:cam.cy-camera.cy*zoom,moleculePoses:poses});
+ F.opacity(initial,1-F.phase(s,0,.18));initialValues.forEach((g,i)=>F.opacity(g,i===0?.44+.56*s:1));
+ headings.forEach(h=>F.opacity(h.el,F.phase(s,.7,1)));
+ fields.forEach((f,i)=>{
+  const alpha=F.phase(s,.8,1);F.opacity(f.g,alpha);
+  ['cell','umi','feature'].forEach((key,j)=>{
+   const a=V3.CodesMesh.project(dna.anchors[key],poses[i],cam),w=[50,66,205][j],top=centers[i].y-62;
+   f.texts[j].setBox({x:a.x-w/2,y:top,width:w,height:30});f.lines[j].setAttribute('d',`M${a.x} ${top+33} L${a.x} ${a.y-10}`);F.opacity(f.lines[j],alpha*.6);
+  });
+ });
+ status.forEach(q=>{F.opacity(q.g,propVisible);F.opacity(q.split.el,(1-F.phase(b,0,.3))*(1-r));F.opacity(q.prep.el,F.phase(b,.7,1)*(1-r));F.opacity(q.decode.el,F.phase(d,.65,1));});
+ records.forEach((q,i)=>{const x=155+600*i;F.opacity(q.g,tileOpacity);q.raw.setBox({x,y:512,width:370,height:34});q.decoded.setBox({x,y:512,width:370,height:34});F.opacity(q.raw.el,1-F.phase(d,0,.3));F.opacity(q.decoded.el,F.phase(d,.65,1));});
+ F.opacity(sequencing.el,F.phase(r,0,.15)*(1-F.phase(r,.60,.76)));F.opacity(connector,F.phase(k,.4,1));F.opacity(paired.el,F.phase(k,.65,1));F.opacity(foot.el,1-F.phase(k,0,.3));
+ F.opacity(preamble.el,1-F.phase(r,0,.15));F.opacity(dataPreamble.el,F.phase(r,.25,.5));
+ Object.assign(v.root.dataset,{librariesSplit:String(s),librariesPrep:String(b),librariesRead:String(r),librariesDecode:String(d),librariesPair:String(k),librariesReadProgress:String(travel),librariesRecords:tileOpacity===1?'2':'0',librariesCell:'A',librariesProducts:b===1?'6':'3'});
+}
+Bio3D.motion(ctx,v,st,paint,[
+ ['Те же ДНК-продукты. Вернёмся к этапу до секвенирования.','The same DNA products. Return to the stage before sequencing.'],
+ ['После общей амплификации RNA- и ADT-продукты разделяют по размеру.','After common amplification, RNA and ADT products are separated by size.'],
+ ['Каждую ветвь подготавливают отдельно. Копии сохраняют код A.','Prepare each branch separately. Copies retain barcode A.'],
+ ['Секвенирование переносит информацию из обеих библиотек в чтения.','Sequencing transfers information from both libraries into reads.'],
+ ['RNA: узнаём ген. ADT: узнаём антитело по словарю кодов.','RNA: identify the gene. ADT: identify the antibody using its barcode dictionary.'],
+ ['Код A связывает два профиля; UMI считают отдельно в каждом канале.','Barcode A pairs two profiles; UMIs are counted separately within each modality.']
+],[{split:1},{prep:1},{read:1},{decode:1},{pair:1}],[3500,2800,3200,1800,2200]);paint();return v.root;
+}});
 })();
 
 </script>

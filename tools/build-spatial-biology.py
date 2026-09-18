@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build or compare the two-scene 3D cell, capture and molecular-code example."""
+"""Build or compare the three-scene 3D cell, capture, molecular-code and library example."""
 import argparse
 import importlib.util
 import tempfile
