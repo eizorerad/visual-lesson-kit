@@ -2476,7 +2476,7 @@
       "id": "three-dimensional",
       "branch": "three-dimensional",
       "title": "Reusable 3D biology components / Компоненты 3D-биологии",
-      "summary": "Reuse V3 molecule meshes, a depth-tested cell surface, solid capture beads and primers, aqueous droplets, RNA/tag strands, three-code records and paired RNA/ADT libraries. Compose authored camera, binding, wash, lysis and hybridization states without replacing object identity.",
+      "summary": "Reuse V3 molecule meshes, a depth-tested cell surface, solid capture beads and primers, aqueous droplets, RNA/tag strands, three-code records, paired RNA/ADT libraries and enlarged data-field cards. Compose authored camera, binding, wash, lysis and hybridization states without replacing object identity.",
       "keywords": [
         "three-dimensional",
         "V3.MoleculeMesh",
@@ -2494,12 +2494,25 @@
         "три кода",
         "V3.LibrariesMesh",
         "RNA ADT libraries",
-        "две библиотеки"
+        "две библиотеки",
+        "V3.LibrariesMesh.readouts",
+        "readout-rna",
+        "readout-adt",
+        "3D data-field cards",
+        "объёмные карточки полей данных"
       ],
       "status": "ready",
       "guides": [
         {
           "path": "three-dimensional.md"
+        },
+        {
+          "path": "three-dimensional.md",
+          "section": "V3.LibrariesMesh"
+        },
+        {
+          "path": "three-dimensional.md",
+          "section": "Motion and identity contracts"
         }
       ],
       "sources": [
@@ -2531,7 +2544,7 @@
       "id": "spatial-biology",
       "branch": "three-dimensional",
       "title": "Spatial biology template / Пространственная биология",
-      "summary": "Build an editable three-scene RU/EN 3D lesson: antibody labelling, rotation and close-up, washing, one-cell/one-bead droplet, lysis and co-capture, then cell barcode, feature identity and UMI, followed by RNA and ADT library separation with the shared cell barcode preserved. Optional --template spatial-biology includes reusable V3 components and Bio3D recipes.",
+      "summary": "Build an editable three-scene RU/EN 3D lesson: antibody labelling, rotation and close-up, washing, one-cell/one-bead droplet, lysis and co-capture, then cell barcode, feature identity and UMI, followed by RNA and ADT library separation with the shared cell barcode preserved. Reuse R1/R2 readout close-ups, RNA gene mapping, ADT antibody-dictionary lookup and paired profiles, with camera motion completed before readout labels appear. Optional --template spatial-biology includes reusable V3 components and Bio3D recipes.",
       "keywords": [
         "spatial-biology",
         "spatial biology",
@@ -2549,12 +2562,41 @@
         "co-capture",
         "two libraries one cell barcode",
         "RNA ADT library separation",
-        "две библиотеки один клеточный код"
+        "две библиотеки один клеточный код",
+        "R1 R2",
+        "paired reads",
+        "парные чтения",
+        "readout",
+        "RNA ADT readout",
+        "чтение RNA ADT",
+        "gene mapping",
+        "сопоставление с референсом",
+        "antibody dictionary",
+        "словарь антител",
+        "paired profiles",
+        "парные профили",
+        "same cell barcode pairing",
+        "общий клеточный код",
+        "camera settles before labels",
+        "камера перед подписями"
       ],
       "status": "ready",
       "guides": [
         {
-          "path": "three-dimensional.md"
+          "path": "three-dimensional.md",
+          "section": "Reusable scenarios"
+        },
+        {
+          "path": "three-dimensional.md",
+          "section": "RNA and ADT readouts"
+        },
+        {
+          "path": "three-dimensional.md",
+          "section": "Motion and identity contracts"
+        },
+        {
+          "path": "three-dimensional.md",
+          "section": "Primary sources for the readout scenario"
         }
       ],
       "sources": [

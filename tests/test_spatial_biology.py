@@ -38,6 +38,26 @@ class SpatialBiologyTests(unittest.TestCase):
             self.assertIn('three-dimensional', cards[card_id]['related'])
         self.command(router, '--check', '--json')
 
+    def test_readout_and_pairing_queries_find_the_reusable_scenario(self):
+        router = ROOT / 'docs/navigation/route.py'
+        for query in ('R1 R2', 'paired reads', 'парные чтения', 'readout',
+                      'RNA ADT readout', 'чтение RNA ADT', 'gene mapping',
+                      'сопоставление с референсом', 'antibody dictionary',
+                      'словарь антител', 'paired profiles', 'парные профили',
+                      'общий клеточный код', 'camera settles before labels',
+                      'камера перед подписями'):
+            with self.subTest(query=query):
+                data = json.loads(self.command(router, query, '--json'))
+                self.assertTrue(data['results'], query)
+                self.assertEqual(data['results'][0]['id'], 'spatial-biology', query)
+        for query in ('V3.LibrariesMesh.readouts', 'readout-rna', 'readout-adt'):
+            data = json.loads(self.command(router, query, '--json'))
+            self.assertEqual(data['results'][0]['id'], 'three-dimensional', query)
+        card = json.loads(self.command(router, '--show', 'spatial-biology', '--json'))
+        self.assertEqual([guide.get('section') for guide in card['guides']], [
+            'Reusable scenarios', 'RNA and ADT readouts',
+            'Motion and identity contracts', 'Primary sources for the readout scenario'])
+
     def test_template_exports_after_relocation_with_guides_and_ordered_scripts(self):
         with tempfile.TemporaryDirectory(prefix='spatial biology portable ') as tmp:
             source, project = Path(tmp) / 'initial', Path(tmp) / 'перенесённый урок'

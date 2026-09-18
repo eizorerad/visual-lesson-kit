@@ -202,6 +202,73 @@ Every actor uses environment coordinates and supplies typed mesh parts. Repeated
 
 These props are explanatory symbols, not laboratory equipment or a reconstruction of a flow cell. Supports separate the two library channels; tiles and readout cards represent data records; moving markers represent information being read. The recipe supplies barcode, feature and UMI identity. Its separate RNA and ADT read close-ups explain gene mapping and antibody-code lookup before returning to the paired overview. Splitting or preparing a library does not create a new cell barcode, and moving a read marker does not move or destroy the source DNA. See `js/recipes/spatial-biology/03-libraries.js` for the complete six-state composition and its RU/EN notes.
 
+## Reusable scenarios
+
+The `spatial-biology` template assembles three complete RU/EN scenes and 24 states. Scene files are editable recipes; the `V3` files above are reusable geometry/rendering APIs. All are copied into newly created projects, including projects that select a different template. Use the template to run the full sequence, or keep only the scene scripts your lesson needs.
+
+| Viewer question | Visible operation and result | Recipe / template address |
+| --- | --- | --- |
+| Which antibodies remain after washing? | Bind to surface sites, rotate the same cell, inspect one antibody, then remove unbound actors while bound actors retain their attachment frame. | `01-surface.js`, `#1` through `#1.5` |
+| How do RNA and antibody tags acquire a shared address? | Encounter a bead, enclose it with the cell in an aqueous droplet, lyse, co-capture, then inspect the two poly(A)/oligo-dT interfaces. Capture and later synthesis are distinguished. | `01-surface.js` / `capture-stage.js`, `#1.6` through `#1.11` |
+| What do cell barcode, feature and UMI each mean? | Inspect the fields separately, reveal a persistent PCR descendant, then group duplicate *read records* into one count. DNA products remain distinct. | `02-codes.js`, `#2` through `#2.5` |
+| How can two libraries still describe the same cell? | Separate products into RNA/ADT branches, prepare the branches, inspect their reads, then pair the results using the retained cell barcode. | `03-libraries.js`, `#3` through `#3.5` |
+
+The recipe paths are under `js/recipes/spatial-biology/`. Addresses above are for the three-scene template and its standalone example; a host lesson can place these scenes at different numbers. The last scene stands alone: add a matrix or downstream-analysis scene explicitly when your explanation needs one.
+
+For only the library scenario in a generated project, retain the normal kit shell and common libraries, load `js/motion.js`, `js/perspective.js`, the five `js/three/` modules, `js/recipes/spatial-biology/common.js`, and `js/recipes/spatial-biology/03-libraries.js` before `js/player.js` and `js/boot.js`. Keep `css/spatial-biology.css`. The cell/capture and code-scene recipe scripts can be omitted. Direct entry into the library scene is supported; the shared navigation bridge only runs when a compatible outgoing scene is present.
+
+## RNA and ADT readouts
+
+`03-libraries.js` is a complete six-state sequencing scenario rather than a picture of a sequencing instrument:
+
+| State | What the viewer sees | Retained identity |
+| --- | --- | --- |
+| 0 | Return to preparation before sequencing; the three inherited DNA examples keep their previous poses. | Cell A, RNA UMI GCT, ADT UMI TGA and the existing PCR-copy relationship. |
+| 1 | RNA-derived and ADT-derived products move into separate spatial groups. | Whole product IDs and their code fields; displayed helix lengths are not comparable. |
+| 2 | The branches are prepared separately; selected PCR descendants emerge from their parents. | Copy ancestry, barcode and UMI. The animation does not simulate tagmentation. |
+| 3 | Enlarge RNA-derived DNA; reveal paired-read fields and base letters, then map a sequence to a gene. | R1: cell barcode and UMI; R2: transcript-derived sequence in this Drop-seq layout. |
+| 4 | Return through the two-group view, enlarge ADT-derived DNA, and look up its code in an antibody dictionary. | R1: cell barcode and UMI; R2: synthetic antibody code. |
+| 5 | Return to two library groups and two interpreted records, paired by cell A. | Modalities remain separate; their UMIs are not merged across channels. |
+
+Both libraries contain DNA. **R1 and R2 are paired reads from one library fragment; they do not stand for RNA and ADT.** This allocation of read fields belongs to the illustrated original Drop-seq protocol. RNA feature assignment uses a reference sequence; ADT feature assignment uses the reagent's barcode dictionary. ADT is not protein sequencing and is not assigned by mapping its barcode to the CD4 gene.
+
+The strings `ACTGACGA → CD4` and `GTCACTAG → anti-CD4` are explicitly invented teaching correspondences. The short cell and UMI labels are also illustrative. When supplying real sequence or antibody-panel data, replace the sequence, assignment, RU/EN captions and source notes together; do not present the default short strings as measured or reference sequences.
+
+To adapt the actor identity in a new composition, use `V3.CodesMesh.product({id, kind, cell, umi, feature})` for each original record and give PCR descendants distinct IDs with their source identity retained. Do not mutate the cached example returned by `V3.CodesMesh.create()`. The bundled recipe deliberately calls `create()` to match the preceding code scene. If changing its examples, update both scenes and the `F.shared` identity declaration together; also replace the recipe's displayed sequences, labels, outputs and notes. The template does not infer those texts from a supplied product object.
+
+Use `V3.LibrariesMesh.create().readouts` for the enlarged data cards. Its `cell`, `umi` and `sequence` anchors identify semantic fields; the geometry itself carries no molecular sequence. Supply read labels and results separately, as the recipe does. The same card and timing pattern can explain another barcode-based assay if its read layout and decoding rules are checked against that assay's source.
+
+## Motion and identity contracts
+
+The readout scenario uses one demand-rendered surface. Mesh buffers are created once; authored states change poses, material opacity and projected annotations. There is no idle rotation or timer-driven repaint. An actor's world placement and its annotations use the same effective orthographic camera:
+
+```js
+const projectedCamera = {
+  cx: camera.cx * magnification + panX,
+  cy: camera.cy * magnification + panY,
+  scale: camera.scale * magnification
+};
+const label = V3.CodesMesh.project(localAnchor, moleculePose, projectedCamera);
+```
+
+Preserve the following ordering when adapting the story:
+
+1. Move and settle the camera before showing the fixed readout labels.
+2. Bring information markers to their fields, then reveal base letters.
+3. Finish the sequence before revealing its gene or dictionary assignment.
+4. Hide the readout before moving the camera away.
+5. Return through a common overview when switching between enlarged molecules, so they do not pass through each other.
+
+The code/library boundary declares a shared `F.shared` identity and matches the three DNA poses. This preserves visual and scientific continuity; normal scene disposal still replaces the renderer between scenes. Within a scene, the canvas and actors persist. A direct hash jump reconstructs the requested state without needing earlier playback.
+
+These rules are guarded in `tests/spatial-biology.cjs`, including late readout-transition samples in addition to the general endpoints and midpoints. Keep the assertions about camera scale, completed sequence letters, source barcode/UMI identity, and one canvas when changing timing. `F.driver` must remain cancellable through `ctx.onDispose`; language and appearance changes must retain the current state.
+
+## Primary sources for the readout scenario
+
+- [Stoeckius et al., CITE-seq (2017), Methods](https://pmc.ncbi.nlm.nih.gov/articles/PMC5669064/): transcript and antibody-tag library preparation, read processing and tag identification. [Publisher article and supplement](https://www.nature.com/articles/nmeth.4380).
+- [McCarroll Laboratory, Drop-seq Informatics Cookbook v1.0 (2015), pp. 3–4](https://mccarrolllab.org/wp-content/uploads/2015/05/DropSeqInformaticsCookbook_v1.0_May20151.pdf): the original Drop-seq R1 cell-barcode and UMI layout. The real lengths are not the shortened labels in this teaching scene.
+- [Illumina, paired-end sequencing](https://www.illumina.com/science/technology/next-generation-sequencing/plan-experiments/paired-end-vs-single-read.html) and [sequencing by synthesis](https://www.illumina.com/science/technology/next-generation-sequencing/sequencing-technology.html): paired reads and base calling. The scene is a field-level explanation, not an instrument reconstruction.
+
 ## Scientific and rendering limits
 
 The example follows [Stoeckius et al. (2017), original CITE-seq](https://doi.org/10.1038/nmeth.4380)
