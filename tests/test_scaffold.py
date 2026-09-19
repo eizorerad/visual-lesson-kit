@@ -222,6 +222,47 @@ class ScaffoldTests(unittest.TestCase):
                                  (ROOT / 'starter/js' / name).read_bytes())
                 self.assertNotIn('src="js/' + name + '"', gallery_html)
 
+    def test_crispri_template_exports_eleven_ordered_scenes_without_autorunning_in_gallery(self):
+        with tempfile.TemporaryDirectory(prefix='lesson-crispri-') as tmp:
+            dest = Path(tmp) / 'lesson'
+            result = self.run_cli(dest, '--template', 'crispri', '--lang', 'en', '--title', 'CRISPRi design')
+            self.assertEqual(result.returncode, 0, result.stderr)
+            html = (dest / 'index.html').read_text()
+            scripts = re.findall(r'<script src="([^"]+)"', html)
+            episodes = ('01-objects-crispri', '02-protein-origin', '02-delivery', '03-guide-factory', '04-repression',
+                        '05-methods', '06-libraries', '07-moi', '08-evidence', '09-studies', '10-check')
+            recipes = ['js/recipes/crispri/crispri-helpers.js'] + [
+                'js/recipes/crispri/' + name + '.js' for name in episodes]
+            sequence = ['js/crispri-design.js', *recipes, 'js/player.js', 'js/boot.js']
+            for before, after in zip(sequence, sequence[1:]):
+                self.assertLess(scripts.index(before), scripts.index(after))
+            self.assertEqual(len(scripts), len(set(scripts)))
+            self.assertFalse(any('/episodes/' in src for src in scripts))
+            self.assertIn('href="css/crispri.css"', html)
+            self.assertIn('<html lang="en"', html)
+            self.assertIn('<title>CRISPRi design</title>', html)
+            for file in ['js/crispri-design.js', 'css/crispri.css', *recipes]:
+                self.assertEqual((dest / file).read_bytes(), (ROOT / 'starter' / file).read_bytes())
+            self.assertEqual((dest / 'guide/crispri-design.md').read_bytes(),
+                             (ROOT / 'docs/crispri-design.md').read_bytes())
+            self.assertFalse(any(p.is_file() for p in (dest / 'assets').iterdir()))
+            for args in [('--check',), ()]:
+                built = subprocess.run([sys.executable, str(dest / 'build/bundle.py'), *args],
+                                       capture_output=True, text=True)
+                self.assertEqual(built.returncode, 0, built.stderr)
+            bundle = (dest / 'dist/lesson.html').read_text()
+            self.assertNotIn('<script src=', bundle)
+            self.assertNotIn('href="css/', bundle)
+            self.assertNotIn(str(ROOT), bundle)
+            for name in episodes:
+                self.assertIn((dest / 'js/recipes/crispri' / (name + '.js')).read_text().strip(), bundle)
+            gallery = Path(tmp) / 'gallery'
+            self.assertEqual(self.run_cli(gallery).returncode, 0)
+            gallery_html = (gallery / 'index.html').read_text()
+            for file in ['js/crispri-design.js', 'css/crispri.css', *recipes]:
+                self.assertTrue((gallery / file).is_file())
+                self.assertNotIn(file, gallery_html)
+
     def test_english_default_contains_both_language_packs(self):
         with tempfile.TemporaryDirectory() as tmp:
             dest = Path(tmp) / 'English lesson'

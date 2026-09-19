@@ -2624,6 +2624,65 @@
       ]
     },
     {
+      "id": "crispri-design",
+      "branch": "biology",
+      "title": "CRISPRi construct and occupancy / Конструкция CRISPRi и множественность",
+      "summary": "Create an eleven-scene CRISPRi lesson from cellular dCas9–KRAB production and guide delivery to experimental evidence, or reuse Poisson construct occupancy, single/dual-guide DNA cassettes and pseudodiploid virions.",
+      "keywords": [
+        "crispri-design",
+        "crispri template",
+        "dCas9 KRAB protein origin translation",
+        "откуда белок dCas9 KRAB мРНК трансляция",
+        "CRISPRi delivery experimental design",
+        "урок CRISPRi доставка библиотеки",
+        "dual guide cassette",
+        "Poisson MOI occupancy",
+        "lentiviral pseudodiploid genome",
+        "PD.poissonOccupancy",
+        "PD.cassette",
+        "PD.virion",
+        "кассета двух гайдов",
+        "множественность трансдукции",
+        "вирион две копии РНК"
+      ],
+      "status": "ready",
+      "guides": [
+        {
+          "path": "crispri-design.md",
+          "section": "Reusable eleven-scene lesson"
+        },
+        {
+          "path": "crispri-design.md",
+          "section": "Poisson occupancy"
+        },
+        {
+          "path": "crispri-design.md",
+          "section": "Persistent cassette and virion actors"
+        },
+        {
+          "path": "crispri-design.md",
+          "section": "Verification"
+        }
+      ],
+      "sources": [
+        "js/crispri-design.js"
+      ],
+      "examples": [
+        "crispri.html",
+        "js/recipes/crispri/01-objects-crispri.js",
+        "js/recipes/crispri/02-protein-origin.js",
+        "js/recipes/crispri/07-moi.js"
+      ],
+      "caveat": "Poisson occupancy assumes independent events at one common rate; drawings are schematic, and two guide-encoding DNA units are distinct from two packaged RNA genome copies. No knockdown or delivery kinetics are computed.",
+      "related": [
+        "molecular-animation",
+        "scene",
+        "motion",
+        "clearance",
+        "export-qa"
+      ]
+    },
+    {
       "id": "rna-prediction",
       "branch": "biology",
       "title": "RNA prediction narrative / Предсказание структуры РНК",
