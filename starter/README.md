@@ -41,3 +41,7 @@
 Оформление версии 0.12.1 переключает чёрный/белый фон, три палитры и Source Sans 3 / Source Serif 4; код использует Source Code Pro. Цветовые роли и правила темы — в `theme.md`; полные лицензии шрифтов — в `licenses/` созданного урока. Метаданные `lesson-kit.json` указывают имя `visual-lesson-kit` и версию движка.
 
 Новый пример: `explanations.html` и `js/recipes/explanation-bridges.js` — повторяющаяся карта, квантили и пошаговый расчёт расстояния. В создаваемом проекте руководства: `guide/explanation-design.md`, `guide/explanation-geometry.md`, `guide/distributions.md`. Шаблон `--template explanations` делает этот пример главным уроком.
+
+## ATAC-seq и отдельные компоненты
+
+`atac-seq.html` — полный 46-эпизодный фильм, `atac-components.html` — четыре обычные сцены / 16 состояний. Выбранный при создании шаблон уже находится в `index.html`. В фильме редактируйте `js/atac-config.js`; в отдельном примере — `js/recipes/atac/components.js`. Сборка: `python3 build/atac-film.py`. Руководства: [фильм и ремикс](guide/atac-seq.md), [сборка из частей](guide/atac-components.md). Источники: `assets/atac/SOURCES.md`; проверки: `qa/atac/README.md`.

@@ -37,12 +37,15 @@ publication or other item linked from a structural record.
 | [1EHZ](https://www.rcsb.org/structure/1EHZ) | Shi & Moore (2000), [The crystal structure of yeast phenylalanine tRNA at 1.93 Å resolution: a classic structure revisited](https://pmc.ncbi.nlm.nih.gov/articles/PMC1369984/). | `starter/assets/rna-folding/tertiary-1ehz.cif`, selected JSON/JavaScript coordinate extracts, and the tRNA selections in `starter/assets/trna/*.json` and `starter/js/trna-*-data.js`. |
 | [1HR2](https://www.rcsb.org/structure/1HR2) | Juneau et al. (2001), [Structural basis of the enhanced stability of a mutant ribozyme domain and a detailed view of RNA-solvent interactions](https://doi.org/10.1016/S0969-2126(01)00579-2). | `starter/assets/rna-folding/motif-1hr2.pdb` and selected JSON/JavaScript coordinate extracts. |
 | [7BG9](https://www.rcsb.org/structure/7BG9) | Ghanim et al. (2021), [Structure of human telomerase holoenzyme with bound telomeric DNA](https://doi.org/10.1038/s41586-021-03415-4). | `starter/assets/molecular-views/7BG9.pdb` and selected JSON/JavaScript coordinate extracts. |
+| [1KX5](https://www.rcsb.org/structure/1KX5) | Davey et al. (2002), [Solvent mediated interactions in the structure of the nucleosome core particle at 1.9 Å resolution](https://doi.org/10.1016/S0022-2836(02)00386-8). | Saved assembly mmCIF, metadata and selected Cα/C4′ traces in `starter/assets/atac/structures/` and `starter/js/atac-*-data.js` / `atac-structures.js`. |
+| [1MUH](https://www.rcsb.org/structure/1MUH) | Davies et al. (2000), [Three-dimensional structure of the Tn5 synaptic complex transposition intermediate](https://doi.org/10.1126/science.289.5476.77). | Saved biological assembly mmCIF, metadata and selected polymer traces in `starter/assets/atac/structures/` and `starter/js/atac-structures.js`. |
 
 Coordinate selections, hashes, model assumptions and further references are in
 the [RNA folding source guide](starter/assets/rna-folding/SOURCES.md) and
 [molecular views source guide](starter/assets/molecular-views/SOURCES.md), plus the [tRNA film source guide](starter/assets/trna/SOURCES.md).
 In generated projects these guides are at `assets/rna-folding/SOURCES.md` and
 `assets/molecular-views/SOURCES.md`; the `starter/` prefix is omitted.
+ATAC sources, extraction and limitations are in [the ATAC source guide](starter/assets/atac/SOURCES.md); generated projects use `assets/atac/SOURCES.md`.
 The drawings distinguish source coordinates from authored explanatory motion.
 
 ## Distribution

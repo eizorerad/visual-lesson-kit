@@ -1,0 +1,194 @@
+{
+  "pdbx_struct_assembly": {
+    "details": "author_defined_assembly",
+    "id": "1",
+    "oligomeric_count": 6,
+    "oligomeric_details": "hexameric",
+    "rcsb_candidate_assembly": "Y",
+    "rcsb_details": "author_defined_assembly"
+  },
+  "pdbx_struct_assembly_gen": [
+    {
+      "assembly_id": "1",
+      "asym_id_list": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "oper_expression": "1,2",
+      "ordinal": 1
+    }
+  ],
+  "pdbx_struct_oper_list": [
+    {
+      "id": "1",
+      "matrix_1_1": 1.0,
+      "matrix_1_2": 0.0,
+      "matrix_1_3": 0.0,
+      "matrix_2_1": 0.0,
+      "matrix_2_2": 1.0,
+      "matrix_2_3": 0.0,
+      "matrix_3_1": 0.0,
+      "matrix_3_2": 0.0,
+      "matrix_3_3": 1.0,
+      "name": "1_555",
+      "symmetry_operation": "x,y,z",
+      "type": "identity operation",
+      "vector_1": 0.0,
+      "vector_2": 0.0,
+      "vector_3": 0.0
+    },
+    {
+      "id": "2",
+      "matrix_1_1": 0.5,
+      "matrix_1_2": 0.8660254038,
+      "matrix_1_3": 0.0,
+      "matrix_2_1": 0.8660254038,
+      "matrix_2_2": -0.5,
+      "matrix_2_3": 0.0,
+      "matrix_3_1": 0.0,
+      "matrix_3_2": 0.0,
+      "matrix_3_3": -1.0,
+      "name": "12_554",
+      "symmetry_operation": "x,x-y,-z-1/6",
+      "type": "crystal symmetry operation",
+      "vector_1": 0.0,
+      "vector_2": 0.0,
+      "vector_3": -38.0166666667
+    }
+  ],
+  "rcsb_assembly_container_identifiers": {
+    "assembly_id": "1",
+    "entry_id": "1MUH",
+    "interface_ids": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "rcsb_id": "1MUH-1"
+  },
+  "rcsb_assembly_info": {
+    "assembly_id": "1",
+    "atom_count": 9382,
+    "branched_atom_count": 0,
+    "branched_entity_count": 0,
+    "branched_entity_instance_count": 0,
+    "deuterated_water_count": 0,
+    "entry_id": "1MUH",
+    "formula_weight": 132.38,
+    "hydrogen_atom_count": 0,
+    "modeled_polymer_monomer_count": 990,
+    "na_polymer_entity_types": "Other",
+    "nonpolymer_atom_count": 4,
+    "nonpolymer_entity_count": 2,
+    "nonpolymer_entity_instance_count": 4,
+    "num_heterologous_interface_entities": 5,
+    "num_heteromeric_interface_entities": 5,
+    "num_homomeric_interface_entities": 1,
+    "num_interface_entities": 6,
+    "num_interfaces": 6,
+    "num_isologous_interface_entities": 1,
+    "num_na_interface_entities": 1,
+    "num_prot_na_interface_entities": 4,
+    "num_protein_interface_entities": 1,
+    "polymer_atom_count": 8766,
+    "polymer_composition": "protein/NA",
+    "polymer_entity_count": 3,
+    "polymer_entity_count_DNA": 2,
+    "polymer_entity_count_RNA": 0,
+    "polymer_entity_count_nucleic_acid": 2,
+    "polymer_entity_count_nucleic_acid_hybrid": 0,
+    "polymer_entity_count_protein": 1,
+    "polymer_entity_instance_count": 6,
+    "polymer_entity_instance_count_DNA": 4,
+    "polymer_entity_instance_count_RNA": 0,
+    "polymer_entity_instance_count_nucleic_acid": 4,
+    "polymer_entity_instance_count_nucleic_acid_hybrid": 0,
+    "polymer_entity_instance_count_protein": 2,
+    "polymer_monomer_count": 1042,
+    "selected_polymer_entity_types": "Protein/NA",
+    "solvent_atom_count": 612,
+    "solvent_entity_count": 1,
+    "solvent_entity_instance_count": 6,
+    "total_assembly_buried_surface_area": 9022.270340487608,
+    "total_number_interface_residues": 445,
+    "unmodeled_polymer_monomer_count": 52
+  },
+  "rcsb_struct_symmetry": [
+    {
+      "kind": "Global Symmetry",
+      "oligomeric_state": "Homo 2-mer",
+      "stoichiometry": [
+        "A2"
+      ],
+      "symbol": "C2",
+      "type": "Cyclic",
+      "rotation_axes": [
+        {
+          "end": [
+            103.45749754000298,
+            59.73121405477205,
+            -19.008333332877378
+          ],
+          "order": 2,
+          "start": [
+            31.386756045524663,
+            18.12115205249501,
+            -19.008333333982
+          ]
+        }
+      ],
+      "clusters": [
+        {
+          "members": [
+            {
+              "asym_id": "C",
+              "pdbx_struct_oper_list_ids": [
+                "1"
+              ]
+            },
+            {
+              "asym_id": "C",
+              "pdbx_struct_oper_list_ids": [
+                "2"
+              ]
+            }
+          ],
+          "avg_rmsd": 2.837888251919298e-10
+        }
+      ]
+    }
+  ],
+  "rcsb_struct_symmetry_lineage": [
+    {
+      "depth": 0,
+      "id": "Global Symmetry",
+      "name": "Global Symmetry"
+    },
+    {
+      "depth": 3,
+      "id": "Global Symmetry.Cyclic.C2.Homo 2-mer",
+      "name": "Homo 2-mer"
+    },
+    {
+      "depth": 2,
+      "id": "Global Symmetry.Cyclic.C2",
+      "name": "C2"
+    },
+    {
+      "depth": 1,
+      "id": "Global Symmetry.Cyclic",
+      "name": "Cyclic"
+    }
+  ],
+  "rcsb_id": "1MUH-1",
+  "rcsb_struct_symmetry_provenance_code": "biojava-7.2.2"
+}

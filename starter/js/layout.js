@@ -3,7 +3,13 @@
 (function(global){
 'use strict';
 const SVG='http://www.w3.org/2000/svg',contracts=new Map(),texts=new Set(),watchers=new WeakMap();
-let serial=0;
+let serial=0,fontEpoch=0;
+// A loaded face can replace a fallback without changing computed CSS names.
+const fontSet=global.document&&document.fonts;
+if(fontSet){
+ if(fontSet.addEventListener){fontSet.addEventListener('loadingdone',()=>{fontEpoch++;});fontSet.addEventListener('loadingerror',()=>{fontEpoch++;});}
+ if(fontSet.ready)fontSet.ready.then(()=>{fontEpoch++;});
+}
 const belongs=(root,node)=>root===node||!!(root&&root.contains(node));
 const finiteBounds=b=>b&&['x','y','width','height'].every(k=>Number.isFinite(b[k]))&&b.width>=0&&b.height>=0&&Number.isFinite(b.x+b.width)&&Number.isFinite(b.y+b.height);
 function dense(array,test){for(let i=0;i<array.length;i++)if(!Object.prototype.hasOwnProperty.call(array,i)||!test(array[i]))return false;return true;}
@@ -91,7 +97,7 @@ function audit(root,options={}){
 }
 function textBox(parent,options){
  if(!parent||parent.namespaceURI!==SVG||!options)throw new TypeError('textBox needs an SVG parent and options');
- let bounds=box(options),source=String(options.text===undefined?'':options.text),disposed=false,raf=0;
+ let bounds=box(options),source=String(options.text===undefined?'':options.text),disposed=false,raf=0,layoutSignature=null,layoutMeasurement=null;
  const pad=padding(options.padding===undefined?12:options.padding),size=options.size===undefined?25:options.size,lineHeight=options.lineHeight===undefined?1.4:options.lineHeight,lineGap=options.lineGap===undefined?size*.08:options.lineGap;
  if(!Number.isFinite(size)||size<=0||!Number.isFinite(lineHeight)||lineHeight<1)throw new RangeError('Text size must be positive and lineHeight at least 1');
  if(!Number.isFinite(lineGap)||lineGap<0)throw new RangeError('lineGap must be finite and nonnegative');
@@ -105,27 +111,42 @@ function textBox(parent,options){
  function layout(){
   if(disposed)return false;
   const content=global.D&&D.i18n?D.i18n.text(source):source,inner=inset(bounds,pad),x=align==='left'?inner.x:align==='right'?inner.x+inner.width:inner.x+inner.width/2;
+  // Keep settled tspans intact. Repeatedly replacing identical SVG text can
+  // invalidate Chromium's glyph paint cache during otherwise unrelated motion.
+  // Include all font metrics and face-loading epochs; never cache bad measures.
+  const style=el.isConnected?global.getComputedStyle(el):null;
+  const fontKeys=['fontFamily','fontSize','fontWeight','fontStyle','fontStretch','fontVariant','fontVariantLigatures','fontVariantNumeric','fontFeatureSettings','fontVariationSettings','fontKerning','fontOpticalSizing','fontSizeAdjust','letterSpacing','wordSpacing','textTransform','textRendering','direction','writingMode','textOrientation','dominantBaseline','alignmentBaseline'];
+  const signature=style?JSON.stringify([source,content,bounds,pad,size,lineHeight,lineGap,align,valign,fontEpoch,fontSet&&fontSet.status,...fontKeys.map(k=>style[k])]):null;
+  if(signature!==null&&signature===layoutSignature){
+   let current;try{current=el.getBBox();}catch(_){}
+   if(current&&finiteBounds(current)&&layoutMeasurement&&['x','y','width','height'].every(k=>Math.abs(current[k]-layoutMeasurement[k])<1e-6))return true;
+  }
+  layoutSignature=null;layoutMeasurement=null;
   el.dataset.layoutSource=source;el.dataset.layoutBox=JSON.stringify(bounds);el.setAttribute('aria-label',content);el.setAttribute('x',x);el.setAttribute('y',inner.y);el.textContent=content;
   if(!el.isConnected||typeof el.getComputedTextLength!=='function'||typeof el.getBBox!=='function'){el.dataset.layoutStatus='unmeasured';return false;}
   function width(text){el.textContent=text;try{return el.getComputedTextLength();}catch(_){return NaN;}}
   const lines=[];let valid=true;
   content.split(/\r?\n/).forEach(paragraph=>{
    const words=paragraph.trim().split(/\s+/);let line='';
-   words.forEach(word=>{const candidate=line?line+' '+word:word,n=width(candidate);if(!Number.isFinite(n)){valid=false;return;}if(line&&n>inner.width){lines.push(line);line=word;}else line=candidate;});lines.push(line);
+   words.forEach(word=>{const candidate=line?line+' '+word:word,n=width(candidate);if(!Number.isFinite(n)||n<0||(candidate.trim()&&n===0)){valid=false;return;}if(line&&n>inner.width){lines.push(line);line=word;}else line=candidate;});lines.push(line);
   });
   if(!valid){el.textContent=content;el.dataset.layoutStatus='unmeasured';return false;}
   // SVG font rectangles can exceed 1.2 em (and differ across fallback glyphs).
   // Measure a common ascent/descent envelope before choosing the line stride.
   let metricTop=Infinity,metricBottom=-Infinity;
-  lines.forEach(line=>{if(!line)return;el.textContent=line;let b;try{b=el.getBBox();}catch(_){valid=false;return;}if(!b||!Number.isFinite(b.y)||!Number.isFinite(b.height)){valid=false;return;}metricTop=Math.min(metricTop,b.y);metricBottom=Math.max(metricBottom,b.y+b.height);});
+  lines.forEach(line=>{if(!line)return;el.textContent=line;let b;try{b=el.getBBox();}catch(_){valid=false;return;}if(!finiteBounds(b)||b.width===0||b.height===0){valid=false;return;}metricTop=Math.min(metricTop,b.y);metricBottom=Math.max(metricBottom,b.y+b.height);});
   if(!valid){el.textContent=content;el.dataset.layoutStatus='unmeasured';return false;}
   const stride=Math.max(size*lineHeight,(Number.isFinite(metricTop)?metricBottom-metricTop:0)+lineGap);if(!Number.isFinite(stride)){el.textContent=content;el.dataset.layoutStatus='unmeasured';return false;}el.dataset.layoutLineStride=String(stride);
   el.textContent='';
   const nodes=lines.map((line,i)=>{const n=document.createElementNS(SVG,'tspan');n.setAttribute('x',x);n.setAttribute('y',inner.y+i*stride);n.textContent=line;el.append(n);return n;});
   let measured;try{measured=el.getBBox();}catch(_){el.dataset.layoutStatus='unmeasured';return false;}
-  if(!measured||!['x','y','width','height'].every(k=>Number.isFinite(measured[k]))){el.dataset.layoutStatus='unmeasured';return false;}
+  if(!finiteBounds(measured)||(content.trim()&&(measured.width===0||measured.height===0))){el.dataset.layoutStatus='unmeasured';return false;}
   const top=valign==='top'?inner.y:valign==='bottom'?inner.y+inner.height-measured.height:inner.y+(inner.height-measured.height)/2,dy=top-measured.y;
-  nodes.forEach(n=>n.setAttribute('y',+n.getAttribute('y')+dy));el.dataset.layoutStatus=measured.width>inner.width+.01||measured.height>inner.height+.01?'overflow':'fits';return true;
+  nodes.forEach(n=>n.setAttribute('y',+n.getAttribute('y')+dy));el.dataset.layoutStatus=measured.width>inner.width+.01||measured.height>inner.height+.01?'overflow':'fits';
+  let settled;try{settled=el.getBBox();}catch(_){}
+  if(!finiteBounds(settled)||(content.trim()&&(settled.width===0||settled.height===0))){el.dataset.layoutStatus='unmeasured';return false;}
+  if(el.isConnected&&signature!==null){layoutSignature=signature;layoutMeasurement={x:settled.x,y:settled.y,width:settled.width,height:settled.height};}
+  return true;
  }
  function refresh(){if(raf){global.cancelAnimationFrame(raf);raf=0;}layout();if(!el.isConnected)schedule();}
  const api={el,layout,setText(value){const next=String(value);if(next!==source){source=next;refresh();}return api;},setBox(value){const next=box(value);inset(next,pad);if(Object.keys(next).some(k=>next[k]!==bounds[k])){bounds=next;refresh();}return api;},dispose(){if(disposed)return;disposed=true;if(raf)global.cancelAnimationFrame(raf);unregister();texts.delete(api);}};

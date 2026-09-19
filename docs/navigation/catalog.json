@@ -2848,6 +2848,125 @@
         "languages",
         "export-qa"
       ]
+    },
+    {
+      "id": "atac-seq",
+      "branch": "biology",
+      "title": "ATAC-seq film / Фильм о доступности хроматина",
+      "summary": "Repeat the 46-cue / 240.6-second ATAC-seq movie or remix named episodes, timing and bilingual copy: source-backed nucleosome and Tn5, paired reads, original fragments, tracks, length distributions and interpretation.",
+      "keywords": [
+        "ATAC-seq",
+        "ATACseq",
+        "ATAC-seq фильм",
+        "атак секвенирование",
+        "доступность хроматина фильм",
+        "tn5 tagmentation film",
+        "транспозаза",
+        "атак ремикс",
+        "atac film remix"
+      ],
+      "status": "ready",
+      "guides": [
+        {
+          "path": "atac-seq.md",
+          "section": "Повторить одной командой"
+        },
+        {
+          "path": "atac-seq.md",
+          "section": "Собрать свой маршрут"
+        },
+        {
+          "path": "atac-seq.md",
+          "section": "Каталог эпизодов"
+        },
+        {
+          "path": "atac-seq.md",
+          "section": "Проверить после изменений"
+        }
+      ],
+      "sources": [
+        "atac-seq.html",
+        "js/atac-config.js",
+        "js/atac-story.js",
+        "js/atac-camera-story.js",
+        "assets/atac/SOURCES.md",
+        "build/atac-film.py",
+        "qa/atac/README.md"
+      ],
+      "examples": [
+        "js/atac-journey.js"
+      ],
+      "caveat": "Curated 1KX5/1MUH structural models and synthetic fragment data. Authored docking and readout motion are explanatory, not a reaction simulation or FASTQ analysis. Review new narration and transitions after remixing.",
+      "related": [
+        "atac-components",
+        "cinema-timeline",
+        "cinematic-explanation",
+        "molecular-views",
+        "export-qa"
+      ]
+    },
+    {
+      "id": "atac-components",
+      "branch": "three-dimensional",
+      "title": "Chromatin and sequencing bricks / Компоненты хроматина и чтения",
+      "summary": "Reuse independent nucleosome/Tn5 source views and close-ups, histone tails, contour-preserving insert straightening, 3D paired-end reading, accumulating length histograms and nearby fading labels. Four editable scenes,16 states without the whole-film controller.",
+      "keywords": [
+        "atac-components",
+        "nucleosome 1KX5",
+        "нуклеосома 3d",
+        "гистоновые хвосты",
+        "tn5 1MUH",
+        "paired-end reading",
+        "R1 R2 синтез",
+        "длина фрагмента распрямление",
+        "ближние подписи молекула",
+        "histogram accumulation"
+      ],
+      "status": "ready",
+      "guides": [
+        {
+          "path": "atac-components.md",
+          "section": "Независимый пример"
+        },
+        {
+          "path": "atac-components.md",
+          "section": "Карта компонентов"
+        },
+        {
+          "path": "atac-components.md",
+          "section": "Вставить одну сцену"
+        },
+        {
+          "path": "atac-components.md",
+          "section": "Подпись возле движущегося объекта"
+        },
+        {
+          "path": "atac-components.md",
+          "section": "Проверка компонентов"
+        }
+      ],
+      "sources": [
+        "atac-components.html",
+        "js/atac-structure-views.js",
+        "js/atac-histone-cartoon.js",
+        "js/atac-tn5-cartoon.js",
+        "js/atac-fragment-origin.js",
+        "js/atac-read-views.js",
+        "js/atac-signals.js",
+        "js/atac-callouts.js"
+      ],
+      "examples": [
+        "js/recipes/atac/components.js"
+      ],
+      "caveat": "Built for packaged source structures and F001 teaching data, not arbitrary atom/FASTQ import. Coordinates are experimental; linker placements, readout and straightening are pedagogical. Callout field uses the standard 1280x720 stage.",
+      "related": [
+        "atac-seq",
+        "molecular-views",
+        "molecular-coordinates",
+        "clearance",
+        "motion",
+        "export-qa"
+      ]
     }
   ]
 }

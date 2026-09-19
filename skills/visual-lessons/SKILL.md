@@ -24,6 +24,8 @@ For a protein–RNA complex, telomerase-style 3D overview or atomic close-up wit
 
 For RNA folding, pairing/stacking, A-minor contacts or hydrated magnesium, select **`rna-folding`** first. It provides a complete editable template, source coordinates and portable QA. Select `molecular-coordinates` to reuse the fragment renderer and locator elsewhere. Preserve source/model/coordinate identity and actual connectivity. Rotation and emphasis explain a structure; they do not compute folding or molecular dynamics.
 
+For chromatin accessibility, Tn5, paired-end reading or fragment-length distributions, select `atac-seq`. Its full-film template supports named episode/timing/text remixes. Select `atac-components` for independent source-backed nucleosome/Tn5 views, fragment straightening, reading, histograms and nearby fading labels. Source data, builders and portable QA travel with generated projects; synthetic records and authored docking are explicitly distinguished from PDB coordinates.
+
 A new episode can use `scene` and `story`; a repair can go directly to `layout`, `clearance`, `motion`, `hit-audit` or the relevant domain. Cards distinguish ready components, compositions and missing external capabilities. Do not force a scientific question into an unrelated example.
 
 ## Create, verify and export

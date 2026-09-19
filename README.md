@@ -64,6 +64,7 @@ Read the [complete setup guide](docs/codex-setup.md) for installation scope, rel
 | --- | --- |
 | `spatial-biology` | Procedural 3D cell labelling, bead/droplet capture, barcode–feature–UMI explanation and paired RNA/ADT libraries |
 | `molecular-views` | Coordinate-backed complex overview and atomic detail, fitted camera, rotation, shared depth ordering and source provenance |
+| `atac-seq` / `atac-components` | Four-minute ATAC-seq film with remixable cues, or independent source structures, readout and quantitative views |
 | `trna-journey` | Continuous 6:38 tRNA film; remix named episodes, timing and RU/EN captions; atomic stem, D/T contacts, Mg/water and space-filling spheres |
 | `rna-prediction` | Motif energies and alignment evidence → pair topology → 2D and schematic 3D; 20 scenes, 91 states, verified ViennaRNA data |
 | `rna-folding` | Connected 17-scene explanation of RNA structure and folding concepts |
@@ -107,3 +108,14 @@ python3 ../my-trna-film/build/bundle.py
 ```
 
 [Open the standalone example locally](examples/trna-journey.html). Edit `js/trna-config.js` to select/reorder episodes and change motion, reading holds and bilingual text; the empty configuration retains all 39 cues and 398 seconds. The [assembly guide](docs/trna-journey.md) includes a complete shorter variant and component map. [CinemaTimeline](docs/cinema-timeline.md) can also pace explanations unrelated to RNA. Source coordinates and scientific caveats travel with the template.
+
+## Repeat, remix or reuse the ATAC-seq film
+
+```sh
+python3 create.py ../my-atac-film --template atac-seq --palette ocean
+python3 ../my-atac-film/build/atac-film.py
+```
+
+[Full film](examples/atac-seq.html): 46 cues / 240.6 seconds, source-backed 1KX5 nucleosomes and 1MUH Tn5, paired-end reading, fragment tracks and interpretation. Edit `js/atac-config.js` to choose episodes, timing and bilingual text. [Guide](docs/atac-seq.md).
+
+For individual parts, use `--template atac-components`: [four independent scenes / 16 states](examples/atac-components.html), with no full-film controller. [Component API and runnable assembly](docs/atac-components.md) cover structure views, nearby labels, contour-preserving straightening, read directions and histogram accumulation. Source data, reproducible builders and portable QA travel with every generated project; unrelated templates do not load the actors.

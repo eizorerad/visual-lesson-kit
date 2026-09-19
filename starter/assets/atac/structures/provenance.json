@@ -1,0 +1,180 @@
+{
+  "retrieved": "2026-09-19",
+  "extraction": "C4-prime per DNA nucleotide; C-alpha per protein residue; base centroid from deposited base heavy atoms. No missing coordinates filled. Biological assembly 1 downloaded from RCSB, not independently modelled.",
+  "structures": [
+    {
+      "key": "nucleosome",
+      "pdb": "1KX5",
+      "assembly": "1",
+      "coordinateFile": "assets/atac/structures/1KX5-assembly1.cif",
+      "downloadUrl": "https://files.rcsb.org/download/1KX5-assembly1.cif",
+      "sha256": "508081dd6a54cec472b8dd39ffdf3c57af56f67ab5fbf29da6cd076367f2263c",
+      "primaryArticle": "https://doi.org/10.1016/S0022-2836(02)00386-8",
+      "polymerChains": [
+        {
+          "id": "A",
+          "authorId": "I",
+          "entityId": "1",
+          "role": "nucleosomal DNA strand 1",
+          "traceAtom": "C4'",
+          "pointCount": 147,
+          "breaks": []
+        },
+        {
+          "id": "B",
+          "authorId": "J",
+          "entityId": "2",
+          "role": "nucleosomal DNA strand 2",
+          "traceAtom": "C4'",
+          "pointCount": 147,
+          "breaks": []
+        },
+        {
+          "id": "C",
+          "authorId": "A",
+          "entityId": "3",
+          "role": "histone H3",
+          "traceAtom": "CA",
+          "pointCount": 135,
+          "breaks": []
+        },
+        {
+          "id": "D",
+          "authorId": "B",
+          "entityId": "4",
+          "role": "histone H4",
+          "traceAtom": "CA",
+          "pointCount": 102,
+          "breaks": []
+        },
+        {
+          "id": "E",
+          "authorId": "C",
+          "entityId": "5",
+          "role": "histone H2A.1",
+          "traceAtom": "CA",
+          "pointCount": 128,
+          "breaks": []
+        },
+        {
+          "id": "F",
+          "authorId": "D",
+          "entityId": "6",
+          "role": "histone H2B.2",
+          "traceAtom": "CA",
+          "pointCount": 122,
+          "breaks": []
+        },
+        {
+          "id": "G",
+          "authorId": "E",
+          "entityId": "3",
+          "role": "histone H3",
+          "traceAtom": "CA",
+          "pointCount": 135,
+          "breaks": []
+        },
+        {
+          "id": "H",
+          "authorId": "F",
+          "entityId": "4",
+          "role": "histone H4",
+          "traceAtom": "CA",
+          "pointCount": 102,
+          "breaks": []
+        },
+        {
+          "id": "I",
+          "authorId": "G",
+          "entityId": "5",
+          "role": "histone H2A.1",
+          "traceAtom": "CA",
+          "pointCount": 128,
+          "breaks": []
+        },
+        {
+          "id": "J",
+          "authorId": "H",
+          "entityId": "6",
+          "role": "histone H2B.2",
+          "traceAtom": "CA",
+          "pointCount": 122,
+          "breaks": []
+        }
+      ],
+      "excluded": "waters, ions, all non-polymer ligands; unmodeled residues are not interpolated",
+      "basePairNote": "Antiparallel reverse-complement sequence correspondence; visual rungs retained only when C1-prime distances are 9.5\u201311.5 \u00c5 and base-centroid distances 4.5\u20137.5 \u00c5. This omits the two terminal distorted positions per Tn5 DNA end. Rungs represent paired bases, not individual hydrogen bonds; no DSSR assignment is claimed."
+    },
+    {
+      "key": "transposome",
+      "pdb": "1MUH",
+      "assembly": "1",
+      "coordinateFile": "assets/atac/structures/1MUH-assembly1.cif",
+      "downloadUrl": "https://files.rcsb.org/download/1MUH-assembly1.cif",
+      "sha256": "589b5420da477b98bb1f11f74f39da2168f1afb4e38182bfe25c55ade791ceb7",
+      "primaryArticle": "https://doi.org/10.1126/science.289.5476.77",
+      "polymerChains": [
+        {
+          "id": "A",
+          "authorId": "B",
+          "entityId": "1",
+          "role": "transferred strand of end 1",
+          "traceAtom": "C4'",
+          "pointCount": 20,
+          "breaks": []
+        },
+        {
+          "id": "B",
+          "authorId": "C",
+          "entityId": "2",
+          "role": "non-transferred strand of end 1",
+          "traceAtom": "C4'",
+          "pointCount": 20,
+          "breaks": []
+        },
+        {
+          "id": "C",
+          "authorId": "A",
+          "entityId": "3",
+          "role": "Tn5 subunit 1",
+          "traceAtom": "CA",
+          "pointCount": 455,
+          "breaks": [
+            368
+          ]
+        },
+        {
+          "id": "A-2",
+          "authorId": "B-2",
+          "entityId": "1",
+          "role": "transferred strand of end 2",
+          "traceAtom": "C4'",
+          "pointCount": 20,
+          "breaks": []
+        },
+        {
+          "id": "B-2",
+          "authorId": "C-2",
+          "entityId": "2",
+          "role": "non-transferred strand of end 2",
+          "traceAtom": "C4'",
+          "pointCount": 20,
+          "breaks": []
+        },
+        {
+          "id": "C-2",
+          "authorId": "A-2",
+          "entityId": "3",
+          "role": "Tn5 subunit 2",
+          "traceAtom": "CA",
+          "pointCount": 455,
+          "breaks": [
+            368
+          ]
+        }
+      ],
+      "excluded": "waters, ions, all non-polymer ligands; unmodeled residues are not interpolated",
+      "basePairNote": "Antiparallel reverse-complement sequence correspondence; visual rungs retained only when C1-prime distances are 9.5\u201311.5 \u00c5 and base-centroid distances 4.5\u20137.5 \u00c5. This omits the two terminal distorted positions per Tn5 DNA end. Rungs represent paired bases, not individual hydrogen bonds; no DSSR assignment is claimed."
+    }
+  ]
+}

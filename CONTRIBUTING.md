@@ -40,3 +40,9 @@ The verifier defaults to the `chrome` browser channel. `VLK_BROWSER_CHANNEL` sel
 Explain the behavior changed, relevant scientific assumptions and checks performed. Add tests for meaningful invariants or regressions; avoid tests that merely repeat implementation text. Preserve font notices, coordinate provenance and stable object identity during transformations. Update the navigation catalog when adding an API or guide.
 
 The repository includes source, docs, templates and standalone examples. Local histories, private authoring artifacts, dependency installations and screenshots from development sessions are excluded by `.gitignore`.
+
+## ATAC templates
+
+`python3 tools/build-atac.py` rebuilds both examples; `--check` compares their exported bytes with a fresh project. `python3 -m unittest discover -s tests -p test_atac_templates.py -v` checks portable generation, source extraction, dependency isolation and discovery. Shared runtime tests include text-node retention, font invalidation, actor disposal and deterministic remixing.
+
+The generated `qa/atac/README.md` separates default-film science/visual regression from arbitrary-route smoke checks and component checks. Browser tests require Playwright and a local browser, are distinct from Node DOM unit tests, and leave diagnostic reports in the generated project. A shared `layout.js` or bundled-notices change requires rebuilding existing examples as well as the new ones.
