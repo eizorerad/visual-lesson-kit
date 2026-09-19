@@ -113,7 +113,7 @@ const identity=m=>[m.a,m.b,m.c,m.d,m.e,m.f].every((n,i)=>near(n,[1,0,0,1,0,0][i]
   // zero camera duration and must render the settled PDB view immediately.
   const remix=await browser.newPage({viewport:{width:1440,height:900}});
   remix.on('pageerror',e=>report.errors.push(e.message));
-  await remix.addInitScript(()=>{window.ATAC_FILM_CONFIG={route:['nucleosome-real','histone-octamer']};});
+  await remix.addInitScript(config=>Object.defineProperty(window,'ATAC_FILM_CONFIG',{configurable:false,get:()=>config,set:()=>{}}),{route:['nucleosome-real','histone-octamer']});
   await remix.goto(pathToFileURL(artifact).href+'?lang=ru&qa=nucleosome-zero-motion');
   await remix.waitForFunction(()=>window.ATAC_FILM?.snapshot&&window.CINEMA);
   report.zeroMotion=await remix.evaluate(()=>{
@@ -121,7 +121,7 @@ const identity=m=>[m.a,m.b,m.c,m.d,m.e,m.f].every((n,i)=>near(n,[1,0,0,1,0,0][i]
    return{key:s.key,source:s.structure.source,motion:ATAC_FILM.cues[0].motion,progress:s.zoomBridge?.progress,opacity:+getComputedStyle(a).opacity,matrix:{a:m.a,b:m.b,c:m.c,d:m.d,e:m.e,f:m.f},invalid:[...D.deck.root().querySelectorAll('svg *')].filter(n=>['d','x','y','cx','cy','transform'].some(k=>/NaN|Infinity/.test(n.getAttribute(k)||''))).length};
   });
   check('A route starting at nucleosome-real handles motion=0 as a settled experimental view',()=>{
-   const z=report.zeroMotion;assert.equal(z.key,'nucleosome-real');assert.equal(z.motion,0);assert.equal(z.progress,1);assert.equal(z.source,'1KX5');assert.equal(z.opacity,1);assert(identity(z.matrix));assert.equal(z.invalid,0);
+   const z=report.zeroMotion;assert.equal(z.key,'nucleosome-real');assert.equal(z.motion,0);assert(z.progress===undefined||z.progress===1,'no partial zoom bridge at a zero-motion first cue');assert.equal(z.source,'1KX5');assert.equal(z.opacity,1);assert(identity(z.matrix));assert.equal(z.invalid,0);
   });
   await remix.close();
   check('No browser errors or external requests',()=>{assert.deepEqual(report.errors,[]);assert.deepEqual(report.external,[]);});

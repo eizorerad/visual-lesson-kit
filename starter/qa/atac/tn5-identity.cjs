@@ -31,7 +31,7 @@ fs.mkdirSync(output,{recursive:true});
   },time);}
   for(const key of ['tn5','tn5-real','tn5-end-dna','dock','two-events','different-events','release']){
    const cue=cueMap.get(key);if(!cue)continue;const row=await frame(cue.time);report.frames.push(row);
-   check(key+': persistent deposited geometry, no smooth blobs or nucleus icon',()=>{assert(row.stable&&row.sourceImmutable&&row.finite);assert.deepEqual(row.proteinChains.slice().sort(),['C','C-2']);assert(row.traceCounts.every(n=>n>500));assert.equal(row.filledPaths,0);assert.equal(row.nucleusEllipses,0);assert(row.enzymes.every(e=>e.source==='1MUH'&&e.proteinPointCount===910&&e.dnaPointCount===80&&!e.containsTargetDNA&&!e.containsFullAdapters));});
+   check(key+': persistent deposited geometry, no smooth blobs or nucleus icon',()=>{assert(row.stable&&row.sourceImmutable&&row.finite);assert.deepEqual(row.proteinChains.slice().sort(),['C','C-2']);assert(row.matchedVertices>=900,'every retained 1MUH vertex is drawn in the compact copy');assert(row.traceCounts.every(n=>n>=100),'trace runs remain short enough for depth sorting');assert.equal(row.filledPaths,0);assert.equal(row.nucleusEllipses,0);assert(row.enzymes.every(e=>e.source==='1MUH'&&e.proteinPointCount===910&&e.dnaPointCount===80&&!e.containsTargetDNA&&!e.containsFullAdapters));});
    await page.screenshot({path:path.join(output,key+'.png')});
   }
   for(const [key,progresses]of [['tn5-real',[0,.125,.25,.375,.5,.625,.75,.875,1]],['dock',[.28,.35,.42,.5,.58,.65,.72]]]){

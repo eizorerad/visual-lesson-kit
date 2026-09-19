@@ -2,17 +2,26 @@
 (function(g){
 'use strict';
 const s=D.dom.s,h=D.dom.h;
-function opacity(el,a){el.style.opacity=String(Math.max(0,Math.min(1,a)));el.style.pointerEvents=a>.01?'':'none';if(el instanceof HTMLElement)el.inert=a<.99;return el;}
+// Writes compare against the element's current value: identical frames and
+// unchanged actors then cause no DOM mutation, style invalidation or observer work.
+function put(el,name,value){const next=String(value);if(el.getAttribute(name)!==next)el.setAttribute(name,next);return el;}
+function opacity(el,a){
+ const value=String(Math.max(0,Math.min(1,a))),events=a>.01?'':'none';
+ if(el.style.opacity!==value)el.style.opacity=value;
+ if(el.style.pointerEvents!==events)el.style.pointerEvents=events;
+ if(el instanceof HTMLElement){const inert=a<.99;if(el.inert!==inert)el.inert=inert;}
+ return el;
+}
 function label(parent,x,y,value,size=26,color=C.white,anchor='middle'){
  const el=T.text(x,y,value,size,color,anchor);parent.append(el);return el;
 }
 function line(parent,x1,y1,x2,y2,color=C.grey,width=2,dash=''){
  const el=s('line',{x1,y1,x2,y2,stroke:color,'stroke-width':width,'stroke-linecap':'round','stroke-dasharray':dash});parent.append(el);return el;
 }
-function seg(el,x1,y1,x2,y2,width){Object.entries({x1,y1,x2,y2,...(width===undefined?{}:{'stroke-width':width})}).forEach(([k,v])=>el.setAttribute(k,v));}
+function seg(el,x1,y1,x2,y2,width){put(el,'x1',x1);put(el,'y1',y1);put(el,'x2',x2);put(el,'y2',y2);if(width!==undefined)put(el,'stroke-width',width);}
 function dot(parent,x,y,r=6,color=C.gold){const el=s('circle',{cx:x,cy:y,r,fill:color});parent.append(el);return el;}
-function pos(el,x,y){el.setAttribute('cx',x);el.setAttribute('cy',y);}
-function at(el,x,y){el.setAttribute('transform',`translate(${x} ${y})`);}
+function pos(el,x,y){put(el,'cx',x);put(el,'cy',y);}
+function at(el,x,y){put(el,'transform',`translate(${x} ${y})`);}
 function arrow(parent,color=C.gold,width=4){
  const q=s('g'),shaft=line(q,0,0,0,0,color,width),head=s('path',{fill:color});q.append(head);parent.append(q);
  return {g:q,shaft,head,set(x1,y1,x2,y2){seg(shaft,x1,y1,x2,y2);const a=Math.atan2(y2-y1,x2-x1),l=Math.min(14,Math.hypot(x2-x1,y2-y1)/2),w=l*.46;head.setAttribute('d',`M${x2},${y2} L${x2-l*Math.cos(a)+w*Math.sin(a)},${y2-l*Math.sin(a)-w*Math.cos(a)} L${x2-l*Math.cos(a)-w*Math.sin(a)},${y2-l*Math.sin(a)+w*Math.cos(a)} Z`);}};
@@ -100,5 +109,5 @@ function cell(parent,x,y,r=30,color=C.gold,id=''){
 }
 function grid(parent,ox,oy,k,xmin=-1,xmax=3,ymin=-3,ymax=1){const q=group(parent);for(let x=xmin;x<=xmax;x++)line(q,ox+k*x,oy-k*ymin,ox+k*x,oy-k*ymax,x===0?'var(--color-muted)':'var(--color-bg)',x===0?1.7:1);for(let y=ymin;y<=ymax;y++)line(q,ox+k*xmin,oy-k*y,ox+k*xmax,oy-k*y,y===0?'var(--color-muted)':'var(--color-bg)',y===0?1.7:1);return q;}
 function note(html,anchor='',url){return T.note(html,anchor,url);}
-g.F={phase,revealStroke,growArrow,stage,label,line,seg,dot,pos,at,arrow,path,group,opacity,tween,step,driver,image,cell,grid,note,lerp:(a,b,t)=>a+(b-a)*t,clamp:t=>Math.max(0,Math.min(1,t))};
+g.F={phase,revealStroke,growArrow,stage,label,line,seg,dot,pos,at,put,arrow,path,group,opacity,tween,step,driver,image,cell,grid,note,lerp:(a,b,t)=>a+(b-a)*t,clamp:t=>Math.max(0,Math.min(1,t))};
 })(window);

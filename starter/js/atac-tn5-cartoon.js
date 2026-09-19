@@ -30,10 +30,13 @@
   source.chains.forEach((chain,ci)=>{
    const dna=chain.kind==='dna',color=dna?(/2|B/.test(String(chain.end||chain.duplex||chain.group||chain.role))?C.teal:C.gold):(/B|2/.test(chain.role)||ci%2?C.purple:C.red);
    chain.points.forEach((p,index)=>{const q=project(p);(dna?dnaLandmarks:proteinLandmarks).push({chain:chain.id,index,point:[q.x,q.y]});allPoints.push(q);});
-   const limit=dna?1:2,breaks=new Set(chain.breaks||[]);
+   const limit=dna?4:6,gap=dna?11:7,breaks=new Set(chain.breaks||[]);
+   // Runs of retained vertices share one stroke triple (see AtacStructureViews).
+   const joined=j=>j>0&&j<chain.points.length&&!breaks.has(j)&&distance(chain.points[j],chain.points[j-1])<=gap;
    for(let i=0;i<chain.points.length-1;){
-    const end=Math.min(chain.points.length-1,i+limit),ps=chain.points.slice(i,end+1);
-    if((chain.breaks||[]).some(b=>b>i&&b<=end)||ps.some((p,j)=>j&&distance(p,ps[j-1])>(dna?11:7))){i=end;continue;}
+    if(!joined(i+1)){i++;continue;}
+    let end=i+1;while(end<chain.points.length-1&&end-i<limit&&joined(end+1))end++;
+    const ps=chain.points.slice(i,end+1);
     const node=make('g',{'data-source-pdb':'1MUH','data-chain':chain.id,'data-role':chain.role,'data-kind':chain.kind,'data-start-index':i,'data-end-index':end,'data-tn5-trace':''},parent);
     const p=ps.map(project),z=p.reduce((a,q)=>a+q.z,0)/p.length,back=Math.max(0,Math.min(1,.5+z/(view.maxDepth*2)));
     let d='M'+fmt(p[0].x)+','+fmt(p[0].y);

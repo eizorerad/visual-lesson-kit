@@ -86,11 +86,13 @@ function create(svg){
   return {root,depth,m,color,items,strands,rungs,core,terminals,lastOrder:[]};
  }
  const a=molecule(short,'short',C.gold,false),b=molecule(long,'spanning-nucleosome',C.blue,true);
- let disposed=false,snapshot;
+ let lastKey=null,disposed=false,snapshot;
  function paint(input={}){
   if(disposed)throw new Error('AtacFragmentOrigin actor is disposed');
   const visibility=clamp(Number.isFinite(input.visibility)?input.visibility:1),stage=Math.max(0,Math.min(2,Number.isFinite(input.stage)?input.stage:0)),turn=Number.isFinite(input.turn)?input.turn:0;
   const introduce=phase(stage,0,1),strip=phase(stage,1,1.22),straight=phase(stage,1.24,2);
+  // An unchanged state (typically this actor hidden behind other scenes) repaints nothing.
+  const key=visibility+'|'+stage+'|'+turn;if(key===lastKey&&snapshot)return snapshot;lastKey=key;
   opacity(g,visibility);
   if(visibility<=0){snapshot={stage,visibility,introduce,proteinRemoval:strip,unroll:straight,geometry:[],schematic:true};return snapshot;}
   opacity(wordGroups[0],1-phase(stage,0,.38));opacity(wordGroups[1],phase(stage,.5,.85)*(1-phase(stage,1,1.22)));opacity(wordGroups[2],phase(stage,1.85,1.97));

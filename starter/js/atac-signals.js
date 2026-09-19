@@ -9,10 +9,12 @@ function create(svg){
  const S=D.dom.s,id='atac-signals-'+(++serial),g=S('g',{'data-atac-actor':'signals'});svg.append(g);
  const labels=[],nodes={},clamp=v=>Math.max(0,Math.min(1,v)),mix=(a,b,t)=>a+(b-a)*t;
  const phase=(v,a,b)=>{const q=clamp((v-a)/(b-a));return q*q*(3-2*q);};
- const opacity=(el,v)=>{el.style.opacity=String(clamp(v));el.style.pointerEvents='none';};
+ // Writes skip values the element already has: settled fragments then cost no mutations per frame.
+ const opacity=(el,v)=>{const next=String(clamp(v));if(el.style.opacity!==next)el.style.opacity=next;if(el.style.pointerEvents!=='none')el.style.pointerEvents='none';};
+ const put=(e,k,v)=>{const next=String(v);if(e.getAttribute(k)!==next)e.setAttribute(k,next);};
  function group(name){const el=S('g',{'data-atac-layer':name});g.append(el);nodes[name]=el;return el;}
  function line(parent,color=C.blue,width=2){const e=S('line',{stroke:color,'stroke-width':width,'stroke-linecap':'round'});parent.append(e);return e;}
- function seg(e,x1,y1,x2,y2,width){e.setAttribute('x1',x1);e.setAttribute('y1',y1);e.setAttribute('x2',x2);e.setAttribute('y2',y2);if(width!==undefined)e.setAttribute('stroke-width',width);}
+ function seg(e,x1,y1,x2,y2,width){put(e,'x1',x1);put(e,'y1',y1);put(e,'x2',x2);put(e,'y2',y2);if(width!==undefined)put(e,'stroke-width',width);}
  function path(parent,color=C.blue,width=2,fill='none'){const e=S('path',{stroke:color,'stroke-width':width,fill,'stroke-linecap':'round','stroke-linejoin':'round'});parent.append(e);return e;}
  function text(parent,x,y,width,height,ru,en,size=21,color=C.white,align='center'){
   D.i18n.pack('en',{strings:{[ru]:en}});const box=L.textBox(parent,{id:id+'.text.'+labels.length,x,y,width,height,text:ru,size,color,padding:0,lineHeight:1.2,align});labels.push(box);return box;
@@ -74,12 +76,14 @@ function create(svg){
  const fripBracket=line(labelGroup,C.gold,1.8);seg(fripBracket,220,451,1060,451);
  const histSlots=new Map();hist.forEach((b,bi)=>b.ids.forEach((fid,slot)=>histSlots.set(fid,{bin:bi,slot,count:b.count})));
  const metricLabels=[endpointNumbers,coverageNumbers].flat();
- let disposed=false,last=null;
+ let lastKey=null,disposed=false,last=null;
  function setLabel(api,v){opacity(api.el,v);}
  function paint(s={}){
   if(disposed)return {anchors:{},stats:data.stats,stage:0};
   const stage=Number.isFinite(s.stage)?Math.max(0,Math.min(13,s.stage)):0,visibility=Number.isFinite(s.visibility)?clamp(s.visibility):1;
   const lengthReveal=Number.isFinite(s.lengthReveal)?clamp(s.lengthReveal):1;
+  // An unchanged state (typically this actor hidden behind other scenes) repaints nothing.
+  const key=stage+'|'+visibility+'|'+lengthReveal;if(key===lastKey&&last)return last;lastKey=key;
   const admitted=data.fragments.map((_,i)=>phase(lengthReveal,.65*i/data.fragments.length,.65*i/data.fragments.length+.35));
   const shownCounts=Array(hist.length).fill(0);
   data.fragments.forEach((f,i)=>shownCounts[histSlots.get(f.id).bin]+=admitted[i]);

@@ -152,7 +152,9 @@ function textBox(parent,options){
  const api={el,layout,setText(value){const next=String(value);if(next!==source){source=next;refresh();}return api;},setBox(value){const next=box(value);inset(next,pad);if(Object.keys(next).some(k=>next[k]!==bounds[k])){bounds=next;refresh();}return api;},dispose(){if(disposed)return;disposed=true;if(raf)global.cancelAnimationFrame(raf);unregister();texts.delete(api);}};
  texts.add(api);layout();schedule();return api;
 }
-function reflow(root){texts.forEach(api=>{if(belongs(root,api.el))api.layout();});return audit(root);}
+function relayout(root){texts.forEach(api=>{if(belongs(root,api.el))api.layout();});}
+// reflow additionally audits every contract; watchers only need the re-layout.
+function reflow(root){relayout(root);return audit(root);}
 async function ready(root){
  await Promise.resolve();
  reflow(root);
@@ -164,8 +166,8 @@ async function ready(root){
 function watch(root,ctx){
  if(watchers.has(root))return watchers.get(root);
  let disposed=false,raf=0;
- const schedule=()=>{if(!disposed&&!raf)raf=global.requestAnimationFrame(()=>{raf=0;if(!disposed)reflow(root);});};
- const unlang=global.D&&D.i18n?D.i18n.onChange(()=>{if(!disposed)reflow(root);}):()=>{};
+ const schedule=()=>{if(!disposed&&!raf)raf=global.requestAnimationFrame(()=>{raf=0;if(!disposed)relayout(root);});};
+ const unlang=global.D&&D.i18n?D.i18n.onChange(()=>{if(!disposed)relayout(root);}):()=>{};
  const observer=new MutationObserver(schedule);observer.observe(document.documentElement,{attributes:true,attributeFilter:['data-font','class','style']});
  const fonts=document.fonts;if(fonts&&fonts.addEventListener)fonts.addEventListener('loadingdone',schedule);if(fonts&&fonts.ready)fonts.ready.then(schedule);
  global.addEventListener('resize',schedule);
@@ -175,5 +177,5 @@ function watch(root,ctx){
  }
  const api={schedule,dispose};watchers.set(root,api);if(ctx&&typeof ctx.onDispose==='function')ctx.onDispose(dispose);schedule();return api;
 }
-global.L={inset,rows:(b,n,o)=>tracks(b,n,o,true),columns:(b,n,o)=>tracks(b,n,o,false),textBox,contract,audit,reflow,ready,watch};
+global.L={inset,rows:(b,n,o)=>tracks(b,n,o,true),columns:(b,n,o)=>tracks(b,n,o,false),textBox,contract,audit,relayout,reflow,ready,watch};
 })(window);

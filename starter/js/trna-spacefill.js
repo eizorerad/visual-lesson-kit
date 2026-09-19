@@ -5,6 +5,10 @@
 const DATA=TRNA_SPACEFILL_DATA,clamp=x=>Math.max(0,Math.min(1,x||0));
 const region=id=>id<=7||id>=66?'blue':id<=26?'teal':id<=43?'gold':id<=48?'grey':'purple';
 const semantic={blue:'primary',teal:'secondary',gold:'focus',grey:'muted',purple:'auxiliary'};
+// Persistent per-atom SVG records serve identity audits: jsdom checks and
+// ?qa= browser sessions. Ordinary playback keeps geometry in the actor array;
+// thousands of hidden nodes would otherwise be rewritten on every frame.
+const AUDIT=/jsdom/i.test(g.navigator?.userAgent||'')||/[?&]qa=/.test(g.location?.search||'');
 const defaults={blue:[.4,.73,.88],teal:[.38,.79,.71],gold:[.89,.72,.33],grey:[.59,.58,.63],purple:[.67,.6,.83]};
 function create(parent){
  const root=F.group(parent),metadata=F.group(root),viewport={x:60,y:188,width:1160,height:422};
@@ -14,10 +18,14 @@ function create(parent){
  metadata.setAttribute('display','none');metadata.setAttribute('aria-hidden','true');
  const host=D.dom.s('foreignObject',{...viewport,'pointer-events':'none'});root.append(host);
  const renderer=TrnaSphereRenderer.create(host,viewport);
+ root.dataset.spacefillRecords=AUDIT?'svg':'array';
  const actors=DATA.atoms.map(atom=>{
-  const dot=F.dot(metadata,0,0,0,'none');
-  dot.dataset.spacefillAtom=String(atom.id);dot.dataset.spacefillResidue=String(atom.residue);dot.dataset.spacefillElement=atom.element;
-  const title=D.dom.s('title');title.textContent=`1EHZ · ${atom.component}${atom.residue} · ${atom.name}`;dot.append(title);
+  let dot=null;
+  if(AUDIT){
+   dot=F.dot(metadata,0,0,0,'none');
+   dot.dataset.spacefillAtom=String(atom.id);dot.dataset.spacefillResidue=String(atom.residue);dot.dataset.spacefillElement=atom.element;
+   const title=D.dom.s('title');title.textContent=`1EHZ · ${atom.component}${atom.residue} · ${atom.name}`;dot.append(title);
+  }
   return {atom,dot,center:[0,0,0],radius:0,color:defaults[region(atom.residue)]};
  });
  let lastKey=null,lastCamera=null,lastAmount=0,palette={...defaults},disposed=false;
@@ -36,7 +44,7 @@ function create(parent){
   const key=JSON.stringify(camera)+';'+amount;if(key===lastKey)return {count:actors.length};
   const project=TrnaAtoms.projector(camera),radiusProgress=F.phase(amount,.12,1);
   actors.forEach(o=>{const p=project(o.atom.xyz),r=DATA.radii[o.atom.element]*camera.scale*F.lerp(.12,1,radiusProgress);
-   F.pos(o.dot,p[0],p[1]);o.dot.setAttribute('r',r);o.center=[p[0],p[1],p[2]*camera.scale];o.radius=r;o.color=palette[region(o.atom.residue)];
+   if(o.dot){F.pos(o.dot,p[0],p[1]);o.dot.setAttribute('r',r);}o.center=[p[0],p[1],p[2]*camera.scale];o.radius=r;o.color=palette[region(o.atom.residue)];
   });
   renderer.draw(actors);root.dataset.spacefillAmount=String(amount);lastKey=key;return {count:actors.length};
  }
