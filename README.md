@@ -31,7 +31,20 @@ python3 serve.py --port 8150
 
 Visit `http://127.0.0.1:8150`. Change the lesson's recipe in `js/recipes/`, then rebuild the export. Generated projects contain their own runtime, guides, data and notices, and remain usable independently of the original checkout. The generator refuses to overwrite nonempty folders.
 
-**Prerequisites:** Python 3.10+ for generation and export, and a modern browser for viewing. Node.js is optional and used for development tests; see [Contributing](CONTRIBUTING.md).
+By default a project receives the whole component library, so any template's actors can be added later. `--lean` copies only the shared runtime plus the selected template's scripts, data, builders and checks (about 6 MB instead of 14 MB for the tRNA film); the full toolkit can always be regenerated from the checkout.
+
+## Keep a lesson current
+
+Every generated project records the checksum of each kit file in `lesson-kit.json`. From the repository root:
+
+```sh
+python3 upgrade.py ../my-lesson            # report: add / update / same / conflict
+python3 upgrade.py ../my-lesson --apply    # replace pristine kit files, back up the old ones
+```
+
+Authored files (`index.html`, `js/config.js`, `README.md`, your own docs, assets and episodes) are never touched. A kit file that you edited locally is reported as a conflict and kept unless you pass `--force`; replaced files are saved under `.vlk-upgrade-backup/`. Lessons created before checksums existed are upgraded conservatively: missing runtime files are added and differing ones are only replaced with `--force`. [Version notes](docs/upgrading.md) describe what each release changed.
+
+**Prerequisites:** Python 3.9+ for generation and export, and a modern browser for viewing. Node.js is optional and used for development tests; see [Contributing](CONTRIBUTING.md).
 
 ## Use with Codex
 
@@ -58,7 +71,7 @@ Read the [complete setup guide](docs/codex-setup.md) for installation scope, rel
 
 ![A source-backed telomerase complex view with labeled protein, RNA and DNA](docs/images/molecular-overview.png)
 
-[See the atomic detail view](docs/images/molecular-detail.png) · [Run the two-scene example locally](examples/molecular-views.html)
+[See the atomic detail view](docs/images/molecular-detail.png) · [Run the two-scene example locally](examples/README.md)
 
 | Template | Starting point |
 | --- | --- |
@@ -74,13 +87,14 @@ Read the [complete setup guide](docs/codex-setup.md) for installation scope, rel
 | `methods` | Statistical, biological and geometric operations |
 | `explanations` | Connected comparisons, distributions and stepwise derivations |
 | `synthesis` | A recurring map linking model, observations and verification |
+| `crispri` | Eleven ordered CRISPRi design scenes: dCas9 origin and delivery, guide factory, repression, libraries, MOI, evidence and checks |
 | `gallery` | General component gallery and teaching patterns |
 
 The shared shell provides Russian/English switching, black/white backgrounds, three palettes, two text fonts, step navigation, reading notes and questions. Motion utilities preserve object identity; layout and interaction audits help find problems before export.
 
-The separate [3D biology section](docs/three-dimensional.md) provides reusable `V3` molecule meshes, cell surfaces, capture beads, primers, droplets and barcode records. Start with `python3 create.py ../my-3d-lesson --template spatial-biology --lang en --palette ocean` for three complete editable scenes (24 states); [open the standalone example locally](examples/spatial-biology.html). Geometry, visible molecule counts and trajectories are illustrative. The template follows the original solid-bead Drop-seq CITE-seq workflow and distinguishes co-capture from later synthesis. All components and recipes travel with new projects; other templates do not load these scenes.
+The separate [3D biology section](docs/three-dimensional.md) provides reusable `V3` molecule meshes, cell surfaces, capture beads, primers, droplets and barcode records. Start with `python3 create.py ../my-3d-lesson --template spatial-biology --lang en --palette ocean` for three complete editable scenes (24 states); [open the standalone example locally](examples/README.md). Geometry, visible molecule counts and trajectories are illustrative. The template follows the original solid-bead Drop-seq CITE-seq workflow and distinguishes co-capture from later synthesis. All components and recipes travel with new projects; other templates do not load these scenes.
 
-The [RNA prediction template](docs/rna-prediction.md) preserves a continuous causal narrative and its pacing. Create it with `python3 create.py ../my-rna-prediction --template rna-prediction --palette ocean`; [open the standalone example locally](examples/rna-prediction.html). The [indexed RNA actor](docs/rna-pair-molecule.md) and [visual/motion style recipe](docs/cinematic-explanation.md) can be reused independently.
+The [RNA prediction template](docs/rna-prediction.md) preserves a continuous causal narrative and its pacing. Create it with `python3 create.py ../my-rna-prediction --template rna-prediction --palette ocean`; [open the standalone example locally](examples/README.md). The [indexed RNA actor](docs/rna-pair-molecule.md) and [visual/motion style recipe](docs/cinematic-explanation.md) can be reused independently.
 
 The molecular constructor combines two high-level presets—`MolecularScenes.overview` and `MolecularScenes.detail`—with lower-level trace, fragment, camera, locator and control components. Follow the [assembly recipe](docs/molecular-views.md), [API](docs/molecular-views-api.md) and [PDB import guide](docs/molecular-data.md). Rotating source coordinates changes the view; it does not compute a folding trajectory or molecular dynamics.
 
@@ -96,7 +110,7 @@ The selector reads a compact metadata catalog. Open the returned guide sections 
 
 ## Development and attribution
 
-[Contributing](CONTRIBUTING.md) lists test and browser-check commands.
+[Contributing](CONTRIBUTING.md) lists test and browser-check commands; [CHANGELOG.md](CHANGELOG.md) summarizes releases.
 
 Visual Lesson Kit is authored by **Leonid Klarov** ([eizorerad](https://github.com/eizorerad), [eizonix@gmail.com](mailto:eizonix@gmail.com)) and released under the [MIT License](LICENSE). Bundled fonts and structural data retain their separate terms and scientific attribution; see [third-party notices](THIRD_PARTY_NOTICES.md) and [provenance](docs/provenance.md).
 
@@ -107,7 +121,7 @@ python3 create.py ../my-trna-film --template trna-journey --palette ocean
 python3 ../my-trna-film/build/bundle.py
 ```
 
-[Open the standalone example locally](examples/trna-journey.html). Edit `js/trna-config.js` to select/reorder episodes and change motion, reading holds and bilingual text; the empty configuration retains all 39 cues and 398 seconds. The [assembly guide](docs/trna-journey.md) includes a complete shorter variant and component map. [CinemaTimeline](docs/cinema-timeline.md) can also pace explanations unrelated to RNA. Source coordinates and scientific caveats travel with the template.
+[Open the standalone example locally](examples/README.md). Edit `js/trna-config.js` to select/reorder episodes and change motion, reading holds and bilingual text; the empty configuration retains all 39 cues and 398 seconds. The [assembly guide](docs/trna-journey.md) includes a complete shorter variant and component map. [CinemaTimeline](docs/cinema-timeline.md) can also pace explanations unrelated to RNA. Source coordinates and scientific caveats travel with the template.
 
 ## Repeat, remix or reuse the ATAC-seq film
 
@@ -116,6 +130,6 @@ python3 create.py ../my-atac-film --template atac-seq --palette ocean
 python3 ../my-atac-film/build/atac-film.py
 ```
 
-[Full film](examples/atac-seq.html): 46 cues / 240.6 seconds, source-backed 1KX5 nucleosomes and 1MUH Tn5, paired-end reading, fragment tracks and interpretation. Edit `js/atac-config.js` to choose episodes, timing and bilingual text. [Guide](docs/atac-seq.md).
+[Full film](examples/README.md): 46 cues / 240.6 seconds, source-backed 1KX5 nucleosomes and 1MUH Tn5, paired-end reading, fragment tracks and interpretation. Edit `js/atac-config.js` to choose episodes, timing and bilingual text. [Guide](docs/atac-seq.md).
 
-For individual parts, use `--template atac-components`: [four independent scenes / 16 states](examples/atac-components.html), with no full-film controller. [Component API and runnable assembly](docs/atac-components.md) cover structure views, nearby labels, contour-preserving straightening, read directions and histogram accumulation. Source data, reproducible builders and portable QA travel with every generated project; unrelated templates do not load the actors.
+For individual parts, use `--template atac-components`: [four independent scenes / 16 states](examples/README.md), with no full-film controller. [Component API and runnable assembly](docs/atac-components.md) cover structure views, nearby labels, contour-preserving straightening, read directions and histogram accumulation. Source data, reproducible builders and portable QA travel with every generated project; unrelated templates do not load the actors.

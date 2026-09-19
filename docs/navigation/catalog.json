@@ -1,3031 +1,3040 @@
 {
-  "version": 1,
-  "branches": [
+ "version": 1,
+ "branches": [
+  {
+   "id": "narrative",
+   "title": "Explanation / Объяснение",
+   "summary": "Choose a question, visible operations and a coherent ending."
+  },
+  {
+   "id": "drawing",
+   "title": "Drawing and layout / Рисунок и размещение",
+   "summary": "Create scenes, measured text, exact connectors and source-image views."
+  },
+  {
+   "id": "motion",
+   "title": "Motion and viewpoint / Движение и ракурс",
+   "summary": "Preserve actors through motion and distinguish camera changes from scientific change."
+  },
+  {
+   "id": "statistics",
+   "title": "Distributions and evidence / Распределения и выводы",
+   "summary": "Compare distributions, quantify variation and explain statistical decisions."
+  },
+  {
+   "id": "biology",
+   "title": "Biological structures and records / Биологические структуры и записи",
+   "summary": "Explain molecular structures, gene expression, observed counts, aggregation, normalization and alleles."
+  },
+  {
+   "id": "three-dimensional",
+   "title": "3D scenes and surfaces / 3D-сцены и поверхности",
+   "summary": "Assemble source-coordinate molecular overviews and atomic close-ups, or procedural biological surfaces, capture chemistry and barcode records; choose the representation that supports the scientific claim."
+  },
+  {
+   "id": "chemistry",
+   "title": "Chemistry and physical models / Химия и физические модели",
+   "summary": "Connect atoms, bonds and chemical reactions to biological processes through explicit schematic and numerical models."
+  },
+  {
+   "id": "geometry",
+   "title": "Geometry and data organization / Геометрия и организация данных",
+   "summary": "Project vectors, transform coordinates, reorder matrices and assign observation roles."
+  },
+  {
+   "id": "interaction",
+   "title": "Controls and questions / Управление и вопросы",
+   "summary": "Add manual inputs, accessible SVG regions, questions and interaction checks."
+  },
+  {
+   "id": "experience",
+   "title": "Reading experience / Чтение и оформление",
+   "summary": "Adapt language, appearance, shell and mobile gestures without losing state."
+  },
+  {
+   "id": "delivery",
+   "title": "Verification and delivery / Проверка и экспорт",
+   "summary": "Preserve provenance, inspect rendered lessons, build standalone HTML and upgrade carefully."
+  }
+ ],
+ "concepts": [
+  {
+   "id": "scene",
+   "branch": "drawing",
+   "title": "Persistent scene / Постоянная сцена",
+   "summary": "Create scene objects once and update them through authored states with F.stage and F.step.",
+   "keywords": [
+    "scene",
+    "SVG actors",
+    "F.stage",
+    "F.step",
+    "F.group",
+    "сцена",
+    "постоянные объекты",
+    "эпизод"
+   ],
+   "status": "ready",
+   "guides": [
     {
-      "id": "narrative",
-      "title": "Explanation / Объяснение",
-      "summary": "Choose a question, visible operations and a coherent ending."
-    },
-    {
-      "id": "drawing",
-      "title": "Drawing and layout / Рисунок и размещение",
-      "summary": "Create scenes, measured text, exact connectors and source-image views."
-    },
-    {
-      "id": "motion",
-      "title": "Motion and viewpoint / Движение и ракурс",
-      "summary": "Preserve actors through motion and distinguish camera changes from scientific change."
-    },
-    {
-      "id": "statistics",
-      "title": "Distributions and evidence / Распределения и выводы",
-      "summary": "Compare distributions, quantify variation and explain statistical decisions."
-    },
-    {
-      "id": "biology",
-      "title": "Biological structures and records / Биологические структуры и записи",
-      "summary": "Explain molecular structures, gene expression, observed counts, aggregation, normalization and alleles."
-    },
-    {
-      "id": "three-dimensional",
-      "title": "3D scenes and surfaces / 3D-сцены и поверхности",
-      "summary": "Assemble source-coordinate molecular overviews and atomic close-ups, or procedural biological surfaces, capture chemistry and barcode records; choose the representation that supports the scientific claim."
-    },
-    {
-      "id": "chemistry",
-      "title": "Chemistry and physical models / Химия и физические модели",
-      "summary": "Connect atoms, bonds and chemical reactions to biological processes through explicit schematic and numerical models."
-    },
-    {
-      "id": "geometry",
-      "title": "Geometry and data organization / Геометрия и организация данных",
-      "summary": "Project vectors, transform coordinates, reorder matrices and assign observation roles."
-    },
-    {
-      "id": "interaction",
-      "title": "Controls and questions / Управление и вопросы",
-      "summary": "Add manual inputs, accessible SVG regions, questions and interaction checks."
-    },
-    {
-      "id": "experience",
-      "title": "Reading experience / Чтение и оформление",
-      "summary": "Adapt language, appearance, shell and mobile gestures without losing state."
-    },
-    {
-      "id": "delivery",
-      "title": "Verification and delivery / Проверка и экспорт",
-      "summary": "Preserve provenance, inspect rendered lessons, build standalone HTML and upgrade carefully."
+     "path": "components.md",
+     "section": "1. Сцена и постоянные объекты"
     }
-  ],
-  "concepts": [
+   ],
+   "sources": [
+    "js/film.js",
+    "js/lesson.js"
+   ],
+   "examples": [
+    "js/episodes/01-objects.js"
+   ],
+   "caveat": "Object identity must match scientific identity; provide a note for every state and clean up scene resources.",
+   "related": [
+    "story",
+    "layout",
+    "motion",
+    "theme"
+   ]
+  },
+  {
+   "id": "motion",
+   "branch": "motion",
+   "title": "Persistent motion / Движение одних объектов",
+   "summary": "Use F.motionTrack for keyed poses and F.shared for semantically identical actors across adjacent scenes.",
+   "keywords": [
+    "animation",
+    "morph",
+    "persistent actors",
+    "F.motionTrack",
+    "F.shared",
+    "F.driver",
+    "анимация",
+    "преобразование",
+    "перенос объекта"
+   ],
+   "status": "ready",
+   "guides": [
     {
-      "id": "scene",
-      "branch": "drawing",
-      "title": "Persistent scene / Постоянная сцена",
-      "summary": "Create scene objects once and update them through authored states with F.stage and F.step.",
-      "keywords": [
-        "scene",
-        "SVG actors",
-        "F.stage",
-        "F.step",
-        "F.group",
-        "сцена",
-        "постоянные объекты",
-        "эпизод"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "components.md",
-          "section": "1. Сцена и постоянные объекты"
-        }
-      ],
-      "sources": [
-        "js/film.js",
-        "js/lesson.js"
-      ],
-      "examples": [
-        "js/episodes/01-objects.js"
-      ],
-      "caveat": "Object identity must match scientific identity; provide a note for every state and clean up scene resources.",
-      "related": [
-        "story",
-        "layout",
-        "motion",
-        "theme"
-      ]
+     "path": "motion.md",
+     "section": "One actor, several layouts"
     },
     {
-      "id": "motion",
-      "branch": "motion",
-      "title": "Persistent motion / Движение одних объектов",
-      "summary": "Use F.motionTrack for keyed poses and F.shared for semantically identical actors across adjacent scenes.",
-      "keywords": [
-        "animation",
-        "morph",
-        "persistent actors",
-        "F.motionTrack",
-        "F.shared",
-        "F.driver",
-        "анимация",
-        "преобразование",
-        "перенос объекта"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "motion.md",
-          "section": "One actor, several layouts"
-        },
-        {
-          "path": "motion.md",
-          "section": "Continue an object across adjacent scenes"
-        },
-        {
-          "path": "interaction.md",
-          "section": "Уход со сцены"
-        }
-      ],
-      "sources": [
-        "js/motion.js",
-        "js/film.js"
-      ],
-      "examples": [
-        "js/recipes/representation-journey.js"
-      ],
-      "caveat": "Read each selected motion contract and register cleanup; intermediate geometry is an explanation, not evidence of a measured trajectory.",
-      "related": [
-        "scene",
-        "controls",
-        "perspective",
-        "clearance",
-        "molecular-animation"
-      ]
+     "path": "motion.md",
+     "section": "Continue an object across adjacent scenes"
     },
     {
-      "id": "perspective",
-      "branch": "motion",
-      "title": "Camera and depth disclosure / Ракурс и третья координата",
-      "summary": "Project fixed world coordinates with K.project3D and K.spatialScene while explaining what the camera reveals.",
-      "keywords": [
-        "3D",
-        "camera",
-        "orthographic",
-        "K.project3D",
-        "K.spatialScene",
-        "ракурс",
-        "камера",
-        "третья координата",
-        "UMAP"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "perspective.md",
-          "section": "Что именно проектируется"
-        },
-        {
-          "path": "perspective.md",
-          "section": "Небольшая пространственная сцена"
-        },
-        {
-          "path": "perspective.md",
-          "section": "Анимация и ручное управление"
-        },
-        {
-          "path": "perspective.md",
-          "section": "Два образца и границы вывода"
-        }
-      ],
-      "sources": [
-        "js/perspective.js"
-      ],
-      "examples": [
-        "js/episodes/12-viewpoint.js",
-        "js/episodes/13-dimension.js"
-      ],
-      "caveat": "A camera does not recover missing depth, fit UMAP or turn a 2D image into measured 3D coordinates.",
-      "related": [
-        "motion",
-        "projection",
-        "source-figure"
-      ]
-    },
-    {
-      "id": "layout",
-      "branch": "drawing",
-      "title": "Measured text layout / Измеряемое размещение текста",
-      "summary": "Reserve intended boxes with L.textBox, L.rows, L.columns and L.contract, then measure the rendered text.",
-      "keywords": [
-        "text box",
-        "padding",
-        "L.textBox",
-        "L.contract",
-        "L.ready",
-        "layout",
-        "текст",
-        "отступы",
-        "границы",
-        "переполнение"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "layout.md",
-          "section": "Boxes and tracks"
-        },
-        {
-          "path": "layout.md",
-          "section": "SVG text inside a box"
-        },
-        {
-          "path": "layout.md",
-          "section": "Mounting, fonts and disposal"
-        },
-        {
-          "path": "layout.md",
-          "section": "Contracts for existing labels and HTML"
-        },
-        {
-          "path": "layout.md",
-          "section": "What the audit proves"
-        }
-      ],
-      "sources": [
-        "js/layout.js"
-      ],
-      "examples": [
-        "js/recipes/representation-journey.js"
-      ],
-      "caveat": "Measure after font loading in the promised locales and appearance modes; unmeasured text is not passing and text boxes do not prove stroke clearance.",
-      "related": [
-        "clearance",
-        "anchors",
-        "theme",
-        "languages",
-        "export-qa"
-      ]
-    },
-    {
-      "id": "clearance",
-      "branch": "drawing",
-      "title": "Label and stroke clearance / Зазоры подписей и линий",
-      "summary": "Reserve space around complete formulas, axes, vectors and closed contours throughout motion.",
-      "keywords": [
-        "label collision",
-        "formula",
-        "stroke clearance",
-        "axis labels",
-        "moving labels crossing axis",
-        "overlap",
-        "подписи",
-        "движущиеся подписи пересекают ось",
-        "формула",
-        "зазоры",
-        "пересечение",
-        "окружность"
-      ],
-      "status": "compose",
-      "guides": [
-        {
-          "path": "label-clearance.md",
-          "section": "Резервируйте всю формулу"
-        },
-        {
-          "path": "label-clearance.md",
-          "section": "Ось, легенда и движущийся вектор"
-        },
-        {
-          "path": "label-clearance.md",
-          "section": "Проверяйте контакт, а не только прямоугольники"
-        }
-      ],
-      "sources": [
-        "js/layout.js",
-        "js/explanation.js"
-      ],
-      "examples": [
-        "js/recipes/explanation-bridges.js"
-      ],
-      "caveat": "These are composition and review techniques, not an automatic collision-avoidance API; inspect actual shapes and intermediate frames.",
-      "related": [
-        "layout",
-        "anchors",
-        "motion",
-        "svg-button",
-        "export-qa"
-      ]
-    },
-    {
-      "id": "anchors",
-      "branch": "drawing",
-      "title": "Exact anchors and guides / Точные крепления и направляющие",
-      "summary": "Attach flat-ended guides to current geometry using K.boxAnchor and K.guideSpan.",
-      "keywords": [
-        "connector",
-        "anchor",
-        "guide",
-        "span",
-        "K.boxAnchor",
-        "K.guideSpan",
-        "направляющая",
-        "соединитель",
-        "крепление"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "explanation-geometry.md",
-          "section": "Attach to the actual frame"
-        },
-        {
-          "path": "explanation-geometry.md",
-          "section": "A persistent guide or span"
-        },
-        {
-          "path": "explanation-geometry.md",
-          "section": "Recompute connections from the current pose"
-        }
-      ],
-      "sources": [
-        "js/explanation.js"
-      ],
-      "examples": [
-        "js/recipes/explanation-bridges.js"
-      ],
-      "caveat": "Calculate the object and its connector endpoints from the same current pose; exact attachments do not establish collision-free routing.",
-      "related": [
-        "layout",
-        "clearance",
-        "motion",
-        "recurring-map"
-      ]
-    },
-    {
-      "id": "sequence",
-      "branch": "biology",
-      "title": "Indexed sequence / Последовательность с индексами",
-      "summary": "Keep symbols, indices and supplied relations visible while changing their arrangement with K.sequenceTrack.",
-      "keywords": [
-        "sequence",
-        "DNA",
-        "RNA",
-        "protein sequence",
-        "K.sequenceTrack",
-        "последовательность",
-        "нуклеотиды",
-        "индексы",
-        "связи"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "inquiry.md",
-          "section": "Постоянные символы: `K.sequenceTrack`"
-        },
-        {
-          "path": "inquiry.md",
-          "section": "Происхождение и границы"
-        }
-      ],
-      "sources": [
-        "js/inquiry.js"
-      ],
-      "examples": [
-        "js/episodes/06-sequence.js"
-      ],
-      "caveat": "The author supplies coordinates and relations; this helper predicts neither molecular structure nor valid base pairing.",
-      "related": [
-        "motion",
-        "matrix",
-        "molecular-animation",
-        "molecular-simulation"
-      ]
-    },
-    {
-      "id": "matrix",
-      "branch": "geometry",
-      "title": "Matrix and heatmap / Матрица и тепловая карта",
-      "summary": "Reorder a displayed matrix with K.heatmap while preserving cell values and a fixed color scale.",
-      "keywords": [
-        "matrix",
-        "heatmap",
-        "reorder",
-        "K.heatmap",
-        "матрица",
-        "тепловая карта",
-        "перестановка",
-        "кластеризация"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "matrices-partitions.md",
-          "section": "K.heatmap"
-        },
-        {
-          "path": "matrices-partitions.md",
-          "section": "Галерея и научный статус"
-        }
-      ],
-      "sources": [
-        "js/matrices.js"
-      ],
-      "examples": [
-        "js/episodes/07-heatmap.js"
-      ],
-      "caveat": "Permuting rows and columns is not clustering; supplied orders must be bijections and the quantitative color range must remain explicit.",
-      "related": [
-        "partition",
-        "sequence",
-        "theme"
-      ]
-    },
-    {
-      "id": "partition",
-      "branch": "geometry",
-      "title": "Observation partitions / Разделение наблюдений",
-      "summary": "Assign persistent observation IDs to construction, reserve and evaluation roles with K.partitionActors.",
-      "keywords": [
-        "partition",
-        "train test split",
-        "holdout",
-        "K.partitionActors",
-        "выборка",
-        "разбиение",
-        "резерв",
-        "обучение",
-        "проверка"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "matrices-partitions.md",
-          "section": "K.partitionActors"
-        },
-        {
-          "path": "matrices-partitions.md",
-          "section": "Галерея и научный статус"
-        }
-      ],
-      "sources": [
-        "js/partitions.js"
-      ],
-      "examples": [
-        "js/episodes/08-partition.js"
-      ],
-      "caveat": "Each ID must occur exactly once; moving records into groups does not train or validate a model.",
-      "related": [
-        "prediction",
-        "pipeline",
-        "permutation"
-      ]
-    },
-    {
-      "id": "uncertainty",
-      "branch": "statistics",
-      "title": "Spread and mean precision / Разброс и точность среднего",
-      "summary": "Show residuals, sample variance, SD and SEM with K.sampleSummary and K.sampleSpread.",
-      "keywords": [
-        "uncertainty",
-        "variance",
-        "SD",
-        "SEM",
-        "K.sampleSummary",
-        "K.sampleSpread",
-        "неопределённость",
-        "дисперсия",
-        "разброс",
-        "стандартная ошибка"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "statistics.md",
-          "section": "Sample summary"
-        },
-        {
-          "path": "statistics.md",
-          "section": "Residual spread view"
-        },
-        {
-          "path": "statistics.md",
-          "section": "Numerical input contract"
-        },
-        {
-          "path": "statistics.md",
-          "section": "View input and identity contract"
-        },
-        {
-          "path": "statistics.md",
-          "section": "View lifecycle"
-        }
-      ],
-      "sources": [
-        "js/statistics.js"
-      ],
-      "examples": [
-        "js/recipes/methods-statistics.js"
-      ],
-      "caveat": "SD and SEM answer different questions; the author must identify independent sampling units and must not treat a displayed interval as an automatic confidence interval.",
-      "related": [
-        "aggregation",
-        "resampling",
-        "permutation",
-        "empirical-distributions"
-      ]
-    },
-    {
-      "id": "permutation",
-      "branch": "statistics",
-      "title": "Exact mean permutation / Точная перестановка групп",
-      "summary": "Reassign persistent records and enumerate small unpaired mean-difference tests with K.exactMeanPermutation and K.permutationView.",
-      "keywords": [
-        "permutation test",
-        "exchangeability",
-        "null distribution",
-        "K.exactMeanPermutation",
-        "K.permutationView",
-        "перестановочный тест",
-        "перестановка меток",
-        "обменность",
-        "нулевая гипотеза"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "statistics.md",
-          "section": "Exact mean permutation"
-        },
-        {
-          "path": "statistics.md",
-          "section": "Permutation view"
-        },
-        {
-          "path": "statistics.md",
-          "section": "Assignment transitions"
-        },
-        {
-          "path": "statistics.md",
-          "section": "Numerical input contract"
-        },
-        {
-          "path": "statistics.md",
-          "section": "View input and identity contract"
-        },
-        {
-          "path": "statistics.md",
-          "section": "View lifecycle"
-        }
-      ],
-      "sources": [
-        "js/statistics.js"
-      ],
-      "examples": [
-        "js/recipes/methods-statistics.js"
-      ],
-      "caveat": "The exact small-sample unpaired enumeration requires exchangeability; it is not a general paired, clustered or arbitrarily pooled-null testing engine.",
-      "related": [
-        "uncertainty",
-        "multiple-testing",
-        "partition"
-      ]
-    },
-    {
-      "id": "multiple-testing",
-      "branch": "statistics",
-      "title": "Benjamini–Hochberg / Множественное тестирование",
-      "summary": "Sort hypothesis IDs, locate the final passing rank and select its prefix with K.bhAdjust and K.bhView.",
-      "keywords": [
-        "multiple testing",
-        "BH",
-        "Benjamini Hochberg",
-        "FDR",
-        "K.bhAdjust",
-        "K.bhView",
-        "множественное тестирование",
-        "ложные открытия",
-        "p-value",
-        "многих генов",
-        "множество проверок",
-        "выбор гипотез",
-        "сортировка p",
-        "ложноположительные",
-        "false discovery",
-        "adjusted p",
-        "gene testing"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "statistics.md",
-          "section": "BH adjustment"
-        },
-        {
-          "path": "statistics.md",
-          "section": "BH ranking view"
-        },
-        {
-          "path": "statistics.md",
-          "section": "Numerical input contract"
-        },
-        {
-          "path": "statistics.md",
-          "section": "View input and identity contract"
-        },
-        {
-          "path": "statistics.md",
-          "section": "View lifecycle"
-        }
-      ],
-      "sources": [
-        "js/statistics.js"
-      ],
-      "examples": [
-        "js/recipes/methods-statistics.js"
-      ],
-      "caveat": "Explain the procedure's assumptions and family of tests; a BH-adjusted value is not a posterior probability that a hypothesis is true.",
-      "related": [
-        "permutation",
-        "threshold",
-        "story"
-      ]
-    },
-    {
-      "id": "resampling",
-      "branch": "statistics",
-      "title": "Resampling copies / Выборки с возвращением",
-      "summary": "Trace source records into supplied resamples and their means with K.resampleMean.",
-      "keywords": [
-        "bootstrap",
-        "resampling",
-        "sample with replacement",
-        "K.resampleMean",
-        "N.bootstrapMeans",
-        "бутстрэп",
-        "пересэмплирование",
-        "выборка с возвращением"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "resampling.md",
-          "section": "API"
-        },
-        {
-          "path": "resampling.md",
-          "section": "Движение и смысл координат"
-        },
-        {
-          "path": "resampling.md",
-          "section": "Парный bootstrap: рецепт автора"
-        }
-      ],
-      "sources": [
-        "js/resampling.js",
-        "js/lib/num.js"
-      ],
-      "examples": [
-        "js/episodes/10-resampling.js"
-      ],
-      "caveat": "Repeated IDs are copies, not new observations; the view neither generates confidence intervals nor establishes the resampling unit or dependence structure.",
-      "related": [
-        "uncertainty",
-        "aggregation",
-        "prediction"
-      ]
-    },
-    {
-      "id": "prediction",
-      "branch": "statistics",
-      "title": "Matched predictions / Сопоставленные предсказания",
-      "summary": "Compare observed and predicted scalar values for the same IDs using K.predictionComparison and synchronized Pearson/L2 readouts.",
-      "keywords": [
-        "prediction",
-        "Pearson",
-        "correlation",
-        "L2",
-        "K.predictionComparison",
-        "предсказание",
-        "корреляция",
-        "ошибка",
-        "остатки"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "predictions.md",
-          "section": "Arithmetic and interpretation"
-        },
-        {
-          "path": "predictions.md",
-          "section": "Animation and interaction"
-        }
-      ],
-      "sources": [
-        "js/predictions.js"
-      ],
-      "examples": [
-        "js/episodes/09-prediction.js"
-      ],
-      "caveat": "L2 is not RMSE; Pearson for a constant series is undefined, and comparison does not fit a predictive model.",
-      "related": [
-        "controls",
-        "partition",
-        "pipeline",
-        "threshold"
-      ]
-    },
-    {
-      "id": "threshold",
-      "branch": "statistics",
-      "title": "Classification threshold / Порог классификации",
-      "summary": "Connect score thresholds to selected records, integer counts, precision/recall and average precision.",
-      "keywords": [
-        "threshold",
-        "precision recall",
-        "average precision",
-        "PR curve",
-        "K.binaryRanking",
-        "K.thresholdCurve",
-        "порог",
-        "точность полнота",
-        "классификация"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "threshold.md",
-          "section": "Расчёт ранжирования"
-        },
-        {
-          "path": "threshold.md",
-          "section": "Связанная геометрия"
-        },
-        {
-          "path": "threshold.md",
-          "section": "Пример и управление"
-        }
-      ],
-      "sources": [
-        "js/threshold.js"
-      ],
-      "examples": [
-        "js/episodes/11-threshold.js"
-      ],
-      "caveat": "Keep equal scores grouped under score ≥ threshold; the area is discrete average precision, with recall/AP undefined when there are no positive cases.",
-      "related": [
-        "prediction",
-        "controls",
-        "multiple-testing"
-      ]
-    },
-    {
-      "id": "empirical-distributions",
-      "branch": "statistics",
-      "title": "Observations and quantiles / Наблюдения и квантили",
-      "summary": "Represent observations as an empirical inverse CDF with K.empiricalDistribution and distinguish that model from its query grid.",
-      "keywords": [
-        "empirical distribution",
-        "quantile",
-        "inverse CDF",
-        "histogram",
-        "grid resolution",
-        "K.empiricalDistribution",
-        "K.histogram",
-        "эмпирическое распределение",
-        "квантили",
-        "сетка"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "distributions.md",
-          "section": "Observations become an empirical inverse CDF"
-        },
-        {
-          "path": "components.md",
-          "section": "3. Гистограмма из тех же наблюдений"
-        }
-      ],
-      "sources": [
-        "js/distributions.js",
-        "js/charts.js"
-      ],
-      "examples": [
-        "js/recipes/explanation-bridges.js",
-        "js/episodes/02-distribution.js"
-      ],
-      "caveat": "Increasing the probability-grid size adds evaluation positions, not observations; quantile boundary rules and bin boundaries must remain explicit.",
-      "related": [
-        "quantile-transport",
-        "uncertainty",
-        "recurring-map"
-      ]
-    },
-    {
-      "id": "quantile-transport",
-      "branch": "statistics",
-      "title": "One-dimensional transport / Одномерное расстояние и центр",
-      "summary": "Compute empirical W2 with K.wasserstein1D and average aligned quantile-grid curves with K.quantileBarycenter.",
-      "keywords": [
-        "Wasserstein",
-        "W2",
-        "optimal transport",
-        "quantile barycenter",
-        "K.wasserstein1D",
-        "K.quantileBarycenter",
-        "Васерштейн",
-        "оптимальный транспорт",
-        "барицентр",
-        "центральная кривая"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "distributions.md",
-          "section": "Exact W2 for empirical measures"
-        },
-        {
-          "path": "distributions.md",
-          "section": "Average quantile curves on a shared grid"
-        }
-      ],
-      "sources": [
-        "js/distributions.js"
-      ],
-      "examples": [
-        "js/recipes/explanation-bridges.js"
-      ],
-      "caveat": "Exact empirical integration uses floating-point arithmetic; grid-curve averaging does not reconstruct an exact unequal-size empirical barycenter or establish statistical significance.",
-      "related": [
-        "empirical-distributions",
-        "anchors",
-        "recurring-map",
-        "permutation"
-      ]
-    },
-    {
-      "id": "aggregation",
-      "branch": "biology",
-      "title": "Cells to sample evidence / Клетки и образцы",
-      "summary": "Sum raw cell contributions by sample and stratum with K.aggregateCounts and K.countAggregation.",
-      "keywords": [
-        "aggregation",
-        "pseudobulk",
-        "donor",
-        "sample",
-        "scRNA-seq",
-        "K.aggregateCounts",
-        "K.countAggregation",
-        "агрегация",
-        "донор",
-        "клетки",
-        "образцы"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "biology.md",
-          "section": "Raw counts by sample and stratum"
-        },
-        {
-          "path": "biology.md",
-          "section": "Composition and verification"
-        }
-      ],
-      "sources": [
-        "js/biology.js"
-      ],
-      "examples": [
-        "js/recipes/methods-biology.js",
-        "js/recipes/independent-evidence.js"
-      ],
-      "caveat": "Grouping and summing counts does not perform differential expression or make cells independent biological replicates.",
-      "related": [
-        "normalization",
-        "uncertainty",
-        "resampling"
-      ]
-    },
-    {
-      "id": "normalization",
-      "branch": "biology",
-      "title": "Count normalization / Нормализация счётчиков",
-      "summary": "Disclose each row's common-total scaling factor and a separate log1p transform with K.normalizeCountRows and K.countNormalization.",
-      "keywords": [
-        "normalization",
-        "library size",
-        "log1p",
-        "count depth",
-        "K.normalizeCountRows",
-        "K.countNormalization",
-        "нормализация",
-        "глубина",
-        "масштабирование",
-        "логарифм"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "biology.md",
-          "section": "A common total, then natural log1p"
-        },
-        {
-          "path": "biology.md",
-          "section": "Composition and verification"
-        }
-      ],
-      "sources": [
-        "js/biology.js"
-      ],
-      "examples": [
-        "js/recipes/methods-biology.js"
-      ],
-      "caveat": "Scaled values are derived values, not new molecules; retain raw counts and label raw, normalized and log scales separately.",
-      "related": [
-        "aggregation",
-        "matrix",
-        "empirical-distributions"
-      ]
-    },
-    {
-      "id": "alleles",
-      "branch": "biology",
-      "title": "Genotypes to alleles / Генотипы и аллели",
-      "summary": "Count two allele copies per diploid genotype and show separate HWE expectations with K.alleleSummary and K.alleleFrequency.",
-      "keywords": [
-        "allele frequency",
-        "genotype",
-        "Hardy Weinberg",
-        "HWE",
-        "K.alleleSummary",
-        "K.alleleFrequency",
-        "аллели",
-        "генотип",
-        "частота",
-        "Харди Вайнберг"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "biology.md",
-          "section": "Diploid allele frequencies and separate HWE expectations"
-        },
-        {
-          "path": "biology.md",
-          "section": "Composition and verification"
-        }
-      ],
-      "sources": [
-        "js/biology.js"
-      ],
-      "examples": [
-        "js/recipes/methods-biology.js"
-      ],
-      "caveat": "HWE probabilities are model expectations, not observed genotypes; illustrative individual indices are reconstructed from supplied genotype tallies.",
-      "related": [
-        "sequence",
-        "uncertainty",
-        "story"
-      ]
-    },
-    {
-      "id": "circle",
-      "branch": "geometry",
-      "title": "Circle to wave / Окружность и волна",
-      "summary": "Relate a rotating radius to signed sine/cosine components using K.circleComponents and K.unitCircleView.",
-      "keywords": [
-        "unit circle",
-        "sine",
-        "cosine",
-        "wave",
-        "K.circleComponents",
-        "K.unitCircleView",
-        "окружность",
-        "синус",
-        "косинус",
-        "волна",
-        "радианы"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "geometry.md",
-          "section": "Pure numerical models"
-        },
-        {
-          "path": "geometry.md",
-          "section": "Persistent views"
-        }
-      ],
-      "sources": [
-        "js/geometry.js"
-      ],
-      "examples": [
-        "js/recipes/methods-geometry.js"
-      ],
-      "caveat": "Keep radians and sign visible; the supplied view's trace has a documented finite angular range.",
-      "related": [
-        "projection",
-        "motion",
-        "clearance"
-      ]
-    },
-    {
-      "id": "projection",
-      "branch": "geometry",
-      "title": "Projection and PCA / Проекция и PCA",
-      "summary": "Project explicit 2D points, retain discarded residuals and explain exact 2D PCA with K.projectOnto2D, K.pca2D and K.projectionView.",
-      "keywords": [
-        "projection",
-        "PCA",
-        "principal components",
-        "residual",
-        "K.projectOnto2D",
-        "K.pca2D",
-        "K.projectionView",
-        "проекция",
-        "главные компоненты",
-        "остаток"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "geometry.md",
-          "section": "Pure numerical models"
-        },
-        {
-          "path": "geometry.md",
-          "section": "Persistent views"
-        },
-        {
-          "path": "geometry.md",
-          "section": "Composition and verification"
-        }
-      ],
-      "sources": [
-        "js/geometry.js"
-      ],
-      "examples": [
-        "js/recipes/methods-geometry.js"
-      ],
-      "caveat": "State centering and coordinate meaning; these explicit 2D helpers neither fit UMAP nor infer hidden dimensions.",
-      "related": [
-        "perspective",
-        "linear-map",
-        "uncertainty"
-      ]
-    },
-    {
-      "id": "linear-map",
-      "branch": "geometry",
-      "title": "Linear map and area / Линейное преобразование и площадь",
-      "summary": "Transform basis directions and a unit square while computing determinant and area with K.linearMap2D and K.linearMapView.",
-      "keywords": [
-        "linear map",
-        "determinant",
-        "basis",
-        "area",
-        "K.linearMap2D",
-        "K.linearMapView",
-        "линейное преобразование",
-        "определитель",
-        "базис",
-        "площадь"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "geometry.md",
-          "section": "Pure numerical models"
-        },
-        {
-          "path": "geometry.md",
-          "section": "Persistent views"
-        },
-        {
-          "path": "geometry.md",
-          "section": "Composition and verification"
-        }
-      ],
-      "sources": [
-        "js/geometry.js"
-      ],
-      "examples": [
-        "js/recipes/methods-geometry.js"
-      ],
-      "caveat": "Signed determinant and ordinary area differ; a linear map changes coordinates whereas a camera changes their view.",
-      "related": [
-        "projection",
-        "matrix",
-        "motion"
-      ]
-    },
-    {
-      "id": "questions",
-      "branch": "interaction",
-      "title": "Questions, hints and guide / Вопросы, подсказки и конспект",
-      "summary": "Use T.ponder for a prediction before the answer and scene.qa for current-scene questions and the searchable lesson guide.",
-      "keywords": [
-        "questions",
-        "hint",
-        "misconception",
-        "Q&A",
-        "T.ponder",
-        "scene.qa",
-        "вопросы",
-        "подсказка",
-        "конспект",
-        "ответ"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "inquiry.md",
-          "section": "Вопрос до ответа: `T.ponder`"
-        },
-        {
-          "path": "questions.md",
-          "section": "Содержание"
-        },
-        {
-          "path": "questions.md",
-          "section": "Подключение"
-        },
-        {
-          "path": "questions.md",
-          "section": "Поведение"
-        }
-      ],
-      "sources": [
-        "js/inquiry.js",
-        "js/deck.js"
-      ],
-      "examples": [
-        "js/episodes/05-ponder.js"
-      ],
-      "caveat": "Write topic-specific hints, answers and sources in the promised locales; optional reading cannot replace labels essential to the drawing.",
-      "related": [
-        "story",
-        "languages",
-        "shell",
-        "controls"
-      ]
-    },
-    {
-      "id": "controls",
-      "branch": "interaction",
-      "title": "Manual inputs / Ручное управление",
-      "summary": "Connect T.control and T.buttons to one current state and an interruptible F.driver paint function.",
-      "keywords": [
-        "slider",
-        "buttons",
-        "manual input",
-        "T.control",
-        "T.buttons",
-        "F.driver",
-        "ползунок",
-        "кнопки",
-        "параметр",
-        "управление"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "interaction.md"
-        },
-        {
-          "path": "predictions.md",
-          "section": "Animation and interaction"
-        }
-      ],
-      "sources": [
-        "js/lesson.js",
-        "js/film.js"
-      ],
-      "examples": [
-        "js/episodes/09-prediction.js"
-      ],
-      "caveat": "Register driver.dispose with ctx.onDispose and compute current values, marks and captions together; controls must retain keyboard and native reading behavior.",
-      "related": [
-        "motion",
-        "svg-button",
-        "mobile",
-        "prediction"
-      ]
-    },
-    {
-      "id": "svg-button",
-      "branch": "interaction",
-      "title": "Whole SVG activation region / Полная SVG-область нажатия",
-      "summary": "Add an accessible transparent rectangular target, translated label and independent focus indicator with T.svgButton.",
-      "keywords": [
-        "SVG button",
-        "hit target",
-        "tile",
-        "keyboard focus",
-        "T.svgButton",
-        "SVG кнопка",
-        "область нажатия",
-        "плитка",
-        "фокус",
-        "Tab Enter Space"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "interaction-regions.md",
-          "section": "API и состояние"
-        },
-        {
-          "path": "interaction-regions.md",
-          "section": "Указатель, клавиатура и фокус"
-        },
-        {
-          "path": "interaction-regions.md",
-          "section": "Метаданные для проверки"
-        },
-        {
-          "path": "interaction-regions.md",
-          "section": "Проверки"
-        }
-      ],
-      "sources": [
-        "js/interaction-regions.js"
-      ],
-      "examples": [
-        "js/recipes/pipeline-synthesis.js"
-      ],
-      "caveat": "Keep activation rectangles disjoint and focus/selection clear of numeric labels; verify actual blank-area clicks and keyboard focus, not only dispatched events.",
-      "related": [
-        "hit-audit",
-        "controls",
-        "clearance",
-        "pipeline"
-      ]
-    },
-    {
-      "id": "hit-audit",
-      "branch": "interaction",
-      "title": "Hit-region inspection / Проверка зон нажатия",
-      "summary": "Inspect declared SVG hit rectangles for overlap and sampled native hit coverage without activating their callbacks.",
-      "keywords": [
-        "hit audit",
-        "activation overlap",
-        "elementFromPoint",
-        "blank area",
-        "hit rectangle",
-        "проверка нажатий",
-        "перекрытие",
-        "пустая область",
-        "инспектор"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "hit-region-audit.md",
-          "section": "Opt in with a real hit rectangle"
-        },
-        {
-          "path": "hit-region-audit.md",
-          "section": "What is checked"
-        },
-        {
-          "path": "hit-region-audit.md",
-          "section": "Report and coverage counts"
-        },
-        {
-          "path": "hit-region-audit.md",
-          "section": "Limits of this evidence"
-        }
-      ],
-      "sources": [
-        "build/inspect.js"
-      ],
-      "examples": [
-        "js/recipes/pipeline-synthesis.js"
-      ],
-      "caveat": "Sampled rectangles do not prove continuous coverage, correct callbacks or keyboard behavior; no declared regions means zero coverage, not a global pass.",
-      "related": [
-        "svg-button",
-        "clearance",
-        "export-qa"
-      ]
-    },
-    {
-      "id": "story",
-      "branch": "narrative",
-      "title": "Question to operation / От вопроса к действию",
-      "summary": "Choose each scene's question, input objects, visible operation, result and preserved identity before composing the lesson.",
-      "keywords": [
-        "storyboard",
-        "operation map",
-        "narrative",
-        "scientific question",
-        "story",
-        "сценарий",
-        "карта операций",
-        "научный вопрос",
-        "объяснение"
-      ],
-      "status": "compose",
-      "guides": [
-        {
-          "path": "storyboard.md",
-          "section": "Таблица операций до написания сцен"
-        },
-        {
-          "path": "storyboard.md",
-          "section": "Сценарий отдельного раскрытия"
-        },
-        {
-          "path": "scientific-repertoire.md",
-          "section": "A scene should earn its motion"
-        },
-        {
-          "path": "authoring.md",
-          "section": "Работа с содержанием"
-        }
-      ],
-      "sources": [
-        "js/film.js"
-      ],
-      "examples": [
-        "js/recipes/representation-journey.js",
-        "js/recipes/independent-evidence.js"
-      ],
-      "caveat": "The examples are a menu, not a required outline; teaching values must not be relabeled as evidence from the user's material.",
-      "related": [
-        "scene",
-        "recurring-map",
-        "pipeline",
-        "questions",
-        "provenance"
-      ]
-    },
-    {
-      "id": "recurring-map",
-      "branch": "narrative",
-      "title": "Recurring conceptual map / Повторяющаяся смысловая карта",
-      "summary": "Reuse topic-specific motifs to connect local operations, formulas and a final answer to the opening question.",
-      "keywords": [
-        "concept map",
-        "recurring map",
-        "explanation bridge",
-        "formula substitution",
-        "synthesis",
-        "смысловая карта",
-        "общая картина",
-        "формула",
-        "подстановка",
-        "связное объяснение"
-      ],
-      "status": "compose",
-      "guides": [
-        {
-          "path": "explanation-design.md",
-          "section": "Build the explanation around a question"
-        },
-        {
-          "path": "explanation-design.md",
-          "section": "Operation → formula → substitution → interpretation"
-        },
-        {
-          "path": "explanation-design.md",
-          "section": "Turn a result into an explanation"
-        }
-      ],
-      "sources": [
-        "js/explanation.js",
-        "js/distributions.js"
-      ],
-      "examples": [
-        "js/recipes/explanation-bridges.js"
-      ],
-      "caveat": "The map is an authored composition, not a universal API; keep known routes readable and replay limited to available paths without changing current parameters or selection.",
-      "related": [
-        "story",
-        "pipeline",
-        "anchors",
-        "quantile-transport"
-      ]
-    },
-    {
-      "id": "pipeline",
-      "branch": "narrative",
-      "title": "Branched synthesis / Разветвлённая общая карта",
-      "summary": "Compose two construction inputs and separate evaluation branches around one consistent model with the pipeline-synthesis recipe.",
-      "keywords": [
-        "pipeline",
-        "branched map",
-        "two inputs",
-        "independent evaluation",
-        "replay",
-        "PIPELINE_SYNTHESIS_EXAMPLE",
-        "конвейер",
-        "ветвление",
-        "два входа",
-        "независимая проверка",
-        "повтор пути"
-      ],
-      "status": "compose",
-      "guides": [
-        {
-          "path": "pipeline-synthesis.md",
-          "section": "Operation map"
-        },
-        {
-          "path": "pipeline-synthesis.md",
-          "section": "Progress through the map"
-        },
-        {
-          "path": "pipeline-synthesis.md",
-          "section": "Reuse"
-        }
-      ],
-      "sources": [
-        "js/interaction-regions.js",
-        "js/film.js"
-      ],
-      "examples": [
-        "js/recipes/pipeline-synthesis.js"
-      ],
-      "caveat": "The exported toy is not a general scientific API; unrelated examples must not imply one numerical pipeline, and a reference unavailable during construction belongs only to evaluation.",
-      "related": [
-        "recurring-map",
-        "svg-button",
-        "prediction",
-        "partition",
-        "story"
-      ]
-    },
-    {
-      "id": "theme",
-      "branch": "experience",
-      "title": "Live appearance / Переключаемое оформление",
-      "summary": "Use semantic C roles and supplied Source fonts so background, palette and text family can change without rebuilding scenes.",
-      "keywords": [
-        "theme",
-        "palette",
-        "font",
-        "background",
-        "D.appearance",
-        "semantic colors",
-        "тема",
-        "палитра",
-        "шрифт",
-        "фон",
-        "оформление"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "theme.md",
-          "section": "Programmatic configuration"
-        },
-        {
-          "path": "theme.md",
-          "section": "Color roles, not literal hues"
-        },
-        {
-          "path": "theme.md",
-          "section": "Typography and offline fonts"
-        },
-        {
-          "path": "theme.md",
-          "section": "Checks"
-        }
-      ],
-      "sources": [
-        "js/appearance.js",
-        "css/appearance.css",
-        "css/fonts.css"
-      ],
-      "examples": [
-        "index.html"
-      ],
-      "caveat": "Do not parse live C values as hex or append alpha suffixes; preserve state, quantitative scales and complete font notices across appearance changes.",
-      "related": [
-        "layout",
-        "languages",
-        "provenance",
-        "shell"
-      ]
-    },
-    {
-      "id": "languages",
-      "branch": "experience",
-      "title": "RU/EN authoring / Русский и английский",
-      "summary": "Author scene, note and Q&A translations with D.i18n packs while preserving current input, progress and persistent source nodes.",
-      "keywords": [
-        "translation",
-        "localization",
-        "RU EN",
-        "D.i18n.pack",
-        "bilingual",
-        "перевод",
-        "локализация",
-        "язык",
-        "русский",
-        "английский"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "languages.md",
-          "section": "Что сохраняется при переключении"
-        },
-        {
-          "path": "languages.md",
-          "section": "Авторские пакеты"
-        },
-        {
-          "path": "languages.md",
-          "section": "Следующий урок и проверка"
-        }
-      ],
-      "sources": [
-        "js/lib/i18n.js",
-        "js/i18n/en.js",
-        "js/i18n/en-notes.js"
-      ],
-      "examples": [
-        "js/episodes/01-objects.js"
-      ],
-      "caveat": "Translate full source strings or anchored sentences; language changes must not rebuild scenes, alter numbers or overwrite source nodes with already translated text.",
-      "related": [
-        "layout",
-        "theme",
-        "questions",
-        "shell"
-      ]
-    },
-    {
-      "id": "mobile",
-      "branch": "experience",
-      "title": "Native touch and reading / Жесты и чтение на телефоне",
-      "summary": "Keep one-finger lesson navigation scoped to the drawing while preserving native pinch, zoomed panning and reading-pane gestures.",
-      "keywords": [
-        "mobile",
-        "touch",
-        "swipe",
-        "pinch zoom",
-        "data-no-swipe",
-        "телефон",
-        "жесты",
-        "свайп",
-        "масштабирование",
-        "прокрутка"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "mobile-gestures.md",
-          "section": "Gesture scope and recognition"
-        },
-        {
-          "path": "mobile-gestures.md",
-          "section": "Multiple contacts and cancellation"
-        },
-        {
-          "path": "mobile-gestures.md",
-          "section": "Native pinch and required shell settings"
-        },
-        {
-          "path": "mobile-gestures.md",
-          "section": "Lifecycle and integration"
-        }
-      ],
-      "sources": [
-        "js/lib/touch.js",
-        "css/mobile.css"
-      ],
-      "examples": [
-        "index.html"
-      ],
-      "caveat": "Do not disable browser zoom or apply blanket touch-action:none; synthetic events do not establish native gesture arbitration on a physical device.",
-      "related": [
-        "controls",
-        "svg-button",
-        "shell",
-        "export-qa"
-      ]
-    },
-    {
-      "id": "source-figure",
-      "branch": "drawing",
-      "title": "Source figure window / Область исходного рисунка",
-      "summary": "Show a precise region of an original image with K.sourceWindow and retain full-source access through T.evidence.",
-      "keywords": [
-        "source figure",
-        "image crop",
-        "paper figure",
-        "K.sourceWindow",
-        "T.evidence",
-        "исходный рисунок",
-        "изображение",
-        "фрагмент",
-        "источник"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "components.md",
-          "section": "5. Точная область исходного изображения"
-        },
-        {
-          "path": "components.md",
-          "section": "6. Источники и переносимость"
-        }
-      ],
-      "sources": [
-        "js/patterns.js",
-        "js/lesson.js"
-      ],
-      "examples": [
-        "js/episodes/04-source.js"
-      ],
-      "caveat": "Preserve image dimensions, source and permitted use; a crop or schematic reconstruction cannot manufacture raw measurements or missing dimensions.",
-      "related": [
-        "provenance",
-        "perspective",
-        "story",
-        "molecular-simulation"
-      ]
-    },
-    {
-      "id": "provenance",
-      "branch": "delivery",
-      "title": "Sources and ownership / Источники и права",
-      "summary": "Retain scientific source records, distinguish invented fixtures from evidence and preserve factual ownership and complete font notices.",
-      "keywords": [
-        "provenance",
-        "citation",
-        "source",
-        "license",
-        "font notice",
-        "источник",
-        "происхождение",
-        "лицензия",
-        "права",
-        "учебные данные"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "provenance.md"
-        },
-        {
-          "path": "authoring.md",
-          "section": "Данные"
-        },
-        {
-          "path": "components.md",
-          "section": "6. Источники и переносимость"
-        }
-      ],
-      "sources": [
-        "js/config.js",
-        "js/lesson.js"
-      ],
-      "examples": [
-        "js/episodes/04-source.js"
-      ],
-      "caveat": "The kit's availability does not grant rights to unrelated article content, and toy values are not evidence for the user's topic.",
-      "related": [
-        "source-figure",
-        "theme",
-        "story",
-        "export-qa"
-      ]
-    },
-    {
-      "id": "shell",
-      "branch": "experience",
-      "title": "Stable lesson shell / Постоянная оболочка",
-      "summary": "Retain the five fixed controls and one tabbed reading panel without sizing the canvas from localized toolbar content.",
-      "keywords": [
-        "shell",
-        "player",
-        "toolbar",
-        "reading panel",
-        "notes tabs",
-        "оболочка",
-        "проигрыватель",
-        "панель чтения",
-        "заметки",
-        "меню"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "shell.md",
-          "section": "Переход между сценами"
-        },
-        {
-          "path": "shell.md",
-          "section": "Одно пространство чтения"
-        },
-        {
-          "path": "shell.md",
-          "section": "Файлы и устойчивые точки подключения"
-        },
-        {
-          "path": "shell.md",
-          "section": "Проверка"
-        }
-      ],
-      "sources": [
-        "js/deck.js",
-        "js/player.js",
-        "css/shell.css"
-      ],
-      "examples": [
-        "index.html"
-      ],
-      "caveat": "For ordinary authoring change episodes and metadata first; keep shell.css last and preserve documented hooks and native reading controls.",
-      "related": [
-        "languages",
-        "mobile",
-        "questions",
-        "upgrade"
-      ]
-    },
-    {
-      "id": "export-qa",
-      "branch": "delivery",
-      "title": "Verify and export / Проверка и экспорт",
-      "summary": "Check scientific values, intended bounds, intermediate motion and real interactions, then build and inspect the actual standalone HTML.",
-      "keywords": [
-        "export",
-        "standalone HTML",
-        "bundle",
-        "QA",
-        "inspect",
-        "verification",
-        "экспорт",
-        "сборка",
-        "проверка",
-        "инспектор",
-        "автономный HTML"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "qa.md",
-          "section": "Смысл и числа"
-        },
-        {
-          "path": "qa.md",
-          "section": "Открытие и экспорт"
-        },
-        {
-          "path": "qa.md",
-          "section": "Интерактивность и вычисления"
-        }
-      ],
-      "sources": [
-        "build/bundle.py",
-        "build/inspect.html",
-        "build/inspect.js"
-      ],
-      "examples": [
-        "index.html"
-      ],
-      "caveat": "Build/bundle --check does not write updated HTML; DOM tests, finite coordinates and unmeasured regions cannot substitute for rendered inspection and truthful reporting of unavailable checks.",
-      "related": [
-        "layout",
-        "clearance",
-        "hit-audit",
-        "mobile",
-        "theme",
-        "languages",
-        "provenance"
-      ]
-    },
-    {
-      "id": "upgrade",
-      "branch": "delivery",
-      "title": "Upgrade an existing lesson / Обновление урока",
-      "summary": "Select the relevant version migration while preserving authored episodes, translations, values and public integration contracts.",
-      "keywords": [
-        "upgrade",
-        "migration",
-        "version",
-        "compatibility",
-        "обновление",
-        "миграция",
-        "версия",
-        "совместимость",
-        "старый урок"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "upgrading.md",
-          "section": "С 0.14.0: повторяемая молекулярная проверка"
-        },
-        {
-          "path": "upgrading.md",
-          "section": "С 0.12.0: смысловое развитие общей карты"
-        },
-        {
-          "path": "upgrading.md",
-          "section": "С версии 0.11: общая карта и зоны нажатия"
-        },
-        {
-          "path": "upgrading.md",
-          "section": "С версии 0.10: опыт связного объяснения"
-        },
-        {
-          "path": "upgrading.md",
-          "section": "С версии 0.9: научные операции"
-        },
-        {
-          "path": "upgrading.md",
-          "section": "С версии 0.8: внутренние границы и преобразования"
-        },
-        {
-          "path": "upgrading.md",
-          "section": "Переключаемое оформление 0.8.0"
-        }
-      ],
-      "sources": [
-        "lesson-kit.json"
-      ],
-      "examples": [],
-      "caveat": "Updating the library alone does not update an existing lesson; load the migration section for its starting version and verify the resulting artifact.",
-      "related": [
-        "shell",
-        "theme",
-        "pipeline",
-        "export-qa"
-      ]
-    },
-    {
-      "id": "molecular-animation",
-      "branch": "biology",
-      "title": "Schematic molecular actors / Схематичные молекулярные акторы",
-      "summary": "Build persistent nucleic acids, CRISPR proteins, chromatin and expression actors; control contextual and focused parts with stable line weights.",
-      "keywords": [
-        "molecular animation",
-        "molecular actors",
-        "polymerase",
-        "Cas9",
-        "dCas9",
-        "CRISPR",
-        "CRISPRi",
-        "sgRNA",
-        "guide RNA",
-        "tracrRNA",
-        "crRNA",
-        "nucleosome",
-        "chromatin",
-        "ribosome",
-        "tRNA",
-        "mRNA",
-        "transcription factor",
-        "enhancer",
-        "promoter",
-        "B.emphasis",
-        "B.cas9",
-        "K.molecular",
-        "молекулярная анимация",
-        "молекулярные акторы",
-        "полимераза",
-        "гайдовая РНК",
-        "нуклеосома",
-        "хроматин",
-        "рибосома",
-        "тРНК",
-        "мРНК",
-        "белок",
-        "акцент",
-        "толщина контура",
-        "подсветка белка"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "molecular.md",
-          "section": "Molecular actors and visual hierarchy"
-        },
-        {
-          "path": "molecular.md",
-          "section": "Actor catalogue and local anchors"
-        },
-        {
-          "path": "molecular.md",
-          "section": "Scientific boundaries and provenance"
-        },
-        {
-          "path": "molecular-expression-references.md",
-          "section": "API"
-        },
-        {
-          "path": "motion.md",
-          "section": "One actor, several layouts"
-        }
-      ],
-      "sources": [
-        "js/molecular.js",
-        "js/molecular-expression.js",
-        "js/molecular-regulation.js",
-        "js/molecular-rna-processing.js"
-      ],
-      "examples": [
-        "js/recipes/molecular-atlas.js"
-      ],
-      "caveat": "These are purpose-built schematic SVG actors with authored states and trajectories, not atom coordinates, a structure predictor, reaction kinetics or a molecular dynamics solver.",
-      "related": [
-        "motion",
-        "scene",
-        "theme",
-        "clearance",
-        "sequence",
-        "molecular-simulation",
-        "molecular-regulation",
-        "rna-processing",
-        "molecular-inspection",
-        "molecular-coordinates"
-      ]
-    },
-    {
-      "id": "molecular-simulation",
-      "branch": "motion",
-      "title": "Molecular simulation / Молекулярное моделирование",
-      "summary": "Recognize when folding physics, validated trajectories or a general molecular viewer requires tools and evidence outside this kit.",
-      "keywords": [
-        "molecular simulation",
-        "molecular dynamics",
-        "protein folding simulation",
-        "folding physics",
-        "validated trajectory",
-        "molecular viewer",
-        "молекулярное моделирование",
-        "молекулярная динамика",
-        "симуляция сворачивания белка",
-        "физика фолдинга",
-        "траектория",
-        "структура белка",
-        "folding simulation",
-        "рассчитать фолдинг",
-        "расчёт фолдинга",
-        "симуляция фолдинга"
-      ],
-      "status": "external",
-      "guides": [],
-      "sources": [],
-      "examples": [],
-      "caveat": "The kit provides no folding physics, validated molecular trajectories or general structure viewer. Curated source-backed RNA coordinate projections are available through molecular-coordinates; camera motion does not simulate folding.",
-      "related": [
-        "molecular-animation",
-        "source-figure",
-        "provenance",
-        "molecular-coordinates"
-      ]
-    },
-    {
-      "id": "molecular-regulation",
-      "branch": "biology",
-      "title": "Histone chemistry and initiation / Химия гистонов и инициация",
-      "summary": "Explain H3K9 trimethylation, reader recognition, Mediator and a schematic Pol II initiation complex with preserved actors.",
-      "keywords": [
-        "histone tail",
-        "H3K9me3",
-        "histone chemistry",
-        "trimethylation",
-        "Mediator",
-        "initiation complex",
-        "PIC",
-        "TBP",
-        "TFIIB",
-        "TFIIH",
-        "B.histoneTail",
-        "B.mediator",
-        "B.initiationComplex",
-        "гистон",
-        "хвост гистона",
-        "метилирование",
-        "триметилирование",
-        "метильная группа",
-        "лизин",
-        "инициация",
-        "медиатор"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "molecular-regulation.md",
-          "section": "API"
-        },
-        {
-          "path": "molecular-regulation.md",
-          "section": "H3 chemistry and labels"
-        },
-        {
-          "path": "molecular-regulation.md",
-          "section": "PIC organization and limits"
-        }
-      ],
-      "sources": [
-        "js/molecular-regulation.js"
-      ],
-      "examples": [
-        "js/recipes/molecular-regulation-atlas.js"
-      ],
-      "caveat": "Schematic structure and graphical transitions; methylation fractions do not depict reaction intermediates, and PIC convergence does not assert an obligatory assembly order.",
-      "related": [
-        "molecular-animation",
-        "molecular-inspection",
-        "clearance"
-      ]
-    },
-    {
-      "id": "rna-processing",
-      "branch": "biology",
-      "title": "CRISPR families and RNA processing / Семейства CRISPR и обработка РНК",
-      "summary": "Compose Cas12a, Cas13, pre-mRNA and spliceosome actors to distinguish DNA targeting, RNA targeting and a schematic splicing operation.",
-      "keywords": [
-        "splicing",
-        "spliceosome",
-        "pre-mRNA",
-        "preMrna",
-        "intron",
-        "exon",
-        "Cas12a",
-        "Cas13",
-        "RNA processing",
-        "B.cas12a",
-        "B.cas13",
-        "B.preMrna",
-        "B.spliceosome",
-        "сплайсинг",
-        "сплайсосома",
-        "интрон",
-        "экзон",
-        "пре-мРНК",
-        "процессинг РНК"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "molecular-rna-processing.md"
-        }
-      ],
-      "sources": [
-        "js/molecular-rna-processing.js"
-      ],
-      "examples": [
-        "js/recipes/molecular-rna-atlas.js"
-      ],
-      "caveat": "Authored schematic geometry, not a universal guide sequence, atomic structure, splice-site predictor or splicing kinetic model. Distinct CRISPR protein families require compatible guide architecture.",
-      "related": [
-        "molecular-animation",
-        "molecular-regulation",
-        "molecular-inspection",
-        "sequence"
-      ]
-    },
-    {
-      "id": "molecular-inspection",
-      "branch": "interaction",
-      "title": "Enlarged molecular detail / Крупный план молекулы",
-      "summary": "Add an accessible enlarged snapshot of an existing molecular actor or named part while retaining the underlying lesson state.",
-      "keywords": [
-        "B.inspect",
-        "molecular inspection",
-        "molecular detail",
-        "enlarged snapshot",
-        "detail enlargement",
-        "zoom protein",
-        "enlarge molecule",
-        "крупный план",
-        "увеличить белок",
-        "увеличение молекулы",
-        "детали молекулы",
-        "рассмотреть часть",
-        "приблизить белок"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "molecular-inspection.md"
-        }
-      ],
-      "sources": [
-        "js/molecular-inspect.js"
-      ],
-      "examples": [
-        "js/recipes/molecular-regulation-atlas.js"
-      ],
-      "caveat": "The detail view is a captured schematic frame, not new structural evidence or live molecular motion. Its opening and cleanup must be registered with the scene lifecycle.",
-      "related": [
-        "molecular-animation",
-        "svg-button",
-        "hit-audit",
-        "clearance",
-        "molecular-coordinates"
-      ]
-    },
-    {
-      "id": "molecular-check",
-      "branch": "delivery",
-      "title": "Molecular visual check / Проверка молекулярных элементов",
-      "summary": "Create a reusable seven-element visual test cycle with animated states, a captured enlarged view and optional browser QA.",
-      "keywords": [
-        "molecular-check",
-        "molecular check",
-        "molecular visual test",
-        "seven molecular elements",
-        "test animation",
-        "проверка семи молекулярных элементов",
-        "молекулярная проверка",
-        "тестовая анимация",
-        "семь элементов"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "molecular-check.md"
-        }
-      ],
-      "sources": [
-        "molecular-check.html",
-        "js/molecular-check-qa.js"
-      ],
-      "examples": [
-        "js/recipes/molecular-check.js"
-      ],
-      "caveat": "This authored visual test cycle checks schematic states and interaction, not biophysics, molecular trajectories or reaction kinetics. Browser QA is opt-in with ?qa=1.",
-      "related": [
-        "molecular-animation",
-        "molecular-regulation",
-        "rna-processing",
-        "molecular-inspection",
-        "export-qa"
-      ]
-    },
-    {
-      "id": "chemistry",
-      "branch": "chemistry",
-      "title": "Chemical structures and reactions / Химические структуры и реакции",
-      "summary": "Compose persistent chemical drawings with atoms, covalent bonds and reaction representations; keep schematic geometry separate from calculated structure.",
-      "keywords": [
-        "chemistry",
-        "covalent bond",
-        "chemical bond",
-        "atom",
-        "reaction",
-        "electron",
-        "chemical structure",
-        "CH",
-        "химия",
-        "ковалентная связь",
-        "химическая связь",
-        "атом",
-        "электрон",
-        "химическая реакция"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "chemistry.md",
-          "section": "API"
-        },
-        {
-          "path": "chemistry.md",
-          "section": "Scientific scope"
-        }
-      ],
-      "sources": [
-        "js/chemistry.js"
-      ],
-      "examples": [
-        "js/recipes/chemistry-bridge.js"
-      ],
-      "caveat": "Chemical drawings are authored schematics, not calculated quantum states, validated atomic coordinates or molecular-dynamics trajectories. Explicit model assumptions belong to each numerical calculation.",
-      "related": [
-        "physical-chemistry",
-        "chemistry-bridge",
-        "molecular-animation",
-        "clearance"
-      ]
-    },
-    {
-      "id": "physical-chemistry",
-      "branch": "chemistry",
-      "title": "Physical chemistry models / Модели физической химии",
-      "summary": "Calculate energy, reaction kinetics, acid-base balance, diffusion and related physical quantities with explicit inputs, units and assumptions.",
-      "keywords": [
-        "physical-chemistry",
-        "physical chemistry",
-        "free energy",
-        "activation energy",
-        "kinetics",
-        "stoichiometry",
-        "diffusion",
-        "membrane potential",
-        "pH",
-        "PH",
-        "физическая химия",
-        "свободная энергия",
-        "энергия активации",
-        "кинетика",
-        "стехиометрия",
-        "диффузия",
-        "мембранный потенциал"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "physical-chemistry.md",
-          "section": "API"
-        },
-        {
-          "path": "physical-chemistry.md",
-          "section": "Scientific scope"
-        }
-      ],
-      "sources": [
-        "js/physical-chemistry.js"
-      ],
-      "examples": [
-        "js/recipes/chemistry-physics-scenes.js"
-      ],
-      "caveat": "Numerical models have explicit units and idealizations; equilibrium, rates, probabilities and individual trajectories are distinct quantities. These helpers do not simulate an atomistic cell.",
-      "related": [
-        "chemistry",
-        "chemistry-bridge",
-        "export-qa"
-      ]
-    },
-    {
-      "id": "chemistry-bridge",
-      "branch": "chemistry",
-      "title": "Chemistry to biology lesson / Химия → биология",
-      "summary": "Create the v0.17.0 bilingual chemistry-to-biology lesson: 16 continuous visual stories, 48–60 s playback, causal narration, retained actors, linked geometry and model values, with explicit chemical bookkeeping.",
-      "keywords": [
-        "chemistry-bridge",
-        "chemistry bridge",
-        "chemistry to biology",
-        "chemical lesson",
-        "химия в биологию",
-        "химия биология",
-        "химия → биология",
-        "химический урок"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "chemistry-bridge.md",
-          "section": "Use"
-        },
-        {
-          "path": "chemistry-bridge.md",
-          "section": "Scenes"
-        },
-        {
-          "path": "chemistry-bridge.md",
-          "section": "Scope"
-        }
-      ],
-      "sources": [
-        "chemistry-bridge.html",
-        "js/chemistry-bridge-qa.js"
-      ],
-      "examples": [
-        "js/recipes/chemistry-foundations-bonds.js",
-        "js/recipes/chemistry-foundations-environment.js",
-        "js/recipes/chemistry-foundations-transfer.js",
-        "js/recipes/chemistry-context-binding.js",
-        "js/recipes/chemistry-context-reactions.js",
-        "js/recipes/chemistry-context-transport.js",
-        "js/recipes/chemistry-context-energy.js",
-        "js/recipes/chemistry-bridge.js",
-        "js/recipes/chemistry-physics-scenes.js"
-      ],
-      "caveat": "The lesson distinguishes authored chemical representations from computed model values. Browser QA is opt-in with ?qa=1; the animation is not a molecular-dynamics trajectory.",
-      "related": [
-        "chemistry",
-        "physical-chemistry",
-        "molecular-inspection",
-        "export-qa"
-      ]
-    },
-    {
-      "id": "rna-folding",
-      "branch": "biology",
-      "title": "RNA folding lesson / Укладка РНК",
-      "summary": "Reproduce a coherent RU/EN RNA lesson: 17 scenes and 63 states, connected atomic views, pairing and stacking, retained whole-molecule context, tertiary contacts, hydrated magnesium, folding during synthesis and prediction evidence.",
-      "keywords": [
-        "rna-folding",
-        "RNA folding",
-        "RNA structure lesson",
-        "RNA",
-        "укладка РНК",
-        "сворачивание РНК",
-        "структура РНК",
-        "урок РНК",
-        "pairing stacking",
-        "base pairing stacking hydrogen bonds",
-        "спаривание оснований",
-        "стэкинг",
-        "A-minor",
-        "GAAA receptor",
-        "tetraloop",
-        "hydrated magnesium",
-        "hydrated Mg",
-        "гидратированный магний",
-        "ионная атмосфера",
-        "coaxial stacking",
-        "kissing loops",
-        "псевдоузел",
-        "коаксиальный стэкинг"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "rna-folding.md"
-        }
-      ],
-      "sources": [
-        "rna-folding.html",
-        "qa/rna-folding/science.py",
-        "qa/rna-folding/layout.cjs",
-        "qa/rna-folding/motion.cjs",
-        "qa/rna-folding/interaction.cjs",
-        "assets/rna-folding/SOURCES.md",
-        "assets/rna-folding/STORYBOARD.md"
-      ],
-      "examples": [
-        "js/recipes/rna-folding/rna-common.js",
-        "js/recipes/rna-folding/rna-intro.js",
-        "js/recipes/rna-folding/rna-trna.js",
-        "js/recipes/rna-folding/rna-tertiary.js",
-        "js/recipes/rna-folding/rna-ions.js"
-      ],
-      "caveat": "Deposited coordinates and schematic examples are distinguished. Camera motion is not a folding trajectory; no predictor is run. Physical gestures require physical testing.",
-      "related": [
-        "molecular-coordinates",
-        "story",
-        "clearance",
-        "motion",
-        "languages",
-        "export-qa",
-        "molecular-simulation"
-      ]
-    },
-    {
-      "id": "molecular-coordinates",
-      "branch": "biology",
-      "title": "Connected atomic coordinate views / Связанные атомные модели",
-      "summary": "Use MC.rnaFragment, MC.context and MC.project to preserve source atom identity, explicit fragment bonds, whole-molecule context and camera geometry while enlarging or rotating an RNA contact.",
-      "keywords": [
-        "molecular-coordinates",
-        "MC.rnaFragment",
-        "MC.context",
-        "MC.project",
-        "atomic coordinates context zoom",
-        "atomic coordinates",
-        "connected atoms",
-        "atomic 3D",
-        "coordinate view",
-        "source-backed molecule",
-        "атомные координаты",
-        "связанные атомы",
-        "атомная модель",
-        "3D молекула",
-        "PDB coordinates",
-        "PDB viewer",
-        "1EHZ",
-        "1HR2",
-        "whole molecule context",
-        "увеличение атомов",
-        "контекст молекулы"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "molecular-coordinates.md"
-        }
-      ],
-      "sources": [
-        "js/molecular-coordinates.js"
-      ],
-      "examples": [
-        "js/recipes/rna-folding/rna-tertiary.js",
-        "assets/rna-folding/tertiary-v4-1ehz.json",
-        "assets/rna-folding/tertiary-v4-1hr2.json"
-      ],
-      "caveat": "A source-backed SVG renderer for curated RNA fragments, not a general PDB/mmCIF parser, molecular dynamics engine, bond inference tool or folding predictor. Ring polygons are not molecular surfaces.",
-      "related": [
-        "molecular-views",
-        "rna-folding",
-        "perspective",
-        "molecular-inspection",
-        "molecular-simulation",
-        "provenance",
-        "clearance",
-        "motion",
-        "three-dimensional"
-      ]
-    },
-    {
-      "id": "molecular-views",
-      "branch": "three-dimensional",
-      "title": "Molecular construction kit / Конструктор 3D-комплекса",
-      "summary": "Assemble an editable protein–RNA overview and connected atomic close-up with a retained context locator. Two ready scene presets over reusable MV assembly, detail, fit and rig bricks; portable PDB preparation and verified 7BG9 example.",
-      "keywords": [
-        "molecular-views",
-        "molecular construction kit",
-        "3D complex constructor",
-        "конструктор 3D комплекса белок РНК",
-        "конструктор молекул",
-        "3D комплекс",
-        "RNP assembly",
-        "ribonuсleoprotein complex",
-        "теломераза",
-        "telomerase assembly context zoom",
-        "telomerase",
-        "TERT TERC",
-        "protein RNA complex 3D",
-        "готовые кирпичики",
-        "pdb import",
-        "shared depth",
-        "общий вид крупный план"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "molecular-views.md"
-        },
-        {
-          "path": "molecular-views-api.md"
-        },
-        {
-          "path": "molecular-data.md"
-        }
-      ],
-      "sources": [
-        "js/molecular-views.js",
-        "js/molecular-scenes.js",
-        "molecular-views.html",
-        "build/molecular-data.py",
-        "qa/molecular-views/verify.cjs"
-      ],
-      "examples": [
-        "js/recipes/molecular-views.js",
-        "assets/molecular-views/7BG9.config.json",
-        "assets/molecular-views/SOURCES.md"
-      ],
-      "caveat": "Camera-based source coordinates, explicit trace connectivity and selected RNA/DNA atoms; no molecular surfaces, automatic biological assembly, folding physics or measured trajectory. Bounded PDB importer rejects unsupported identities.",
-      "related": [
-        "molecular-coordinates",
-        "perspective",
-        "motion",
-        "clearance",
-        "languages",
-        "export-qa",
-        "molecular-simulation",
-        "three-dimensional"
-      ]
-    },
-    {
-      "id": "three-dimensional",
-      "branch": "three-dimensional",
-      "title": "Reusable 3D biology components / Компоненты 3D-биологии",
-      "summary": "Reuse V3 molecule meshes, a depth-tested cell surface, solid capture beads and primers, aqueous droplets, RNA/tag strands, three-code records, paired RNA/ADT libraries and enlarged data-field cards. Compose authored camera, binding, wash, lysis and hybridization states without replacing object identity.",
-      "keywords": [
-        "three-dimensional",
-        "V3.MoleculeMesh",
-        "V3.CellSurface",
-        "V3.CaptureMesh",
-        "V3.CodesMesh",
-        "3D components",
-        "3D поверхности",
-        "объёмная клетка",
-        "трёхмерные компоненты",
-        "antibody mesh",
-        "клеточная поверхность",
-        "solid bead primers",
-        "поверхность бусины",
-        "три кода",
-        "V3.LibrariesMesh",
-        "RNA ADT libraries",
-        "две библиотеки",
-        "V3.LibrariesMesh.readouts",
-        "readout-rna",
-        "readout-adt",
-        "3D data-field cards",
-        "объёмные карточки полей данных"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "three-dimensional.md"
-        },
-        {
-          "path": "three-dimensional.md",
-          "section": "V3.LibrariesMesh"
-        },
-        {
-          "path": "three-dimensional.md",
-          "section": "Motion and identity contracts"
-        }
-      ],
-      "sources": [
-        "js/three/molecule-mesh.js",
-        "js/three/cell-surface.js",
-        "js/three/capture-mesh.js",
-        "js/three/codes-mesh.js",
-        "js/three/libraries-mesh.js"
-      ],
-      "examples": [
-        "js/recipes/spatial-biology/01-surface.js",
-        "js/recipes/spatial-biology/02-codes.js",
-        "js/recipes/spatial-biology/03-libraries.js"
-      ],
-      "caveat": "Original procedural illustrative geometry, not atomic source coordinates, a protein-count measurement, molecular dynamics, hydrodynamics or kinetic simulation. Camera changes preserve object identity; barcode records are logical fields, not exact library sequence architecture.",
-      "related": [
-        "spatial-biology",
-        "molecular-views",
-        "molecular-coordinates",
-        "perspective",
-        "motion",
-        "clearance",
-        "languages",
-        "export-qa",
-        "molecular-simulation"
-      ]
-    },
-    {
-      "id": "spatial-biology",
-      "branch": "three-dimensional",
-      "title": "Spatial biology template / Пространственная биология",
-      "summary": "Build an editable three-scene RU/EN 3D lesson: antibody labelling, rotation and close-up, washing, one-cell/one-bead droplet, lysis and co-capture, then cell barcode, feature identity and UMI, followed by RNA and ADT library separation with the shared cell barcode preserved. Reuse R1/R2 readout close-ups, RNA gene mapping, ADT antibody-dictionary lookup and paired profiles, with camera motion completed before readout labels appear. Optional --template spatial-biology includes reusable V3 components and Bio3D recipes.",
-      "keywords": [
-        "spatial-biology",
-        "spatial biology",
-        "пространственная биология",
-        "CITE-seq",
-        "CITE-seq cell bead droplet",
-        "цитометрия ДНК метки",
-        "antibody staining capture",
-        "мечение и совместный захват",
-        "poly(A) oligo-dT",
-        "cell barcode feature UMI",
-        "клеточный штрихкод UMI признак",
-        "капля бусина лизис",
-        "droplet bead lysis",
-        "co-capture",
-        "two libraries one cell barcode",
-        "RNA ADT library separation",
-        "две библиотеки один клеточный код",
-        "R1 R2",
-        "paired reads",
-        "парные чтения",
-        "readout",
-        "RNA ADT readout",
-        "чтение RNA ADT",
-        "gene mapping",
-        "сопоставление с референсом",
-        "antibody dictionary",
-        "словарь антител",
-        "paired profiles",
-        "парные профили",
-        "same cell barcode pairing",
-        "общий клеточный код",
-        "camera settles before labels",
-        "камера перед подписями"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "three-dimensional.md",
-          "section": "Reusable scenarios"
-        },
-        {
-          "path": "three-dimensional.md",
-          "section": "RNA and ADT readouts"
-        },
-        {
-          "path": "three-dimensional.md",
-          "section": "Motion and identity contracts"
-        },
-        {
-          "path": "three-dimensional.md",
-          "section": "Primary sources for the readout scenario"
-        }
-      ],
-      "sources": [
-        "spatial-biology.html",
-        "css/spatial-biology.css",
-        "js/recipes/spatial-biology/common.js",
-        "js/recipes/spatial-biology/capture-stage.js"
-      ],
-      "examples": [
-        "js/recipes/spatial-biology/01-surface.js",
-        "js/recipes/spatial-biology/02-codes.js",
-        "js/recipes/spatial-biology/03-libraries.js"
-      ],
-      "caveat": "Editable teaching schematic for the original solid-bead Drop-seq CITE-seq workflow; geometry, colours, visible molecule counts and trajectories are illustrative. Co-capture precedes synthesis; the source RNA and antibody tag do not acquire a cell barcode at hybridization. Recipes are copied into other templates without being loaded.",
-      "related": [
-        "three-dimensional",
-        "molecular-views",
-        "molecular-coordinates",
-        "perspective",
-        "motion",
-        "clearance",
-        "languages",
-        "export-qa",
-        "molecular-simulation"
-      ]
-    },
-    {
-      "id": "crispri-design",
-      "branch": "biology",
-      "title": "CRISPRi construct and occupancy / Конструкция CRISPRi и множественность",
-      "summary": "Create an eleven-scene CRISPRi lesson from cellular dCas9–KRAB production and guide delivery to experimental evidence, or reuse Poisson construct occupancy, single/dual-guide DNA cassettes and pseudodiploid virions.",
-      "keywords": [
-        "crispri-design",
-        "crispri template",
-        "dCas9 KRAB protein origin translation",
-        "откуда белок dCas9 KRAB мРНК трансляция",
-        "CRISPRi delivery experimental design",
-        "урок CRISPRi доставка библиотеки",
-        "dual guide cassette",
-        "Poisson MOI occupancy",
-        "lentiviral pseudodiploid genome",
-        "PD.poissonOccupancy",
-        "PD.cassette",
-        "PD.virion",
-        "кассета двух гайдов",
-        "множественность трансдукции",
-        "вирион две копии РНК"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "crispri-design.md",
-          "section": "Reusable eleven-scene lesson"
-        },
-        {
-          "path": "crispri-design.md",
-          "section": "Poisson occupancy"
-        },
-        {
-          "path": "crispri-design.md",
-          "section": "Persistent cassette and virion actors"
-        },
-        {
-          "path": "crispri-design.md",
-          "section": "Verification"
-        }
-      ],
-      "sources": [
-        "js/crispri-design.js"
-      ],
-      "examples": [
-        "crispri.html",
-        "js/recipes/crispri/01-objects-crispri.js",
-        "js/recipes/crispri/02-protein-origin.js",
-        "js/recipes/crispri/07-moi.js"
-      ],
-      "caveat": "Poisson occupancy assumes independent events at one common rate; drawings are schematic, and two guide-encoding DNA units are distinct from two packaged RNA genome copies. No knockdown or delivery kinetics are computed.",
-      "related": [
-        "molecular-animation",
-        "scene",
-        "motion",
-        "clearance",
-        "export-qa"
-      ]
-    },
-    {
-      "id": "rna-prediction",
-      "branch": "biology",
-      "title": "RNA prediction narrative / Предсказание структуры РНК",
-      "summary": "Reuse the 20-scene, 91-state RNA prediction lesson: motif energies become a formula, real candidate scores select pairs, MSA observations become arcs, and the same indexed chain morphs from sequence to 2D and schematic 3D. Includes verified ViennaRNA99-structure data and portable QA.",
-      "keywords": [
-        "rna-prediction",
-        "RNA secondary structure prediction",
-        "RNAfold ViennaRNA MFE",
-        "термодинамика РНК выравнивание",
-        "предсказание структуры РНК",
-        "модель Тёрнера",
-        "RNA alignment covariation",
-        "ковариация MSA",
-        "RNA ensemble probability",
-        "энергия мотивов РНК"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "rna-prediction.md"
-        }
-      ],
-      "sources": [
-        "rna-prediction.html",
-        "js/rna-pair-molecule.js",
-        "build/rna-prediction-data.py",
-        "assets/rna-prediction/thermo-example.json",
-        "assets/rna-prediction/SOURCES.md",
-        "assets/rna-prediction/COMPUTATION.md",
-        "qa/rna-prediction/science.cjs",
-        "qa/rna-prediction/layout.cjs",
-        "qa/rna-prediction/motion.cjs",
-        "qa/rna-prediction/interaction.cjs"
-      ],
-      "examples": [
-        "js/recipes/rna-prediction/prediction-thermo-story.js",
-        "js/recipes/rna-prediction/prediction-alignment-story.js",
-        "js/recipes/rna-prediction/prediction-ensemble-story.js"
-      ],
-      "caveat": "Real thermodynamic values belong to one fixed13-nt teaching sequence and model. Invented MSA is not a significance test. Pair-compatible3D geometry and animation are authored, not predicted atoms or folding kinetics.",
-      "related": [
-        "rna-pair-molecule",
-        "cinematic-explanation",
-        "rna-folding",
-        "molecular-coordinates",
-        "motion",
-        "clearance",
-        "export-qa"
-      ]
-    },
-    {
-      "id": "rna-pair-molecule",
-      "branch": "three-dimensional",
-      "title": "Indexed RNA morph / Цепь РНК с сохранением индексов",
-      "summary": "Use standalone PM.create to keep the same bases, backbone and pair endpoints while morphing a linear sequence and arcs into a hairpin and a readable right-handed schematic helix. Highlight motifs, turn the camera and vary only the unpaired loop.",
-      "keywords": [
-        "rna-pair-molecule",
-        "PM.create",
-        "RNA sequence arcs hairpin helix",
-        "цепь дуги шпилька спираль",
-        "2D 3D РНК переход",
-        "нумерация нуклеотидов",
-        "парные ограничения РНК"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "rna-pair-molecule.md"
-        }
-      ],
-      "sources": [
-        "js/rna-pair-molecule.js"
-      ],
-      "examples": [
-        "js/recipes/rna-prediction/prediction-thermo-story.js",
-        "js/recipes/rna-prediction/prediction-alignment-story.js"
-      ],
-      "caveat": "One contiguous nested stem with a hairpin and optional outer tails. Schematic coordinates; not metric A-form or a folding solver. Pair indices in API are zero-based; display labels are one-based.",
-      "related": [
-        "rna-prediction",
-        "molecular-coordinates",
-        "motion",
-        "clearance",
-        "cinematic-explanation"
-      ]
-    },
-    {
-      "id": "cinematic-explanation",
-      "branch": "motion",
-      "title": "Causal motion and pacing / Смысл движения и ритм",
-      "summary": "Reproduce the approved RNA lesson’s visual style with the existing quintic driver easing, cubic phase windows, retained actors, semantic colors, staged emphasis, reading pauses and collision-free transfer of evidence into results. Portable authoring recipe for other topics.",
-      "keywords": [
-        "cinematic-explanation",
-        "ритм ускорение анимации",
-        "стиль презентации РНК",
-        "плавное ускорение замедление",
-        "временные кривые",
-        "smoothstep smootherstep",
-        "animation pacing",
-        "causal motion",
-        "timing evidence transfer"
-      ],
-      "status": "compose",
-      "guides": [
-        {
-          "path": "cinematic-explanation.md"
-        }
-      ],
-      "sources": [
-        "js/film.js",
-        "js/lib/anim.js"
-      ],
-      "examples": [
-        "js/recipes/rna-prediction/prediction-thermo-story.js",
-        "js/recipes/rna-prediction/prediction-alignment-story.js",
-        "js/recipes/rna-prediction/prediction-ensemble-story.js"
-      ],
-      "caveat": "An authoring recipe over existing APIs, not a new global easing engine. Phase windows operate on eased state, not necessarily linear elapsed time. Motion conveys reasoning, not measured physical dynamics.",
-      "related": [
-        "rna-prediction",
-        "motion",
-        "scene",
-        "story",
-        "clearance",
-        "languages",
-        "export-qa",
-        "cinema-timeline",
-        "trna-journey"
-      ]
-    },
-    {
-      "id": "trna-journey",
-      "branch": "three-dimensional",
-      "title": "Continuous tRNA film / Непрерывный фильм о тРНК",
-      "summary": "Repeat the 39-cue tRNA film and remix named episodes, timings and bilingual captions. Sequence, cloverleaf, source-coordinate L shape, atomic stem, D/T elbow, Mg/water and per-pixel depth atom spheres.",
-      "keywords": [
-        "trna-journey",
-        "тРНК фильм",
-        "тРНК последовательность атомы",
-        "tRNA journey",
-        "trna film remix",
-        "атомная упаковка тРНК",
-        "Mg вода локоть",
-        "повторить фильм тРНК"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "trna-journey.md",
-          "section": "Повторить одной командой"
-        },
-        {
-          "path": "trna-journey.md",
-          "section": "Собрать свой маршрут"
-        },
-        {
-          "path": "trna-journey.md",
-          "section": "Компоненты отдельно"
-        },
-        {
-          "path": "trna-journey.md",
-          "section": "Проверить после изменений"
-        }
-      ],
-      "sources": [
-        "trna-journey.html",
-        "js/trna-config.js",
-        "js/trna-story.js",
-        "js/trna-world.js",
-        "js/trna-sphere-renderer.js",
-        "assets/trna/SOURCES.md",
-        "build/trna-data.py",
-        "qa/trna/remix.cjs"
-      ],
-      "examples": [
-        "js/trna-journey.js"
-      ],
-      "caveat": "Curated for yeast tRNA(Phe) 1EHZ, not a generic RNA importer or folding simulator. Camera motion preserves source coordinates; author order and captions still need scientific review.",
-      "related": [
-        "cinema-timeline",
-        "cinematic-explanation",
-        "molecular-views",
-        "rna-folding",
-        "export-qa"
-      ]
-    },
-    {
-      "id": "cinema-timeline",
-      "branch": "motion",
-      "title": "Continuous film timeline / Шкала непрерывного фильма",
-      "summary": "Compile numeric poses into motion and explicit reading holds, sample deterministic state and caption phases, and assemble new routes by stable keys.",
-      "keywords": [
-        "cinema-timeline",
-        "непрерывная временная шкала",
-        "пауза для чтения",
-        "continuous film timeline",
-        "caption readiness",
-        "монтаж эпизодов",
-        "перемотка фильма"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "cinema-timeline.md"
-        }
-      ],
-      "sources": [
-        "js/cinema-timeline.js",
-        "js/trna-cinema.js",
-        "css/trna-cinema.css"
-      ],
-      "examples": [
-        "js/trna-story.js",
-        "js/trna-config.js"
-      ],
-      "caveat": "Pure authored numeric interpolation, not physical dynamics. Caption thresholds do not automatically prove visual legibility. Use complete finite target states and dispose the driver and controls.",
-      "related": [
-        "trna-journey",
-        "cinematic-explanation",
-        "motion",
-        "shell",
-        "languages",
-        "export-qa"
-      ]
-    },
-    {
-      "id": "atac-seq",
-      "branch": "biology",
-      "title": "ATAC-seq film / Фильм о доступности хроматина",
-      "summary": "Repeat the 46-cue / 240.6-second ATAC-seq movie or remix named episodes, timing and bilingual copy: source-backed nucleosome and Tn5, paired reads, original fragments, tracks, length distributions and interpretation.",
-      "keywords": [
-        "ATAC-seq",
-        "ATACseq",
-        "ATAC-seq фильм",
-        "атак секвенирование",
-        "доступность хроматина фильм",
-        "tn5 tagmentation film",
-        "транспозаза",
-        "атак ремикс",
-        "atac film remix"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "atac-seq.md",
-          "section": "Повторить одной командой"
-        },
-        {
-          "path": "atac-seq.md",
-          "section": "Собрать свой маршрут"
-        },
-        {
-          "path": "atac-seq.md",
-          "section": "Каталог эпизодов"
-        },
-        {
-          "path": "atac-seq.md",
-          "section": "Проверить после изменений"
-        }
-      ],
-      "sources": [
-        "atac-seq.html",
-        "js/atac-config.js",
-        "js/atac-story.js",
-        "js/atac-camera-story.js",
-        "assets/atac/SOURCES.md",
-        "build/atac-film.py",
-        "qa/atac/README.md"
-      ],
-      "examples": [
-        "js/atac-journey.js"
-      ],
-      "caveat": "Curated 1KX5/1MUH structural models and synthetic fragment data. Authored docking and readout motion are explanatory, not a reaction simulation or FASTQ analysis. Review new narration and transitions after remixing.",
-      "related": [
-        "atac-components",
-        "cinema-timeline",
-        "cinematic-explanation",
-        "molecular-views",
-        "export-qa"
-      ]
-    },
-    {
-      "id": "atac-components",
-      "branch": "three-dimensional",
-      "title": "Chromatin and sequencing bricks / Компоненты хроматина и чтения",
-      "summary": "Reuse independent nucleosome/Tn5 source views and close-ups, histone tails, contour-preserving insert straightening, 3D paired-end reading, accumulating length histograms and nearby fading labels. Four editable scenes,16 states without the whole-film controller.",
-      "keywords": [
-        "atac-components",
-        "nucleosome 1KX5",
-        "нуклеосома 3d",
-        "гистоновые хвосты",
-        "tn5 1MUH",
-        "paired-end reading",
-        "R1 R2 синтез",
-        "длина фрагмента распрямление",
-        "ближние подписи молекула",
-        "histogram accumulation"
-      ],
-      "status": "ready",
-      "guides": [
-        {
-          "path": "atac-components.md",
-          "section": "Независимый пример"
-        },
-        {
-          "path": "atac-components.md",
-          "section": "Карта компонентов"
-        },
-        {
-          "path": "atac-components.md",
-          "section": "Вставить одну сцену"
-        },
-        {
-          "path": "atac-components.md",
-          "section": "Подпись возле движущегося объекта"
-        },
-        {
-          "path": "atac-components.md",
-          "section": "Проверка компонентов"
-        }
-      ],
-      "sources": [
-        "atac-components.html",
-        "js/atac-structure-views.js",
-        "js/atac-histone-cartoon.js",
-        "js/atac-tn5-cartoon.js",
-        "js/atac-fragment-origin.js",
-        "js/atac-read-views.js",
-        "js/atac-signals.js",
-        "js/atac-callouts.js"
-      ],
-      "examples": [
-        "js/recipes/atac/components.js"
-      ],
-      "caveat": "Built for packaged source structures and F001 teaching data, not arbitrary atom/FASTQ import. Coordinates are experimental; linker placements, readout and straightening are pedagogical. Callout field uses the standard 1280x720 stage.",
-      "related": [
-        "atac-seq",
-        "molecular-views",
-        "molecular-coordinates",
-        "clearance",
-        "motion",
-        "export-qa"
-      ]
+     "path": "interaction.md",
+     "section": "Уход со сцены"
     }
-  ]
+   ],
+   "sources": [
+    "js/motion.js",
+    "js/film.js"
+   ],
+   "examples": [
+    "js/recipes/representation-journey.js"
+   ],
+   "caveat": "Read each selected motion contract and register cleanup; intermediate geometry is an explanation, not evidence of a measured trajectory.",
+   "related": [
+    "scene",
+    "controls",
+    "perspective",
+    "clearance",
+    "molecular-animation"
+   ]
+  },
+  {
+   "id": "perspective",
+   "branch": "motion",
+   "title": "Camera and depth disclosure / Ракурс и третья координата",
+   "summary": "Project fixed world coordinates with K.project3D and K.spatialScene while explaining what the camera reveals.",
+   "keywords": [
+    "3D",
+    "camera",
+    "orthographic",
+    "K.project3D",
+    "K.spatialScene",
+    "ракурс",
+    "камера",
+    "третья координата",
+    "UMAP"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "perspective.md",
+     "section": "Что именно проектируется"
+    },
+    {
+     "path": "perspective.md",
+     "section": "Небольшая пространственная сцена"
+    },
+    {
+     "path": "perspective.md",
+     "section": "Анимация и ручное управление"
+    },
+    {
+     "path": "perspective.md",
+     "section": "Два образца и границы вывода"
+    }
+   ],
+   "sources": [
+    "js/perspective.js"
+   ],
+   "examples": [
+    "js/episodes/12-viewpoint.js",
+    "js/episodes/13-dimension.js"
+   ],
+   "caveat": "A camera does not recover missing depth, fit UMAP or turn a 2D image into measured 3D coordinates.",
+   "related": [
+    "motion",
+    "projection",
+    "source-figure"
+   ]
+  },
+  {
+   "id": "layout",
+   "branch": "drawing",
+   "title": "Measured text layout / Измеряемое размещение текста",
+   "summary": "Reserve intended boxes with L.textBox, L.rows, L.columns and L.contract, then measure the rendered text.",
+   "keywords": [
+    "text box",
+    "padding",
+    "L.textBox",
+    "L.contract",
+    "L.ready",
+    "layout",
+    "текст",
+    "отступы",
+    "границы",
+    "переполнение"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "layout.md",
+     "section": "Boxes and tracks"
+    },
+    {
+     "path": "layout.md",
+     "section": "SVG text inside a box"
+    },
+    {
+     "path": "layout.md",
+     "section": "Mounting, fonts and disposal"
+    },
+    {
+     "path": "layout.md",
+     "section": "Contracts for existing labels and HTML"
+    },
+    {
+     "path": "layout.md",
+     "section": "What the audit proves"
+    }
+   ],
+   "sources": [
+    "js/layout.js"
+   ],
+   "examples": [
+    "js/recipes/representation-journey.js"
+   ],
+   "caveat": "Measure after font loading in the promised locales and appearance modes; unmeasured text is not passing and text boxes do not prove stroke clearance.",
+   "related": [
+    "clearance",
+    "anchors",
+    "theme",
+    "languages",
+    "export-qa"
+   ]
+  },
+  {
+   "id": "clearance",
+   "branch": "drawing",
+   "title": "Label and stroke clearance / Зазоры подписей и линий",
+   "summary": "Reserve space around complete formulas, axes, vectors and closed contours throughout motion.",
+   "keywords": [
+    "label collision",
+    "formula",
+    "stroke clearance",
+    "axis labels",
+    "moving labels crossing axis",
+    "overlap",
+    "подписи",
+    "движущиеся подписи пересекают ось",
+    "формула",
+    "зазоры",
+    "пересечение",
+    "окружность"
+   ],
+   "status": "compose",
+   "guides": [
+    {
+     "path": "label-clearance.md",
+     "section": "Резервируйте всю формулу"
+    },
+    {
+     "path": "label-clearance.md",
+     "section": "Ось, легенда и движущийся вектор"
+    },
+    {
+     "path": "label-clearance.md",
+     "section": "Проверяйте контакт, а не только прямоугольники"
+    }
+   ],
+   "sources": [
+    "js/layout.js",
+    "js/explanation.js"
+   ],
+   "examples": [
+    "js/recipes/explanation-bridges.js"
+   ],
+   "caveat": "These are composition and review techniques, not an automatic collision-avoidance API; inspect actual shapes and intermediate frames.",
+   "related": [
+    "layout",
+    "anchors",
+    "motion",
+    "svg-button",
+    "export-qa"
+   ]
+  },
+  {
+   "id": "anchors",
+   "branch": "drawing",
+   "title": "Exact anchors and guides / Точные крепления и направляющие",
+   "summary": "Attach flat-ended guides to current geometry using K.boxAnchor and K.guideSpan.",
+   "keywords": [
+    "connector",
+    "anchor",
+    "guide",
+    "span",
+    "K.boxAnchor",
+    "K.guideSpan",
+    "направляющая",
+    "соединитель",
+    "крепление"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "explanation-geometry.md",
+     "section": "Attach to the actual frame"
+    },
+    {
+     "path": "explanation-geometry.md",
+     "section": "A persistent guide or span"
+    },
+    {
+     "path": "explanation-geometry.md",
+     "section": "Recompute connections from the current pose"
+    }
+   ],
+   "sources": [
+    "js/explanation.js"
+   ],
+   "examples": [
+    "js/recipes/explanation-bridges.js"
+   ],
+   "caveat": "Calculate the object and its connector endpoints from the same current pose; exact attachments do not establish collision-free routing.",
+   "related": [
+    "layout",
+    "clearance",
+    "motion",
+    "recurring-map"
+   ]
+  },
+  {
+   "id": "sequence",
+   "branch": "biology",
+   "title": "Indexed sequence / Последовательность с индексами",
+   "summary": "Keep symbols, indices and supplied relations visible while changing their arrangement with K.sequenceTrack.",
+   "keywords": [
+    "sequence",
+    "DNA",
+    "RNA",
+    "protein sequence",
+    "K.sequenceTrack",
+    "последовательность",
+    "нуклеотиды",
+    "индексы",
+    "связи"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "inquiry.md",
+     "section": "Постоянные символы: `K.sequenceTrack`"
+    },
+    {
+     "path": "inquiry.md",
+     "section": "Происхождение и границы"
+    }
+   ],
+   "sources": [
+    "js/inquiry.js"
+   ],
+   "examples": [
+    "js/episodes/06-sequence.js"
+   ],
+   "caveat": "The author supplies coordinates and relations; this helper predicts neither molecular structure nor valid base pairing.",
+   "related": [
+    "motion",
+    "matrix",
+    "molecular-animation",
+    "molecular-simulation"
+   ]
+  },
+  {
+   "id": "matrix",
+   "branch": "geometry",
+   "title": "Matrix and heatmap / Матрица и тепловая карта",
+   "summary": "Reorder a displayed matrix with K.heatmap while preserving cell values and a fixed color scale.",
+   "keywords": [
+    "matrix",
+    "heatmap",
+    "reorder",
+    "K.heatmap",
+    "матрица",
+    "тепловая карта",
+    "перестановка",
+    "кластеризация"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "matrices-partitions.md",
+     "section": "K.heatmap"
+    },
+    {
+     "path": "matrices-partitions.md",
+     "section": "Галерея и научный статус"
+    }
+   ],
+   "sources": [
+    "js/matrices.js"
+   ],
+   "examples": [
+    "js/episodes/07-heatmap.js"
+   ],
+   "caveat": "Permuting rows and columns is not clustering; supplied orders must be bijections and the quantitative color range must remain explicit.",
+   "related": [
+    "partition",
+    "sequence",
+    "theme"
+   ]
+  },
+  {
+   "id": "partition",
+   "branch": "geometry",
+   "title": "Observation partitions / Разделение наблюдений",
+   "summary": "Assign persistent observation IDs to construction, reserve and evaluation roles with K.partitionActors.",
+   "keywords": [
+    "partition",
+    "train test split",
+    "holdout",
+    "K.partitionActors",
+    "выборка",
+    "разбиение",
+    "резерв",
+    "обучение",
+    "проверка"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "matrices-partitions.md",
+     "section": "K.partitionActors"
+    },
+    {
+     "path": "matrices-partitions.md",
+     "section": "Галерея и научный статус"
+    }
+   ],
+   "sources": [
+    "js/partitions.js"
+   ],
+   "examples": [
+    "js/episodes/08-partition.js"
+   ],
+   "caveat": "Each ID must occur exactly once; moving records into groups does not train or validate a model.",
+   "related": [
+    "prediction",
+    "pipeline",
+    "permutation"
+   ]
+  },
+  {
+   "id": "uncertainty",
+   "branch": "statistics",
+   "title": "Spread and mean precision / Разброс и точность среднего",
+   "summary": "Show residuals, sample variance, SD and SEM with K.sampleSummary and K.sampleSpread.",
+   "keywords": [
+    "uncertainty",
+    "variance",
+    "SD",
+    "SEM",
+    "K.sampleSummary",
+    "K.sampleSpread",
+    "неопределённость",
+    "дисперсия",
+    "разброс",
+    "стандартная ошибка"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "statistics.md",
+     "section": "Sample summary"
+    },
+    {
+     "path": "statistics.md",
+     "section": "Residual spread view"
+    },
+    {
+     "path": "statistics.md",
+     "section": "Numerical input contract"
+    },
+    {
+     "path": "statistics.md",
+     "section": "View input and identity contract"
+    },
+    {
+     "path": "statistics.md",
+     "section": "View lifecycle"
+    }
+   ],
+   "sources": [
+    "js/statistics.js"
+   ],
+   "examples": [
+    "js/recipes/methods-statistics.js"
+   ],
+   "caveat": "SD and SEM answer different questions; the author must identify independent sampling units and must not treat a displayed interval as an automatic confidence interval.",
+   "related": [
+    "aggregation",
+    "resampling",
+    "permutation",
+    "empirical-distributions"
+   ]
+  },
+  {
+   "id": "permutation",
+   "branch": "statistics",
+   "title": "Exact mean permutation / Точная перестановка групп",
+   "summary": "Reassign persistent records and enumerate small unpaired mean-difference tests with K.exactMeanPermutation and K.permutationView.",
+   "keywords": [
+    "permutation test",
+    "exchangeability",
+    "null distribution",
+    "K.exactMeanPermutation",
+    "K.permutationView",
+    "перестановочный тест",
+    "перестановка меток",
+    "обменность",
+    "нулевая гипотеза"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "statistics.md",
+     "section": "Exact mean permutation"
+    },
+    {
+     "path": "statistics.md",
+     "section": "Permutation view"
+    },
+    {
+     "path": "statistics.md",
+     "section": "Assignment transitions"
+    },
+    {
+     "path": "statistics.md",
+     "section": "Numerical input contract"
+    },
+    {
+     "path": "statistics.md",
+     "section": "View input and identity contract"
+    },
+    {
+     "path": "statistics.md",
+     "section": "View lifecycle"
+    }
+   ],
+   "sources": [
+    "js/statistics.js"
+   ],
+   "examples": [
+    "js/recipes/methods-statistics.js"
+   ],
+   "caveat": "The exact small-sample unpaired enumeration requires exchangeability; it is not a general paired, clustered or arbitrarily pooled-null testing engine.",
+   "related": [
+    "uncertainty",
+    "multiple-testing",
+    "partition"
+   ]
+  },
+  {
+   "id": "multiple-testing",
+   "branch": "statistics",
+   "title": "Benjamini–Hochberg / Множественное тестирование",
+   "summary": "Sort hypothesis IDs, locate the final passing rank and select its prefix with K.bhAdjust and K.bhView.",
+   "keywords": [
+    "multiple testing",
+    "BH",
+    "Benjamini Hochberg",
+    "FDR",
+    "K.bhAdjust",
+    "K.bhView",
+    "множественное тестирование",
+    "ложные открытия",
+    "p-value",
+    "многих генов",
+    "множество проверок",
+    "выбор гипотез",
+    "сортировка p",
+    "ложноположительные",
+    "false discovery",
+    "adjusted p",
+    "gene testing"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "statistics.md",
+     "section": "BH adjustment"
+    },
+    {
+     "path": "statistics.md",
+     "section": "BH ranking view"
+    },
+    {
+     "path": "statistics.md",
+     "section": "Numerical input contract"
+    },
+    {
+     "path": "statistics.md",
+     "section": "View input and identity contract"
+    },
+    {
+     "path": "statistics.md",
+     "section": "View lifecycle"
+    }
+   ],
+   "sources": [
+    "js/statistics.js"
+   ],
+   "examples": [
+    "js/recipes/methods-statistics.js"
+   ],
+   "caveat": "Explain the procedure's assumptions and family of tests; a BH-adjusted value is not a posterior probability that a hypothesis is true.",
+   "related": [
+    "permutation",
+    "threshold",
+    "story"
+   ]
+  },
+  {
+   "id": "resampling",
+   "branch": "statistics",
+   "title": "Resampling copies / Выборки с возвращением",
+   "summary": "Trace source records into supplied resamples and their means with K.resampleMean.",
+   "keywords": [
+    "bootstrap",
+    "resampling",
+    "sample with replacement",
+    "K.resampleMean",
+    "N.bootstrapMeans",
+    "бутстрэп",
+    "пересэмплирование",
+    "выборка с возвращением"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "resampling.md",
+     "section": "API"
+    },
+    {
+     "path": "resampling.md",
+     "section": "Движение и смысл координат"
+    },
+    {
+     "path": "resampling.md",
+     "section": "Парный bootstrap: рецепт автора"
+    }
+   ],
+   "sources": [
+    "js/resampling.js",
+    "js/lib/num.js"
+   ],
+   "examples": [
+    "js/episodes/10-resampling.js"
+   ],
+   "caveat": "Repeated IDs are copies, not new observations; the view neither generates confidence intervals nor establishes the resampling unit or dependence structure.",
+   "related": [
+    "uncertainty",
+    "aggregation",
+    "prediction"
+   ]
+  },
+  {
+   "id": "prediction",
+   "branch": "statistics",
+   "title": "Matched predictions / Сопоставленные предсказания",
+   "summary": "Compare observed and predicted scalar values for the same IDs using K.predictionComparison and synchronized Pearson/L2 readouts.",
+   "keywords": [
+    "prediction",
+    "Pearson",
+    "correlation",
+    "L2",
+    "K.predictionComparison",
+    "предсказание",
+    "корреляция",
+    "ошибка",
+    "остатки"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "predictions.md",
+     "section": "Arithmetic and interpretation"
+    },
+    {
+     "path": "predictions.md",
+     "section": "Animation and interaction"
+    }
+   ],
+   "sources": [
+    "js/predictions.js"
+   ],
+   "examples": [
+    "js/episodes/09-prediction.js"
+   ],
+   "caveat": "L2 is not RMSE; Pearson for a constant series is undefined, and comparison does not fit a predictive model.",
+   "related": [
+    "controls",
+    "partition",
+    "pipeline",
+    "threshold"
+   ]
+  },
+  {
+   "id": "threshold",
+   "branch": "statistics",
+   "title": "Classification threshold / Порог классификации",
+   "summary": "Connect score thresholds to selected records, integer counts, precision/recall and average precision.",
+   "keywords": [
+    "threshold",
+    "precision recall",
+    "average precision",
+    "PR curve",
+    "K.binaryRanking",
+    "K.thresholdCurve",
+    "порог",
+    "точность полнота",
+    "классификация"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "threshold.md",
+     "section": "Расчёт ранжирования"
+    },
+    {
+     "path": "threshold.md",
+     "section": "Связанная геометрия"
+    },
+    {
+     "path": "threshold.md",
+     "section": "Пример и управление"
+    }
+   ],
+   "sources": [
+    "js/threshold.js"
+   ],
+   "examples": [
+    "js/episodes/11-threshold.js"
+   ],
+   "caveat": "Keep equal scores grouped under score ≥ threshold; the area is discrete average precision, with recall/AP undefined when there are no positive cases.",
+   "related": [
+    "prediction",
+    "controls",
+    "multiple-testing"
+   ]
+  },
+  {
+   "id": "empirical-distributions",
+   "branch": "statistics",
+   "title": "Observations and quantiles / Наблюдения и квантили",
+   "summary": "Represent observations as an empirical inverse CDF with K.empiricalDistribution and distinguish that model from its query grid.",
+   "keywords": [
+    "empirical distribution",
+    "quantile",
+    "inverse CDF",
+    "histogram",
+    "grid resolution",
+    "K.empiricalDistribution",
+    "K.histogram",
+    "эмпирическое распределение",
+    "квантили",
+    "сетка"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "distributions.md",
+     "section": "Observations become an empirical inverse CDF"
+    },
+    {
+     "path": "components.md",
+     "section": "3. Гистограмма из тех же наблюдений"
+    }
+   ],
+   "sources": [
+    "js/distributions.js",
+    "js/charts.js"
+   ],
+   "examples": [
+    "js/recipes/explanation-bridges.js",
+    "js/episodes/02-distribution.js"
+   ],
+   "caveat": "Increasing the probability-grid size adds evaluation positions, not observations; quantile boundary rules and bin boundaries must remain explicit.",
+   "related": [
+    "quantile-transport",
+    "uncertainty",
+    "recurring-map"
+   ]
+  },
+  {
+   "id": "quantile-transport",
+   "branch": "statistics",
+   "title": "One-dimensional transport / Одномерное расстояние и центр",
+   "summary": "Compute empirical W2 with K.wasserstein1D and average aligned quantile-grid curves with K.quantileBarycenter.",
+   "keywords": [
+    "Wasserstein",
+    "W2",
+    "optimal transport",
+    "quantile barycenter",
+    "K.wasserstein1D",
+    "K.quantileBarycenter",
+    "Васерштейн",
+    "оптимальный транспорт",
+    "барицентр",
+    "центральная кривая"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "distributions.md",
+     "section": "Exact W2 for empirical measures"
+    },
+    {
+     "path": "distributions.md",
+     "section": "Average quantile curves on a shared grid"
+    }
+   ],
+   "sources": [
+    "js/distributions.js"
+   ],
+   "examples": [
+    "js/recipes/explanation-bridges.js"
+   ],
+   "caveat": "Exact empirical integration uses floating-point arithmetic; grid-curve averaging does not reconstruct an exact unequal-size empirical barycenter or establish statistical significance.",
+   "related": [
+    "empirical-distributions",
+    "anchors",
+    "recurring-map",
+    "permutation"
+   ]
+  },
+  {
+   "id": "aggregation",
+   "branch": "biology",
+   "title": "Cells to sample evidence / Клетки и образцы",
+   "summary": "Sum raw cell contributions by sample and stratum with K.aggregateCounts and K.countAggregation.",
+   "keywords": [
+    "aggregation",
+    "pseudobulk",
+    "donor",
+    "sample",
+    "scRNA-seq",
+    "K.aggregateCounts",
+    "K.countAggregation",
+    "агрегация",
+    "донор",
+    "клетки",
+    "образцы"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "biology.md",
+     "section": "Raw counts by sample and stratum"
+    },
+    {
+     "path": "biology.md",
+     "section": "Composition and verification"
+    }
+   ],
+   "sources": [
+    "js/biology.js"
+   ],
+   "examples": [
+    "js/recipes/methods-biology.js",
+    "js/recipes/independent-evidence.js"
+   ],
+   "caveat": "Grouping and summing counts does not perform differential expression or make cells independent biological replicates.",
+   "related": [
+    "normalization",
+    "uncertainty",
+    "resampling"
+   ]
+  },
+  {
+   "id": "normalization",
+   "branch": "biology",
+   "title": "Count normalization / Нормализация счётчиков",
+   "summary": "Disclose each row's common-total scaling factor and a separate log1p transform with K.normalizeCountRows and K.countNormalization.",
+   "keywords": [
+    "normalization",
+    "library size",
+    "log1p",
+    "count depth",
+    "K.normalizeCountRows",
+    "K.countNormalization",
+    "нормализация",
+    "глубина",
+    "масштабирование",
+    "логарифм"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "biology.md",
+     "section": "A common total, then natural log1p"
+    },
+    {
+     "path": "biology.md",
+     "section": "Composition and verification"
+    }
+   ],
+   "sources": [
+    "js/biology.js"
+   ],
+   "examples": [
+    "js/recipes/methods-biology.js"
+   ],
+   "caveat": "Scaled values are derived values, not new molecules; retain raw counts and label raw, normalized and log scales separately.",
+   "related": [
+    "aggregation",
+    "matrix",
+    "empirical-distributions"
+   ]
+  },
+  {
+   "id": "alleles",
+   "branch": "biology",
+   "title": "Genotypes to alleles / Генотипы и аллели",
+   "summary": "Count two allele copies per diploid genotype and show separate HWE expectations with K.alleleSummary and K.alleleFrequency.",
+   "keywords": [
+    "allele frequency",
+    "genotype",
+    "Hardy Weinberg",
+    "HWE",
+    "K.alleleSummary",
+    "K.alleleFrequency",
+    "аллели",
+    "генотип",
+    "частота",
+    "Харди Вайнберг"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "biology.md",
+     "section": "Diploid allele frequencies and separate HWE expectations"
+    },
+    {
+     "path": "biology.md",
+     "section": "Composition and verification"
+    }
+   ],
+   "sources": [
+    "js/biology.js"
+   ],
+   "examples": [
+    "js/recipes/methods-biology.js"
+   ],
+   "caveat": "HWE probabilities are model expectations, not observed genotypes; illustrative individual indices are reconstructed from supplied genotype tallies.",
+   "related": [
+    "sequence",
+    "uncertainty",
+    "story"
+   ]
+  },
+  {
+   "id": "circle",
+   "branch": "geometry",
+   "title": "Circle to wave / Окружность и волна",
+   "summary": "Relate a rotating radius to signed sine/cosine components using K.circleComponents and K.unitCircleView.",
+   "keywords": [
+    "unit circle",
+    "sine",
+    "cosine",
+    "wave",
+    "K.circleComponents",
+    "K.unitCircleView",
+    "окружность",
+    "синус",
+    "косинус",
+    "волна",
+    "радианы"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "geometry.md",
+     "section": "Pure numerical models"
+    },
+    {
+     "path": "geometry.md",
+     "section": "Persistent views"
+    }
+   ],
+   "sources": [
+    "js/geometry.js"
+   ],
+   "examples": [
+    "js/recipes/methods-geometry.js"
+   ],
+   "caveat": "Keep radians and sign visible; the supplied view's trace has a documented finite angular range.",
+   "related": [
+    "projection",
+    "motion",
+    "clearance"
+   ]
+  },
+  {
+   "id": "projection",
+   "branch": "geometry",
+   "title": "Projection and PCA / Проекция и PCA",
+   "summary": "Project explicit 2D points, retain discarded residuals and explain exact 2D PCA with K.projectOnto2D, K.pca2D and K.projectionView.",
+   "keywords": [
+    "projection",
+    "PCA",
+    "principal components",
+    "residual",
+    "K.projectOnto2D",
+    "K.pca2D",
+    "K.projectionView",
+    "проекция",
+    "главные компоненты",
+    "остаток"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "geometry.md",
+     "section": "Pure numerical models"
+    },
+    {
+     "path": "geometry.md",
+     "section": "Persistent views"
+    },
+    {
+     "path": "geometry.md",
+     "section": "Composition and verification"
+    }
+   ],
+   "sources": [
+    "js/geometry.js"
+   ],
+   "examples": [
+    "js/recipes/methods-geometry.js"
+   ],
+   "caveat": "State centering and coordinate meaning; these explicit 2D helpers neither fit UMAP nor infer hidden dimensions.",
+   "related": [
+    "perspective",
+    "linear-map",
+    "uncertainty"
+   ]
+  },
+  {
+   "id": "linear-map",
+   "branch": "geometry",
+   "title": "Linear map and area / Линейное преобразование и площадь",
+   "summary": "Transform basis directions and a unit square while computing determinant and area with K.linearMap2D and K.linearMapView.",
+   "keywords": [
+    "linear map",
+    "determinant",
+    "basis",
+    "area",
+    "K.linearMap2D",
+    "K.linearMapView",
+    "линейное преобразование",
+    "определитель",
+    "базис",
+    "площадь"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "geometry.md",
+     "section": "Pure numerical models"
+    },
+    {
+     "path": "geometry.md",
+     "section": "Persistent views"
+    },
+    {
+     "path": "geometry.md",
+     "section": "Composition and verification"
+    }
+   ],
+   "sources": [
+    "js/geometry.js"
+   ],
+   "examples": [
+    "js/recipes/methods-geometry.js"
+   ],
+   "caveat": "Signed determinant and ordinary area differ; a linear map changes coordinates whereas a camera changes their view.",
+   "related": [
+    "projection",
+    "matrix",
+    "motion"
+   ]
+  },
+  {
+   "id": "questions",
+   "branch": "interaction",
+   "title": "Questions, hints and guide / Вопросы, подсказки и конспект",
+   "summary": "Use T.ponder for a prediction before the answer and scene.qa for current-scene questions and the searchable lesson guide.",
+   "keywords": [
+    "questions",
+    "hint",
+    "misconception",
+    "Q&A",
+    "T.ponder",
+    "scene.qa",
+    "вопросы",
+    "подсказка",
+    "конспект",
+    "ответ"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "inquiry.md",
+     "section": "Вопрос до ответа: `T.ponder`"
+    },
+    {
+     "path": "questions.md",
+     "section": "Содержание"
+    },
+    {
+     "path": "questions.md",
+     "section": "Подключение"
+    },
+    {
+     "path": "questions.md",
+     "section": "Поведение"
+    }
+   ],
+   "sources": [
+    "js/inquiry.js",
+    "js/deck.js"
+   ],
+   "examples": [
+    "js/episodes/05-ponder.js"
+   ],
+   "caveat": "Write topic-specific hints, answers and sources in the promised locales; optional reading cannot replace labels essential to the drawing.",
+   "related": [
+    "story",
+    "languages",
+    "shell",
+    "controls"
+   ]
+  },
+  {
+   "id": "controls",
+   "branch": "interaction",
+   "title": "Manual inputs / Ручное управление",
+   "summary": "Connect T.control and T.buttons to one current state and an interruptible F.driver paint function.",
+   "keywords": [
+    "slider",
+    "buttons",
+    "manual input",
+    "T.control",
+    "T.buttons",
+    "F.driver",
+    "ползунок",
+    "кнопки",
+    "параметр",
+    "управление"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "interaction.md"
+    },
+    {
+     "path": "predictions.md",
+     "section": "Animation and interaction"
+    }
+   ],
+   "sources": [
+    "js/lesson.js",
+    "js/film.js"
+   ],
+   "examples": [
+    "js/episodes/09-prediction.js"
+   ],
+   "caveat": "Register driver.dispose with ctx.onDispose and compute current values, marks and captions together; controls must retain keyboard and native reading behavior.",
+   "related": [
+    "motion",
+    "svg-button",
+    "mobile",
+    "prediction"
+   ]
+  },
+  {
+   "id": "svg-button",
+   "branch": "interaction",
+   "title": "Whole SVG activation region / Полная SVG-область нажатия",
+   "summary": "Add an accessible transparent rectangular target, translated label and independent focus indicator with T.svgButton.",
+   "keywords": [
+    "SVG button",
+    "hit target",
+    "tile",
+    "keyboard focus",
+    "T.svgButton",
+    "SVG кнопка",
+    "область нажатия",
+    "плитка",
+    "фокус",
+    "Tab Enter Space"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "interaction-regions.md",
+     "section": "API и состояние"
+    },
+    {
+     "path": "interaction-regions.md",
+     "section": "Указатель, клавиатура и фокус"
+    },
+    {
+     "path": "interaction-regions.md",
+     "section": "Метаданные для проверки"
+    },
+    {
+     "path": "interaction-regions.md",
+     "section": "Проверки"
+    }
+   ],
+   "sources": [
+    "js/interaction-regions.js"
+   ],
+   "examples": [
+    "js/recipes/pipeline-synthesis.js"
+   ],
+   "caveat": "Keep activation rectangles disjoint and focus/selection clear of numeric labels; verify actual blank-area clicks and keyboard focus, not only dispatched events.",
+   "related": [
+    "hit-audit",
+    "controls",
+    "clearance",
+    "pipeline"
+   ]
+  },
+  {
+   "id": "hit-audit",
+   "branch": "interaction",
+   "title": "Hit-region inspection / Проверка зон нажатия",
+   "summary": "Inspect declared SVG hit rectangles for overlap and sampled native hit coverage without activating their callbacks.",
+   "keywords": [
+    "hit audit",
+    "activation overlap",
+    "elementFromPoint",
+    "blank area",
+    "hit rectangle",
+    "проверка нажатий",
+    "перекрытие",
+    "пустая область",
+    "инспектор"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "hit-region-audit.md",
+     "section": "Opt in with a real hit rectangle"
+    },
+    {
+     "path": "hit-region-audit.md",
+     "section": "What is checked"
+    },
+    {
+     "path": "hit-region-audit.md",
+     "section": "Report and coverage counts"
+    },
+    {
+     "path": "hit-region-audit.md",
+     "section": "Limits of this evidence"
+    }
+   ],
+   "sources": [
+    "build/inspect.js"
+   ],
+   "examples": [
+    "js/recipes/pipeline-synthesis.js"
+   ],
+   "caveat": "Sampled rectangles do not prove continuous coverage, correct callbacks or keyboard behavior; no declared regions means zero coverage, not a global pass.",
+   "related": [
+    "svg-button",
+    "clearance",
+    "export-qa"
+   ]
+  },
+  {
+   "id": "story",
+   "branch": "narrative",
+   "title": "Question to operation / От вопроса к действию",
+   "summary": "Choose each scene's question, input objects, visible operation, result and preserved identity before composing the lesson.",
+   "keywords": [
+    "storyboard",
+    "operation map",
+    "narrative",
+    "scientific question",
+    "story",
+    "сценарий",
+    "карта операций",
+    "научный вопрос",
+    "объяснение"
+   ],
+   "status": "compose",
+   "guides": [
+    {
+     "path": "storyboard.md",
+     "section": "Таблица операций до написания сцен"
+    },
+    {
+     "path": "storyboard.md",
+     "section": "Сценарий отдельного раскрытия"
+    },
+    {
+     "path": "scientific-repertoire.md",
+     "section": "A scene should earn its motion"
+    },
+    {
+     "path": "authoring.md",
+     "section": "Работа с содержанием"
+    }
+   ],
+   "sources": [
+    "js/film.js"
+   ],
+   "examples": [
+    "js/recipes/representation-journey.js",
+    "js/recipes/independent-evidence.js"
+   ],
+   "caveat": "The examples are a menu, not a required outline; teaching values must not be relabeled as evidence from the user's material.",
+   "related": [
+    "scene",
+    "recurring-map",
+    "pipeline",
+    "questions",
+    "provenance"
+   ]
+  },
+  {
+   "id": "recurring-map",
+   "branch": "narrative",
+   "title": "Recurring conceptual map / Повторяющаяся смысловая карта",
+   "summary": "Reuse topic-specific motifs to connect local operations, formulas and a final answer to the opening question.",
+   "keywords": [
+    "concept map",
+    "recurring map",
+    "explanation bridge",
+    "formula substitution",
+    "synthesis",
+    "смысловая карта",
+    "общая картина",
+    "формула",
+    "подстановка",
+    "связное объяснение"
+   ],
+   "status": "compose",
+   "guides": [
+    {
+     "path": "explanation-design.md",
+     "section": "Build the explanation around a question"
+    },
+    {
+     "path": "explanation-design.md",
+     "section": "Operation → formula → substitution → interpretation"
+    },
+    {
+     "path": "explanation-design.md",
+     "section": "Turn a result into an explanation"
+    }
+   ],
+   "sources": [
+    "js/explanation.js",
+    "js/distributions.js"
+   ],
+   "examples": [
+    "js/recipes/explanation-bridges.js"
+   ],
+   "caveat": "The map is an authored composition, not a universal API; keep known routes readable and replay limited to available paths without changing current parameters or selection.",
+   "related": [
+    "story",
+    "pipeline",
+    "anchors",
+    "quantile-transport"
+   ]
+  },
+  {
+   "id": "pipeline",
+   "branch": "narrative",
+   "title": "Branched synthesis / Разветвлённая общая карта",
+   "summary": "Compose two construction inputs and separate evaluation branches around one consistent model with the pipeline-synthesis recipe.",
+   "keywords": [
+    "pipeline",
+    "branched map",
+    "two inputs",
+    "independent evaluation",
+    "replay",
+    "PIPELINE_SYNTHESIS_EXAMPLE",
+    "конвейер",
+    "ветвление",
+    "два входа",
+    "независимая проверка",
+    "повтор пути"
+   ],
+   "status": "compose",
+   "guides": [
+    {
+     "path": "pipeline-synthesis.md",
+     "section": "Operation map"
+    },
+    {
+     "path": "pipeline-synthesis.md",
+     "section": "Progress through the map"
+    },
+    {
+     "path": "pipeline-synthesis.md",
+     "section": "Reuse"
+    }
+   ],
+   "sources": [
+    "js/interaction-regions.js",
+    "js/film.js"
+   ],
+   "examples": [
+    "js/recipes/pipeline-synthesis.js"
+   ],
+   "caveat": "The exported toy is not a general scientific API; unrelated examples must not imply one numerical pipeline, and a reference unavailable during construction belongs only to evaluation.",
+   "related": [
+    "recurring-map",
+    "svg-button",
+    "prediction",
+    "partition",
+    "story"
+   ]
+  },
+  {
+   "id": "theme",
+   "branch": "experience",
+   "title": "Live appearance / Переключаемое оформление",
+   "summary": "Use semantic C roles and supplied Source fonts so background, palette and text family can change without rebuilding scenes.",
+   "keywords": [
+    "theme",
+    "palette",
+    "font",
+    "background",
+    "D.appearance",
+    "semantic colors",
+    "тема",
+    "палитра",
+    "шрифт",
+    "фон",
+    "оформление"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "theme.md",
+     "section": "Programmatic configuration"
+    },
+    {
+     "path": "theme.md",
+     "section": "Color roles, not literal hues"
+    },
+    {
+     "path": "theme.md",
+     "section": "Typography and offline fonts"
+    },
+    {
+     "path": "theme.md",
+     "section": "Checks"
+    }
+   ],
+   "sources": [
+    "js/appearance.js",
+    "css/appearance.css",
+    "css/fonts.css"
+   ],
+   "examples": [
+    "index.html"
+   ],
+   "caveat": "Do not parse live C values as hex or append alpha suffixes; preserve state, quantitative scales and complete font notices across appearance changes.",
+   "related": [
+    "layout",
+    "languages",
+    "provenance",
+    "shell"
+   ]
+  },
+  {
+   "id": "languages",
+   "branch": "experience",
+   "title": "RU/EN authoring / Русский и английский",
+   "summary": "Author scene, note and Q&A translations with D.i18n packs while preserving current input, progress and persistent source nodes.",
+   "keywords": [
+    "translation",
+    "localization",
+    "RU EN",
+    "D.i18n.pack",
+    "bilingual",
+    "перевод",
+    "локализация",
+    "язык",
+    "русский",
+    "английский"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "languages.md",
+     "section": "Что сохраняется при переключении"
+    },
+    {
+     "path": "languages.md",
+     "section": "Авторские пакеты"
+    },
+    {
+     "path": "languages.md",
+     "section": "Следующий урок и проверка"
+    }
+   ],
+   "sources": [
+    "js/lib/i18n.js",
+    "js/i18n/en.js",
+    "js/i18n/en-notes.js"
+   ],
+   "examples": [
+    "js/episodes/01-objects.js"
+   ],
+   "caveat": "Translate full source strings or anchored sentences; language changes must not rebuild scenes, alter numbers or overwrite source nodes with already translated text.",
+   "related": [
+    "layout",
+    "theme",
+    "questions",
+    "shell"
+   ]
+  },
+  {
+   "id": "mobile",
+   "branch": "experience",
+   "title": "Native touch and reading / Жесты и чтение на телефоне",
+   "summary": "Keep one-finger lesson navigation scoped to the drawing while preserving native pinch, zoomed panning and reading-pane gestures.",
+   "keywords": [
+    "mobile",
+    "touch",
+    "swipe",
+    "pinch zoom",
+    "data-no-swipe",
+    "телефон",
+    "жесты",
+    "свайп",
+    "масштабирование",
+    "прокрутка"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "mobile-gestures.md",
+     "section": "Gesture scope and recognition"
+    },
+    {
+     "path": "mobile-gestures.md",
+     "section": "Multiple contacts and cancellation"
+    },
+    {
+     "path": "mobile-gestures.md",
+     "section": "Native pinch and required shell settings"
+    },
+    {
+     "path": "mobile-gestures.md",
+     "section": "Lifecycle and integration"
+    }
+   ],
+   "sources": [
+    "js/lib/touch.js",
+    "css/mobile.css"
+   ],
+   "examples": [
+    "index.html"
+   ],
+   "caveat": "Do not disable browser zoom or apply blanket touch-action:none; synthetic events do not establish native gesture arbitration on a physical device.",
+   "related": [
+    "controls",
+    "svg-button",
+    "shell",
+    "export-qa"
+   ]
+  },
+  {
+   "id": "source-figure",
+   "branch": "drawing",
+   "title": "Source figure window / Область исходного рисунка",
+   "summary": "Show a precise region of an original image with K.sourceWindow and retain full-source access through T.evidence.",
+   "keywords": [
+    "source figure",
+    "image crop",
+    "paper figure",
+    "K.sourceWindow",
+    "T.evidence",
+    "исходный рисунок",
+    "изображение",
+    "фрагмент",
+    "источник"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "components.md",
+     "section": "5. Точная область исходного изображения"
+    },
+    {
+     "path": "components.md",
+     "section": "6. Источники и переносимость"
+    }
+   ],
+   "sources": [
+    "js/patterns.js",
+    "js/lesson.js"
+   ],
+   "examples": [
+    "js/episodes/04-source.js"
+   ],
+   "caveat": "Preserve image dimensions, source and permitted use; a crop or schematic reconstruction cannot manufacture raw measurements or missing dimensions.",
+   "related": [
+    "provenance",
+    "perspective",
+    "story",
+    "molecular-simulation"
+   ]
+  },
+  {
+   "id": "provenance",
+   "branch": "delivery",
+   "title": "Sources and ownership / Источники и права",
+   "summary": "Retain scientific source records, distinguish invented fixtures from evidence and preserve factual ownership and complete font notices.",
+   "keywords": [
+    "provenance",
+    "citation",
+    "source",
+    "license",
+    "font notice",
+    "источник",
+    "происхождение",
+    "лицензия",
+    "права",
+    "учебные данные"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "provenance.md"
+    },
+    {
+     "path": "authoring.md",
+     "section": "Данные"
+    },
+    {
+     "path": "components.md",
+     "section": "6. Источники и переносимость"
+    }
+   ],
+   "sources": [
+    "js/config.js",
+    "js/lesson.js"
+   ],
+   "examples": [
+    "js/episodes/04-source.js"
+   ],
+   "caveat": "The kit's availability does not grant rights to unrelated article content, and toy values are not evidence for the user's topic.",
+   "related": [
+    "source-figure",
+    "theme",
+    "story",
+    "export-qa"
+   ]
+  },
+  {
+   "id": "shell",
+   "branch": "experience",
+   "title": "Stable lesson shell / Постоянная оболочка",
+   "summary": "Retain the five fixed controls and one tabbed reading panel without sizing the canvas from localized toolbar content.",
+   "keywords": [
+    "shell",
+    "player",
+    "toolbar",
+    "reading panel",
+    "notes tabs",
+    "оболочка",
+    "проигрыватель",
+    "панель чтения",
+    "заметки",
+    "меню"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "shell.md",
+     "section": "Переход между сценами"
+    },
+    {
+     "path": "shell.md",
+     "section": "Одно пространство чтения"
+    },
+    {
+     "path": "shell.md",
+     "section": "Файлы и устойчивые точки подключения"
+    },
+    {
+     "path": "shell.md",
+     "section": "Проверка"
+    }
+   ],
+   "sources": [
+    "js/deck.js",
+    "js/player.js",
+    "css/shell.css"
+   ],
+   "examples": [
+    "index.html"
+   ],
+   "caveat": "For ordinary authoring change episodes and metadata first; keep shell.css last and preserve documented hooks and native reading controls.",
+   "related": [
+    "languages",
+    "mobile",
+    "questions",
+    "upgrade"
+   ]
+  },
+  {
+   "id": "export-qa",
+   "branch": "delivery",
+   "title": "Verify and export / Проверка и экспорт",
+   "summary": "Check scientific values, intended bounds, intermediate motion and real interactions, then build and inspect the actual standalone HTML.",
+   "keywords": [
+    "export",
+    "standalone HTML",
+    "bundle",
+    "QA",
+    "inspect",
+    "verification",
+    "экспорт",
+    "сборка",
+    "проверка",
+    "инспектор",
+    "автономный HTML"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "qa.md",
+     "section": "Смысл и числа"
+    },
+    {
+     "path": "qa.md",
+     "section": "Открытие и экспорт"
+    },
+    {
+     "path": "qa.md",
+     "section": "Интерактивность и вычисления"
+    }
+   ],
+   "sources": [
+    "build/bundle.py",
+    "build/inspect.html",
+    "build/inspect.js"
+   ],
+   "examples": [
+    "index.html"
+   ],
+   "caveat": "Build/bundle --check does not write updated HTML; DOM tests, finite coordinates and unmeasured regions cannot substitute for rendered inspection and truthful reporting of unavailable checks.",
+   "related": [
+    "layout",
+    "clearance",
+    "hit-audit",
+    "mobile",
+    "theme",
+    "languages",
+    "provenance"
+   ]
+  },
+  {
+   "id": "upgrade",
+   "branch": "delivery",
+   "title": "Upgrade an existing lesson / Обновление урока",
+   "summary": "Bring a generated lesson to the current release with upgrade.py (checksum-verified kit files, authored files untouched), then follow the version notes for what changed.",
+   "keywords": [
+    "upgrade",
+    "migration",
+    "version",
+    "compatibility",
+    "обновление",
+    "миграция",
+    "версия",
+    "совместимость",
+    "старый урок",
+    "upgrade.py",
+    "lesson-kit.json",
+    "checksum",
+    "conflict",
+    "lean"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "upgrading.md",
+     "section": "Инструмент обновления"
+    },
+    {
+     "path": "upgrading.md",
+     "section": "С 0.14.0: повторяемая молекулярная проверка"
+    },
+    {
+     "path": "upgrading.md",
+     "section": "С 0.12.0: смысловое развитие общей карты"
+    },
+    {
+     "path": "upgrading.md",
+     "section": "С версии 0.11: общая карта и зоны нажатия"
+    },
+    {
+     "path": "upgrading.md",
+     "section": "С версии 0.10: опыт связного объяснения"
+    },
+    {
+     "path": "upgrading.md",
+     "section": "С версии 0.9: научные операции"
+    },
+    {
+     "path": "upgrading.md",
+     "section": "С версии 0.8: внутренние границы и преобразования"
+    },
+    {
+     "path": "upgrading.md",
+     "section": "Переключаемое оформление 0.8.0"
+    }
+   ],
+   "sources": [
+    "lesson-kit.json"
+   ],
+   "examples": [],
+   "caveat": "Updating the library alone does not update an existing lesson; run upgrade.py from the kit root, review reported conflicts, rebuild the standalone HTML and verify the resulting artifact.",
+   "related": [
+    "shell",
+    "theme",
+    "pipeline",
+    "export-qa"
+   ]
+  },
+  {
+   "id": "molecular-animation",
+   "branch": "biology",
+   "title": "Schematic molecular actors / Схематичные молекулярные акторы",
+   "summary": "Build persistent nucleic acids, CRISPR proteins, chromatin and expression actors; control contextual and focused parts with stable line weights.",
+   "keywords": [
+    "molecular animation",
+    "molecular actors",
+    "polymerase",
+    "Cas9",
+    "dCas9",
+    "CRISPR",
+    "CRISPRi",
+    "sgRNA",
+    "guide RNA",
+    "tracrRNA",
+    "crRNA",
+    "nucleosome",
+    "chromatin",
+    "ribosome",
+    "tRNA",
+    "mRNA",
+    "transcription factor",
+    "enhancer",
+    "promoter",
+    "B.emphasis",
+    "B.cas9",
+    "K.molecular",
+    "молекулярная анимация",
+    "молекулярные акторы",
+    "полимераза",
+    "гайдовая РНК",
+    "нуклеосома",
+    "хроматин",
+    "рибосома",
+    "тРНК",
+    "мРНК",
+    "белок",
+    "акцент",
+    "толщина контура",
+    "подсветка белка"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "molecular.md",
+     "section": "Molecular actors and visual hierarchy"
+    },
+    {
+     "path": "molecular.md",
+     "section": "Actor catalogue and local anchors"
+    },
+    {
+     "path": "molecular.md",
+     "section": "Scientific boundaries and provenance"
+    },
+    {
+     "path": "molecular-expression-references.md",
+     "section": "API"
+    },
+    {
+     "path": "motion.md",
+     "section": "One actor, several layouts"
+    }
+   ],
+   "sources": [
+    "js/molecular.js",
+    "js/molecular-expression.js",
+    "js/molecular-regulation.js",
+    "js/molecular-rna-processing.js"
+   ],
+   "examples": [
+    "js/recipes/molecular-atlas.js"
+   ],
+   "caveat": "These are purpose-built schematic SVG actors with authored states and trajectories, not atom coordinates, a structure predictor, reaction kinetics or a molecular dynamics solver.",
+   "related": [
+    "motion",
+    "scene",
+    "theme",
+    "clearance",
+    "sequence",
+    "molecular-simulation",
+    "molecular-regulation",
+    "rna-processing",
+    "molecular-inspection",
+    "molecular-coordinates"
+   ]
+  },
+  {
+   "id": "molecular-simulation",
+   "branch": "motion",
+   "title": "Molecular simulation / Молекулярное моделирование",
+   "summary": "Recognize when folding physics, validated trajectories or a general molecular viewer requires tools and evidence outside this kit.",
+   "keywords": [
+    "molecular simulation",
+    "molecular dynamics",
+    "protein folding simulation",
+    "folding physics",
+    "validated trajectory",
+    "molecular viewer",
+    "молекулярное моделирование",
+    "молекулярная динамика",
+    "симуляция сворачивания белка",
+    "физика фолдинга",
+    "траектория",
+    "структура белка",
+    "folding simulation",
+    "рассчитать фолдинг",
+    "расчёт фолдинга",
+    "симуляция фолдинга"
+   ],
+   "status": "external",
+   "guides": [],
+   "sources": [],
+   "examples": [],
+   "caveat": "The kit provides no folding physics, validated molecular trajectories or general structure viewer. Curated source-backed RNA coordinate projections are available through molecular-coordinates; camera motion does not simulate folding.",
+   "related": [
+    "molecular-animation",
+    "source-figure",
+    "provenance",
+    "molecular-coordinates"
+   ]
+  },
+  {
+   "id": "molecular-regulation",
+   "branch": "biology",
+   "title": "Histone chemistry and initiation / Химия гистонов и инициация",
+   "summary": "Explain H3K9 trimethylation, reader recognition, Mediator and a schematic Pol II initiation complex with preserved actors.",
+   "keywords": [
+    "histone tail",
+    "H3K9me3",
+    "histone chemistry",
+    "trimethylation",
+    "Mediator",
+    "initiation complex",
+    "PIC",
+    "TBP",
+    "TFIIB",
+    "TFIIH",
+    "B.histoneTail",
+    "B.mediator",
+    "B.initiationComplex",
+    "гистон",
+    "хвост гистона",
+    "метилирование",
+    "триметилирование",
+    "метильная группа",
+    "лизин",
+    "инициация",
+    "медиатор"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "molecular-regulation.md",
+     "section": "API"
+    },
+    {
+     "path": "molecular-regulation.md",
+     "section": "H3 chemistry and labels"
+    },
+    {
+     "path": "molecular-regulation.md",
+     "section": "PIC organization and limits"
+    }
+   ],
+   "sources": [
+    "js/molecular-regulation.js"
+   ],
+   "examples": [
+    "js/recipes/molecular-regulation-atlas.js"
+   ],
+   "caveat": "Schematic structure and graphical transitions; methylation fractions do not depict reaction intermediates, and PIC convergence does not assert an obligatory assembly order.",
+   "related": [
+    "molecular-animation",
+    "molecular-inspection",
+    "clearance"
+   ]
+  },
+  {
+   "id": "rna-processing",
+   "branch": "biology",
+   "title": "CRISPR families and RNA processing / Семейства CRISPR и обработка РНК",
+   "summary": "Compose Cas12a, Cas13, pre-mRNA and spliceosome actors to distinguish DNA targeting, RNA targeting and a schematic splicing operation.",
+   "keywords": [
+    "splicing",
+    "spliceosome",
+    "pre-mRNA",
+    "preMrna",
+    "intron",
+    "exon",
+    "Cas12a",
+    "Cas13",
+    "RNA processing",
+    "B.cas12a",
+    "B.cas13",
+    "B.preMrna",
+    "B.spliceosome",
+    "сплайсинг",
+    "сплайсосома",
+    "интрон",
+    "экзон",
+    "пре-мРНК",
+    "процессинг РНК"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "molecular-rna-processing.md"
+    }
+   ],
+   "sources": [
+    "js/molecular-rna-processing.js"
+   ],
+   "examples": [
+    "js/recipes/molecular-rna-atlas.js"
+   ],
+   "caveat": "Authored schematic geometry, not a universal guide sequence, atomic structure, splice-site predictor or splicing kinetic model. Distinct CRISPR protein families require compatible guide architecture.",
+   "related": [
+    "molecular-animation",
+    "molecular-regulation",
+    "molecular-inspection",
+    "sequence"
+   ]
+  },
+  {
+   "id": "molecular-inspection",
+   "branch": "interaction",
+   "title": "Enlarged molecular detail / Крупный план молекулы",
+   "summary": "Add an accessible enlarged snapshot of an existing molecular actor or named part while retaining the underlying lesson state.",
+   "keywords": [
+    "B.inspect",
+    "molecular inspection",
+    "molecular detail",
+    "enlarged snapshot",
+    "detail enlargement",
+    "zoom protein",
+    "enlarge molecule",
+    "крупный план",
+    "увеличить белок",
+    "увеличение молекулы",
+    "детали молекулы",
+    "рассмотреть часть",
+    "приблизить белок"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "molecular-inspection.md"
+    }
+   ],
+   "sources": [
+    "js/molecular-inspect.js"
+   ],
+   "examples": [
+    "js/recipes/molecular-regulation-atlas.js"
+   ],
+   "caveat": "The detail view is a captured schematic frame, not new structural evidence or live molecular motion. Its opening and cleanup must be registered with the scene lifecycle.",
+   "related": [
+    "molecular-animation",
+    "svg-button",
+    "hit-audit",
+    "clearance",
+    "molecular-coordinates"
+   ]
+  },
+  {
+   "id": "molecular-check",
+   "branch": "delivery",
+   "title": "Molecular visual check / Проверка молекулярных элементов",
+   "summary": "Create a reusable seven-element visual test cycle with animated states, a captured enlarged view and optional browser QA.",
+   "keywords": [
+    "molecular-check",
+    "molecular check",
+    "molecular visual test",
+    "seven molecular elements",
+    "test animation",
+    "проверка семи молекулярных элементов",
+    "молекулярная проверка",
+    "тестовая анимация",
+    "семь элементов"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "molecular-check.md"
+    }
+   ],
+   "sources": [
+    "molecular-check.html",
+    "js/molecular-check-qa.js"
+   ],
+   "examples": [
+    "js/recipes/molecular-check.js"
+   ],
+   "caveat": "This authored visual test cycle checks schematic states and interaction, not biophysics, molecular trajectories or reaction kinetics. Browser QA is opt-in with ?qa=1.",
+   "related": [
+    "molecular-animation",
+    "molecular-regulation",
+    "rna-processing",
+    "molecular-inspection",
+    "export-qa"
+   ]
+  },
+  {
+   "id": "chemistry",
+   "branch": "chemistry",
+   "title": "Chemical structures and reactions / Химические структуры и реакции",
+   "summary": "Compose persistent chemical drawings with atoms, covalent bonds and reaction representations; keep schematic geometry separate from calculated structure.",
+   "keywords": [
+    "chemistry",
+    "covalent bond",
+    "chemical bond",
+    "atom",
+    "reaction",
+    "electron",
+    "chemical structure",
+    "CH",
+    "химия",
+    "ковалентная связь",
+    "химическая связь",
+    "атом",
+    "электрон",
+    "химическая реакция"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "chemistry.md",
+     "section": "API"
+    },
+    {
+     "path": "chemistry.md",
+     "section": "Scientific scope"
+    }
+   ],
+   "sources": [
+    "js/chemistry.js"
+   ],
+   "examples": [
+    "js/recipes/chemistry-bridge.js"
+   ],
+   "caveat": "Chemical drawings are authored schematics, not calculated quantum states, validated atomic coordinates or molecular-dynamics trajectories. Explicit model assumptions belong to each numerical calculation.",
+   "related": [
+    "physical-chemistry",
+    "chemistry-bridge",
+    "molecular-animation",
+    "clearance"
+   ]
+  },
+  {
+   "id": "physical-chemistry",
+   "branch": "chemistry",
+   "title": "Physical chemistry models / Модели физической химии",
+   "summary": "Calculate energy, reaction kinetics, acid-base balance, diffusion and related physical quantities with explicit inputs, units and assumptions.",
+   "keywords": [
+    "physical-chemistry",
+    "physical chemistry",
+    "free energy",
+    "activation energy",
+    "kinetics",
+    "stoichiometry",
+    "diffusion",
+    "membrane potential",
+    "pH",
+    "PH",
+    "физическая химия",
+    "свободная энергия",
+    "энергия активации",
+    "кинетика",
+    "стехиометрия",
+    "диффузия",
+    "мембранный потенциал"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "physical-chemistry.md",
+     "section": "API"
+    },
+    {
+     "path": "physical-chemistry.md",
+     "section": "Scientific scope"
+    }
+   ],
+   "sources": [
+    "js/physical-chemistry.js"
+   ],
+   "examples": [
+    "js/recipes/chemistry-physics-scenes.js"
+   ],
+   "caveat": "Numerical models have explicit units and idealizations; equilibrium, rates, probabilities and individual trajectories are distinct quantities. These helpers do not simulate an atomistic cell.",
+   "related": [
+    "chemistry",
+    "chemistry-bridge",
+    "export-qa"
+   ]
+  },
+  {
+   "id": "chemistry-bridge",
+   "branch": "chemistry",
+   "title": "Chemistry to biology lesson / Химия → биология",
+   "summary": "Create the v0.17.0 bilingual chemistry-to-biology lesson: 16 continuous visual stories, 48–60 s playback, causal narration, retained actors, linked geometry and model values, with explicit chemical bookkeeping.",
+   "keywords": [
+    "chemistry-bridge",
+    "chemistry bridge",
+    "chemistry to biology",
+    "chemical lesson",
+    "химия в биологию",
+    "химия биология",
+    "химия → биология",
+    "химический урок"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "chemistry-bridge.md",
+     "section": "Use"
+    },
+    {
+     "path": "chemistry-bridge.md",
+     "section": "Scenes"
+    },
+    {
+     "path": "chemistry-bridge.md",
+     "section": "Scope"
+    }
+   ],
+   "sources": [
+    "chemistry-bridge.html",
+    "js/chemistry-bridge-qa.js"
+   ],
+   "examples": [
+    "js/recipes/chemistry-foundations-bonds.js",
+    "js/recipes/chemistry-foundations-environment.js",
+    "js/recipes/chemistry-foundations-transfer.js",
+    "js/recipes/chemistry-context-binding.js",
+    "js/recipes/chemistry-context-reactions.js",
+    "js/recipes/chemistry-context-transport.js",
+    "js/recipes/chemistry-context-energy.js",
+    "js/recipes/chemistry-bridge.js",
+    "js/recipes/chemistry-physics-scenes.js"
+   ],
+   "caveat": "The lesson distinguishes authored chemical representations from computed model values. Browser QA is opt-in with ?qa=1; the animation is not a molecular-dynamics trajectory.",
+   "related": [
+    "chemistry",
+    "physical-chemistry",
+    "molecular-inspection",
+    "export-qa"
+   ]
+  },
+  {
+   "id": "rna-folding",
+   "branch": "biology",
+   "title": "RNA folding lesson / Укладка РНК",
+   "summary": "Reproduce a coherent RU/EN RNA lesson: 17 scenes and 63 states, connected atomic views, pairing and stacking, retained whole-molecule context, tertiary contacts, hydrated magnesium, folding during synthesis and prediction evidence.",
+   "keywords": [
+    "rna-folding",
+    "RNA folding",
+    "RNA structure lesson",
+    "RNA",
+    "укладка РНК",
+    "сворачивание РНК",
+    "структура РНК",
+    "урок РНК",
+    "pairing stacking",
+    "base pairing stacking hydrogen bonds",
+    "спаривание оснований",
+    "стэкинг",
+    "A-minor",
+    "GAAA receptor",
+    "tetraloop",
+    "hydrated magnesium",
+    "hydrated Mg",
+    "гидратированный магний",
+    "ионная атмосфера",
+    "coaxial stacking",
+    "kissing loops",
+    "псевдоузел",
+    "коаксиальный стэкинг"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "rna-folding.md"
+    }
+   ],
+   "sources": [
+    "rna-folding.html",
+    "qa/rna-folding/science.py",
+    "qa/rna-folding/layout.cjs",
+    "qa/rna-folding/motion.cjs",
+    "qa/rna-folding/interaction.cjs",
+    "assets/rna-folding/SOURCES.md",
+    "assets/rna-folding/STORYBOARD.md"
+   ],
+   "examples": [
+    "js/recipes/rna-shared/rna-common.js",
+    "js/recipes/rna-folding/rna-intro.js",
+    "js/recipes/rna-folding/rna-trna.js",
+    "js/recipes/rna-shared/rna-tertiary.js",
+    "js/recipes/rna-folding/rna-ions.js"
+   ],
+   "caveat": "Deposited coordinates and schematic examples are distinguished. Camera motion is not a folding trajectory; no predictor is run. Physical gestures require physical testing.",
+   "related": [
+    "molecular-coordinates",
+    "story",
+    "clearance",
+    "motion",
+    "languages",
+    "export-qa",
+    "molecular-simulation"
+   ]
+  },
+  {
+   "id": "molecular-coordinates",
+   "branch": "biology",
+   "title": "Connected atomic coordinate views / Связанные атомные модели",
+   "summary": "Use MC.rnaFragment, MC.context and MC.project to preserve source atom identity, explicit fragment bonds, whole-molecule context and camera geometry while enlarging or rotating an RNA contact.",
+   "keywords": [
+    "molecular-coordinates",
+    "MC.rnaFragment",
+    "MC.context",
+    "MC.project",
+    "atomic coordinates context zoom",
+    "atomic coordinates",
+    "connected atoms",
+    "atomic 3D",
+    "coordinate view",
+    "source-backed molecule",
+    "атомные координаты",
+    "связанные атомы",
+    "атомная модель",
+    "3D молекула",
+    "PDB coordinates",
+    "PDB viewer",
+    "1EHZ",
+    "1HR2",
+    "whole molecule context",
+    "увеличение атомов",
+    "контекст молекулы"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "molecular-coordinates.md"
+    }
+   ],
+   "sources": [
+    "js/molecular-coordinates.js"
+   ],
+   "examples": [
+    "js/recipes/rna-shared/rna-tertiary.js",
+    "assets/rna-folding/tertiary-v4-1ehz.json",
+    "assets/rna-folding/tertiary-v4-1hr2.json"
+   ],
+   "caveat": "A source-backed SVG renderer for curated RNA fragments, not a general PDB/mmCIF parser, molecular dynamics engine, bond inference tool or folding predictor. Ring polygons are not molecular surfaces.",
+   "related": [
+    "molecular-views",
+    "rna-folding",
+    "perspective",
+    "molecular-inspection",
+    "molecular-simulation",
+    "provenance",
+    "clearance",
+    "motion",
+    "three-dimensional"
+   ]
+  },
+  {
+   "id": "molecular-views",
+   "branch": "three-dimensional",
+   "title": "Molecular construction kit / Конструктор 3D-комплекса",
+   "summary": "Assemble an editable protein–RNA overview and connected atomic close-up with a retained context locator. Two ready scene presets over reusable MV assembly, detail, fit and rig bricks; portable PDB preparation and verified 7BG9 example.",
+   "keywords": [
+    "molecular-views",
+    "molecular construction kit",
+    "3D complex constructor",
+    "конструктор 3D комплекса белок РНК",
+    "конструктор молекул",
+    "3D комплекс",
+    "RNP assembly",
+    "ribonuсleoprotein complex",
+    "теломераза",
+    "telomerase assembly context zoom",
+    "telomerase",
+    "TERT TERC",
+    "protein RNA complex 3D",
+    "готовые кирпичики",
+    "pdb import",
+    "shared depth",
+    "общий вид крупный план"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "molecular-views.md"
+    },
+    {
+     "path": "molecular-views-api.md"
+    },
+    {
+     "path": "molecular-data.md"
+    }
+   ],
+   "sources": [
+    "js/molecular-views.js",
+    "js/molecular-scenes.js",
+    "molecular-views.html",
+    "build/molecular-data.py",
+    "qa/molecular-views/verify.cjs"
+   ],
+   "examples": [
+    "js/recipes/molecular-views.js",
+    "assets/molecular-views/7BG9.config.json",
+    "assets/molecular-views/SOURCES.md"
+   ],
+   "caveat": "Camera-based source coordinates, explicit trace connectivity and selected RNA/DNA atoms; no molecular surfaces, automatic biological assembly, folding physics or measured trajectory. Bounded PDB importer rejects unsupported identities.",
+   "related": [
+    "molecular-coordinates",
+    "perspective",
+    "motion",
+    "clearance",
+    "languages",
+    "export-qa",
+    "molecular-simulation",
+    "three-dimensional"
+   ]
+  },
+  {
+   "id": "three-dimensional",
+   "branch": "three-dimensional",
+   "title": "Reusable 3D biology components / Компоненты 3D-биологии",
+   "summary": "Reuse V3 molecule meshes, a depth-tested cell surface, solid capture beads and primers, aqueous droplets, RNA/tag strands, three-code records, paired RNA/ADT libraries and enlarged data-field cards. Compose authored camera, binding, wash, lysis and hybridization states without replacing object identity.",
+   "keywords": [
+    "three-dimensional",
+    "V3.MoleculeMesh",
+    "V3.CellSurface",
+    "V3.CaptureMesh",
+    "V3.CodesMesh",
+    "3D components",
+    "3D поверхности",
+    "объёмная клетка",
+    "трёхмерные компоненты",
+    "antibody mesh",
+    "клеточная поверхность",
+    "solid bead primers",
+    "поверхность бусины",
+    "три кода",
+    "V3.LibrariesMesh",
+    "RNA ADT libraries",
+    "две библиотеки",
+    "V3.LibrariesMesh.readouts",
+    "readout-rna",
+    "readout-adt",
+    "3D data-field cards",
+    "объёмные карточки полей данных"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "three-dimensional.md"
+    },
+    {
+     "path": "three-dimensional.md",
+     "section": "V3.LibrariesMesh"
+    },
+    {
+     "path": "three-dimensional.md",
+     "section": "Motion and identity contracts"
+    }
+   ],
+   "sources": [
+    "js/three/molecule-mesh.js",
+    "js/three/cell-surface.js",
+    "js/three/capture-mesh.js",
+    "js/three/codes-mesh.js",
+    "js/three/libraries-mesh.js"
+   ],
+   "examples": [
+    "js/recipes/spatial-biology/01-surface.js",
+    "js/recipes/spatial-biology/02-codes.js",
+    "js/recipes/spatial-biology/03-libraries.js"
+   ],
+   "caveat": "Original procedural illustrative geometry, not atomic source coordinates, a protein-count measurement, molecular dynamics, hydrodynamics or kinetic simulation. Camera changes preserve object identity; barcode records are logical fields, not exact library sequence architecture.",
+   "related": [
+    "spatial-biology",
+    "molecular-views",
+    "molecular-coordinates",
+    "perspective",
+    "motion",
+    "clearance",
+    "languages",
+    "export-qa",
+    "molecular-simulation"
+   ]
+  },
+  {
+   "id": "spatial-biology",
+   "branch": "three-dimensional",
+   "title": "Spatial biology template / Пространственная биология",
+   "summary": "Build an editable three-scene RU/EN 3D lesson: antibody labelling, rotation and close-up, washing, one-cell/one-bead droplet, lysis and co-capture, then cell barcode, feature identity and UMI, followed by RNA and ADT library separation with the shared cell barcode preserved. Reuse R1/R2 readout close-ups, RNA gene mapping, ADT antibody-dictionary lookup and paired profiles, with camera motion completed before readout labels appear. Optional --template spatial-biology includes reusable V3 components and Bio3D recipes.",
+   "keywords": [
+    "spatial-biology",
+    "spatial biology",
+    "пространственная биология",
+    "CITE-seq",
+    "CITE-seq cell bead droplet",
+    "цитометрия ДНК метки",
+    "antibody staining capture",
+    "мечение и совместный захват",
+    "poly(A) oligo-dT",
+    "cell barcode feature UMI",
+    "клеточный штрихкод UMI признак",
+    "капля бусина лизис",
+    "droplet bead lysis",
+    "co-capture",
+    "two libraries one cell barcode",
+    "RNA ADT library separation",
+    "две библиотеки один клеточный код",
+    "R1 R2",
+    "paired reads",
+    "парные чтения",
+    "readout",
+    "RNA ADT readout",
+    "чтение RNA ADT",
+    "gene mapping",
+    "сопоставление с референсом",
+    "antibody dictionary",
+    "словарь антител",
+    "paired profiles",
+    "парные профили",
+    "same cell barcode pairing",
+    "общий клеточный код",
+    "camera settles before labels",
+    "камера перед подписями"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "three-dimensional.md",
+     "section": "Reusable scenarios"
+    },
+    {
+     "path": "three-dimensional.md",
+     "section": "RNA and ADT readouts"
+    },
+    {
+     "path": "three-dimensional.md",
+     "section": "Motion and identity contracts"
+    },
+    {
+     "path": "three-dimensional.md",
+     "section": "Primary sources for the readout scenario"
+    }
+   ],
+   "sources": [
+    "spatial-biology.html",
+    "css/spatial-biology.css",
+    "js/recipes/spatial-biology/common.js",
+    "js/recipes/spatial-biology/capture-stage.js"
+   ],
+   "examples": [
+    "js/recipes/spatial-biology/01-surface.js",
+    "js/recipes/spatial-biology/02-codes.js",
+    "js/recipes/spatial-biology/03-libraries.js"
+   ],
+   "caveat": "Editable teaching schematic for the original solid-bead Drop-seq CITE-seq workflow; geometry, colours, visible molecule counts and trajectories are illustrative. Co-capture precedes synthesis; the source RNA and antibody tag do not acquire a cell barcode at hybridization. Recipes are copied into other templates without being loaded.",
+   "related": [
+    "three-dimensional",
+    "molecular-views",
+    "molecular-coordinates",
+    "perspective",
+    "motion",
+    "clearance",
+    "languages",
+    "export-qa",
+    "molecular-simulation"
+   ]
+  },
+  {
+   "id": "crispri-design",
+   "branch": "biology",
+   "title": "CRISPRi construct and occupancy / Конструкция CRISPRi и множественность",
+   "summary": "Create an eleven-scene CRISPRi lesson from cellular dCas9–KRAB production and guide delivery to experimental evidence, or reuse Poisson construct occupancy, single/dual-guide DNA cassettes and pseudodiploid virions.",
+   "keywords": [
+    "crispri-design",
+    "crispri template",
+    "dCas9 KRAB protein origin translation",
+    "откуда белок dCas9 KRAB мРНК трансляция",
+    "CRISPRi delivery experimental design",
+    "урок CRISPRi доставка библиотеки",
+    "dual guide cassette",
+    "Poisson MOI occupancy",
+    "lentiviral pseudodiploid genome",
+    "PD.poissonOccupancy",
+    "PD.cassette",
+    "PD.virion",
+    "кассета двух гайдов",
+    "множественность трансдукции",
+    "вирион две копии РНК"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "crispri-design.md",
+     "section": "Reusable eleven-scene lesson"
+    },
+    {
+     "path": "crispri-design.md",
+     "section": "Poisson occupancy"
+    },
+    {
+     "path": "crispri-design.md",
+     "section": "Persistent cassette and virion actors"
+    },
+    {
+     "path": "crispri-design.md",
+     "section": "Verification"
+    }
+   ],
+   "sources": [
+    "js/crispri-design.js"
+   ],
+   "examples": [
+    "crispri.html",
+    "js/recipes/crispri/01-objects-crispri.js",
+    "js/recipes/crispri/02-protein-origin.js",
+    "js/recipes/crispri/07-moi.js"
+   ],
+   "caveat": "Poisson occupancy assumes independent events at one common rate; drawings are schematic, and two guide-encoding DNA units are distinct from two packaged RNA genome copies. No knockdown or delivery kinetics are computed.",
+   "related": [
+    "molecular-animation",
+    "scene",
+    "motion",
+    "clearance",
+    "export-qa"
+   ]
+  },
+  {
+   "id": "rna-prediction",
+   "branch": "biology",
+   "title": "RNA prediction narrative / Предсказание структуры РНК",
+   "summary": "Reuse the 20-scene, 91-state RNA prediction lesson: motif energies become a formula, real candidate scores select pairs, MSA observations become arcs, and the same indexed chain morphs from sequence to 2D and schematic 3D. Includes verified ViennaRNA99-structure data and portable QA.",
+   "keywords": [
+    "rna-prediction",
+    "RNA secondary structure prediction",
+    "RNAfold ViennaRNA MFE",
+    "термодинамика РНК выравнивание",
+    "предсказание структуры РНК",
+    "модель Тёрнера",
+    "RNA alignment covariation",
+    "ковариация MSA",
+    "RNA ensemble probability",
+    "энергия мотивов РНК"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "rna-prediction.md"
+    }
+   ],
+   "sources": [
+    "rna-prediction.html",
+    "js/rna-pair-molecule.js",
+    "build/rna-prediction-data.py",
+    "assets/rna-prediction/thermo-example.json",
+    "assets/rna-prediction/SOURCES.md",
+    "assets/rna-prediction/COMPUTATION.md",
+    "qa/rna-prediction/science.cjs",
+    "qa/rna-prediction/layout.cjs",
+    "qa/rna-prediction/motion.cjs",
+    "qa/rna-prediction/interaction.cjs"
+   ],
+   "examples": [
+    "js/recipes/rna-prediction/prediction-thermo-story.js",
+    "js/recipes/rna-prediction/prediction-alignment-story.js",
+    "js/recipes/rna-prediction/prediction-ensemble-story.js"
+   ],
+   "caveat": "Real thermodynamic values belong to one fixed13-nt teaching sequence and model. Invented MSA is not a significance test. Pair-compatible3D geometry and animation are authored, not predicted atoms or folding kinetics.",
+   "related": [
+    "rna-pair-molecule",
+    "cinematic-explanation",
+    "rna-folding",
+    "molecular-coordinates",
+    "motion",
+    "clearance",
+    "export-qa"
+   ]
+  },
+  {
+   "id": "rna-pair-molecule",
+   "branch": "three-dimensional",
+   "title": "Indexed RNA morph / Цепь РНК с сохранением индексов",
+   "summary": "Use standalone PM.create to keep the same bases, backbone and pair endpoints while morphing a linear sequence and arcs into a hairpin and a readable right-handed schematic helix. Highlight motifs, turn the camera and vary only the unpaired loop.",
+   "keywords": [
+    "rna-pair-molecule",
+    "PM.create",
+    "RNA sequence arcs hairpin helix",
+    "цепь дуги шпилька спираль",
+    "2D 3D РНК переход",
+    "нумерация нуклеотидов",
+    "парные ограничения РНК"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "rna-pair-molecule.md"
+    }
+   ],
+   "sources": [
+    "js/rna-pair-molecule.js"
+   ],
+   "examples": [
+    "js/recipes/rna-prediction/prediction-thermo-story.js",
+    "js/recipes/rna-prediction/prediction-alignment-story.js"
+   ],
+   "caveat": "One contiguous nested stem with a hairpin and optional outer tails. Schematic coordinates; not metric A-form or a folding solver. Pair indices in API are zero-based; display labels are one-based.",
+   "related": [
+    "rna-prediction",
+    "molecular-coordinates",
+    "motion",
+    "clearance",
+    "cinematic-explanation"
+   ]
+  },
+  {
+   "id": "cinematic-explanation",
+   "branch": "motion",
+   "title": "Causal motion and pacing / Смысл движения и ритм",
+   "summary": "Reproduce the approved RNA lesson’s visual style with the existing quintic driver easing, cubic phase windows, retained actors, semantic colors, staged emphasis, reading pauses and collision-free transfer of evidence into results. Portable authoring recipe for other topics.",
+   "keywords": [
+    "cinematic-explanation",
+    "ритм ускорение анимации",
+    "стиль презентации РНК",
+    "плавное ускорение замедление",
+    "временные кривые",
+    "smoothstep smootherstep",
+    "animation pacing",
+    "causal motion",
+    "timing evidence transfer"
+   ],
+   "status": "compose",
+   "guides": [
+    {
+     "path": "cinematic-explanation.md"
+    }
+   ],
+   "sources": [
+    "js/film.js",
+    "js/lib/anim.js"
+   ],
+   "examples": [
+    "js/recipes/rna-prediction/prediction-thermo-story.js",
+    "js/recipes/rna-prediction/prediction-alignment-story.js",
+    "js/recipes/rna-prediction/prediction-ensemble-story.js"
+   ],
+   "caveat": "An authoring recipe over existing APIs, not a new global easing engine. Phase windows operate on eased state, not necessarily linear elapsed time. Motion conveys reasoning, not measured physical dynamics.",
+   "related": [
+    "rna-prediction",
+    "motion",
+    "scene",
+    "story",
+    "clearance",
+    "languages",
+    "export-qa",
+    "cinema-timeline",
+    "trna-journey"
+   ]
+  },
+  {
+   "id": "trna-journey",
+   "branch": "three-dimensional",
+   "title": "Continuous tRNA film / Непрерывный фильм о тРНК",
+   "summary": "Repeat the 39-cue tRNA film and remix named episodes, timings and bilingual captions. Sequence, cloverleaf, source-coordinate L shape, atomic stem, D/T elbow, Mg/water and per-pixel depth atom spheres.",
+   "keywords": [
+    "trna-journey",
+    "тРНК фильм",
+    "тРНК последовательность атомы",
+    "tRNA journey",
+    "trna film remix",
+    "атомная упаковка тРНК",
+    "Mg вода локоть",
+    "повторить фильм тРНК"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "trna-journey.md",
+     "section": "Повторить одной командой"
+    },
+    {
+     "path": "trna-journey.md",
+     "section": "Собрать свой маршрут"
+    },
+    {
+     "path": "trna-journey.md",
+     "section": "Компоненты отдельно"
+    },
+    {
+     "path": "trna-journey.md",
+     "section": "Проверить после изменений"
+    }
+   ],
+   "sources": [
+    "trna-journey.html",
+    "js/trna-config.js",
+    "js/trna-story.js",
+    "js/trna-world.js",
+    "js/trna-sphere-renderer.js",
+    "assets/trna/SOURCES.md",
+    "build/trna-data.py",
+    "qa/trna/remix.cjs"
+   ],
+   "examples": [
+    "js/trna-journey.js"
+   ],
+   "caveat": "Curated for yeast tRNA(Phe) 1EHZ, not a generic RNA importer or folding simulator. Camera motion preserves source coordinates; author order and captions still need scientific review.",
+   "related": [
+    "cinema-timeline",
+    "cinematic-explanation",
+    "molecular-views",
+    "rna-folding",
+    "export-qa"
+   ]
+  },
+  {
+   "id": "cinema-timeline",
+   "branch": "motion",
+   "title": "Continuous film timeline / Шкала непрерывного фильма",
+   "summary": "Compile numeric poses into motion and explicit reading holds, sample deterministic state and caption phases, and assemble new routes by stable keys.",
+   "keywords": [
+    "cinema-timeline",
+    "непрерывная временная шкала",
+    "пауза для чтения",
+    "continuous film timeline",
+    "caption readiness",
+    "монтаж эпизодов",
+    "перемотка фильма"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "cinema-timeline.md"
+    }
+   ],
+   "sources": [
+    "js/cinema-timeline.js",
+    "js/trna-cinema.js",
+    "css/trna-cinema.css"
+   ],
+   "examples": [
+    "js/trna-story.js",
+    "js/trna-config.js"
+   ],
+   "caveat": "Pure authored numeric interpolation, not physical dynamics. Caption thresholds do not automatically prove visual legibility. Use complete finite target states and dispose the driver and controls.",
+   "related": [
+    "trna-journey",
+    "cinematic-explanation",
+    "motion",
+    "shell",
+    "languages",
+    "export-qa"
+   ]
+  },
+  {
+   "id": "atac-seq",
+   "branch": "biology",
+   "title": "ATAC-seq film / Фильм о доступности хроматина",
+   "summary": "Repeat the 46-cue / 240.6-second ATAC-seq movie or remix named episodes, timing and bilingual copy: source-backed nucleosome and Tn5, paired reads, original fragments, tracks, length distributions and interpretation.",
+   "keywords": [
+    "ATAC-seq",
+    "ATACseq",
+    "ATAC-seq фильм",
+    "атак секвенирование",
+    "доступность хроматина фильм",
+    "tn5 tagmentation film",
+    "транспозаза",
+    "атак ремикс",
+    "atac film remix"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "atac-seq.md",
+     "section": "Повторить одной командой"
+    },
+    {
+     "path": "atac-seq.md",
+     "section": "Собрать свой маршрут"
+    },
+    {
+     "path": "atac-seq.md",
+     "section": "Каталог эпизодов"
+    },
+    {
+     "path": "atac-seq.md",
+     "section": "Проверить после изменений"
+    }
+   ],
+   "sources": [
+    "atac-seq.html",
+    "js/atac-config.js",
+    "js/atac-story.js",
+    "js/atac-camera-story.js",
+    "assets/atac/SOURCES.md",
+    "build/atac-film.py",
+    "qa/atac/README.md"
+   ],
+   "examples": [
+    "js/atac-journey.js"
+   ],
+   "caveat": "Curated 1KX5/1MUH structural models and synthetic fragment data. Authored docking and readout motion are explanatory, not a reaction simulation or FASTQ analysis. Review new narration and transitions after remixing.",
+   "related": [
+    "atac-components",
+    "cinema-timeline",
+    "cinematic-explanation",
+    "molecular-views",
+    "export-qa"
+   ]
+  },
+  {
+   "id": "atac-components",
+   "branch": "three-dimensional",
+   "title": "Chromatin and sequencing bricks / Компоненты хроматина и чтения",
+   "summary": "Reuse independent nucleosome/Tn5 source views and close-ups, histone tails, contour-preserving insert straightening, 3D paired-end reading, accumulating length histograms and nearby fading labels. Four editable scenes,16 states without the whole-film controller.",
+   "keywords": [
+    "atac-components",
+    "nucleosome 1KX5",
+    "нуклеосома 3d",
+    "гистоновые хвосты",
+    "tn5 1MUH",
+    "paired-end reading",
+    "R1 R2 синтез",
+    "длина фрагмента распрямление",
+    "ближние подписи молекула",
+    "histogram accumulation"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "atac-components.md",
+     "section": "Независимый пример"
+    },
+    {
+     "path": "atac-components.md",
+     "section": "Карта компонентов"
+    },
+    {
+     "path": "atac-components.md",
+     "section": "Вставить одну сцену"
+    },
+    {
+     "path": "atac-components.md",
+     "section": "Подпись возле движущегося объекта"
+    },
+    {
+     "path": "atac-components.md",
+     "section": "Проверка компонентов"
+    }
+   ],
+   "sources": [
+    "atac-components.html",
+    "js/atac-structure-views.js",
+    "js/atac-histone-cartoon.js",
+    "js/atac-tn5-cartoon.js",
+    "js/atac-fragment-origin.js",
+    "js/atac-read-views.js",
+    "js/atac-signals.js",
+    "js/atac-callouts.js"
+   ],
+   "examples": [
+    "js/recipes/atac/components.js"
+   ],
+   "caveat": "Built for packaged source structures and F001 teaching data, not arbitrary atom/FASTQ import. Coordinates are experimental; linker placements, readout and straightening are pedagogical. Callout field uses the standard 1280x720 stage.",
+   "related": [
+    "atac-seq",
+    "molecular-views",
+    "molecular-coordinates",
+    "clearance",
+    "motion",
+    "export-qa"
+   ]
+  }
+ ]
 }

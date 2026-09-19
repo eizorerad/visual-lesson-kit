@@ -2,7 +2,7 @@
 
 Start with `guide/START.md` (`../docs/START.md` in the original starter). Use the concept selector to find the relevant contract, then read the selected section. Source files and examples are available on demand. Do not load the whole library or a compiled HTML bundle just to discover what exists.
 
-Create a new lesson in a fresh folder with the kit generator. Existing lessons contain local runtime copies; use the `upgrade` card for intentional updates. Edit episode scripts and metadata first. Use the supplied primary material and this kit; sibling presentations and historical archives are unnecessary. A user's explicit scope takes priority.
+Create a new lesson in a fresh folder with the kit generator. Existing lessons contain local runtime copies; update them intentionally with `python3 upgrade.py <lesson>` from the central kit (the `upgrade` card explains statuses and version changes). Edit episode scripts and metadata first. Use the supplied primary material and this kit; sibling presentations and historical archives are unnecessary. A user's explicit scope takes priority.
 
 If an older project lacks the navigator, consult the central kit’s `docs/START.md` and check the selected API against the project’s own runtime before reuse.
 

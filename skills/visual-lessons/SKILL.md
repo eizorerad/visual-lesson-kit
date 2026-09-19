@@ -12,6 +12,7 @@ python3 "/path/to/visual-lessons/scripts/kit.py" root
 python3 "/path/to/visual-lessons/scripts/kit.py" route "protein RNA complex"
 python3 "/path/to/visual-lessons/scripts/kit.py" route --read molecular-views
 python3 "/path/to/visual-lessons/scripts/kit.py" create /absolute/new-lesson --template molecular-views --title "Telomerase" --lang en
+python3 "/path/to/visual-lessons/scripts/kit.py" upgrade /absolute/existing-lesson --apply
 ```
 
 Replace the helper path with the discovered location. If the checkout is missing, use `docs/codex-setup.md` in the repository to restore the full installation; the skill folder alone does not contain the library.
@@ -30,7 +31,7 @@ A new episode can use `scene` and `story`; a repair can go directly to `layout`,
 
 ## Create, verify and export
 
-Create a fresh project outside the kit using `kit.py create`; pass verified source URL/label, language and appearance options appropriate to the task. Existing projects own runtime copies: use the `upgrade` card instead of regenerating over them. If an older project lacks the navigator, consult the central kit and verify selected APIs exist in that project's runtime.
+Create a fresh project outside the kit using `kit.py create`; pass verified source URL/label, language and appearance options appropriate to the task, and `--lean` when the project should carry only its template's pack. Existing projects own runtime copies: bring them to the current release with `kit.py upgrade /absolute/lesson` (report) and `--apply` (see the `upgrade` card) instead of regenerating over them; locally edited kit files are kept unless `--force` is given. If an older project lacks the navigator, consult the central kit and verify selected APIs exist in that project's runtime.
 
 Ground claims in the supplied material and primary sources, and label invented data. Preserve the shared scientific object across states, compact shell, live theme, RU/EN text, accessible controls and cancellable motion contracts. Choose an explanatory sequence with explicit bridges between questions.
 
