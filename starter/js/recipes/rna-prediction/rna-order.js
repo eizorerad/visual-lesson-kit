@@ -1,1 +1,2 @@
-RNA.finish();
+// Prediction path: a subset of the shared episodes plus its own stories, in a new order.
+RNA.finish({order:['story-thermo-score', 'story-thermo-search', 'story-thermo-shape', 'story-ensemble', 'pred-beam', 'story-alignment', 'story-alignment-shape', 'pred-phylogeny', 'pred-hybrid', 'rna-pseudoknot', 'rna-cotranscription', 'rna-ions', 'pred-tools', 'rna-trna-real', 'rna-nucleotide', 'rna-chemistry', 'rna-pairs', 'rna-loops', 'pred-dp', 'rna-geometry'],chapters:[['Термодинамика: полный путь','Thermodynamics: the full path'],['Эволюция: от колонок к парам','Evolution: from columns to pairs'],['Границы и выбор метода','Limits and method choice'],['Крупный план и алгоритмы','Close-up views and algorithms']],cuts:[5,9,13],strict:false});

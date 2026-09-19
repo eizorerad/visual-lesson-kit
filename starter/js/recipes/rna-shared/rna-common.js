@@ -2,14 +2,20 @@
 'use strict';
 const R={};let uid=0;
 // Register the lesson in teaching order after all episode definitions are loaded.
+// Shared by the rna-folding and rna-prediction templates; template-specific
+// episodes live beside their own rna-order.js.
 const episodes=[];
 R.register=def=>episodes.push(def);
-R.finish=function(){
- const order=['story-thermo-score', 'story-thermo-search', 'story-thermo-shape', 'story-ensemble', 'pred-beam', 'story-alignment', 'story-alignment-shape', 'pred-phylogeny', 'pred-hybrid', 'rna-pseudoknot', 'rna-cotranscription', 'rna-ions', 'pred-tools', 'rna-trna-real', 'rna-nucleotide', 'rna-chemistry', 'rna-pairs', 'rna-loops', 'pred-dp', 'rna-geometry'];
- const chapters=[['Термодинамика: полный путь','Thermodynamics: the full path'],['Эволюция: от колонок к парам','Evolution: from columns to pairs'],['Границы и выбор метода','Limits and method choice'],['Крупный план и алгоритмы','Close-up views and algorithms']];
- episodes.filter(def=>order.includes(def.id)).sort((a,b)=>order.indexOf(a.id)-order.indexOf(b.id)).forEach(def=>{
-  const i=order.indexOf(def.id);
-  def.chapter=chapters[i<5?0:i<9?1:i<13?2:3];R.mount(def);
+// Each template supplies its own teaching order, chapter names and chapter
+// boundaries; the shared episode files never encode a presentation outline.
+const DEFAULT_ORDER=['rna-map','rna-protein','rna-nucleotide','rna-chemistry','rna-pairs','rna-loops','rna-representations','rna-pseudoknot','rna-geometry','rna-trna-real','rna-docking','rna-anchors','rna-ions','rna-cotranscription','rna-evidence','rna-ml','rna-takeaways'];
+const DEFAULT_CHAPTERS=[['Основания и цепь','Bases and backbone'],['Пары и форма','Pairs and shape'],['Контакты и среда','Contacts and environment'],['Путь и предсказание','Pathway and prediction']];
+R.finish=function(config={}){
+ const order=config.order||DEFAULT_ORDER,chapters=config.chapters||DEFAULT_CHAPTERS,cuts=config.cuts||[6,10,13],strict=config.strict!==false;
+ const chosen=strict?episodes:episodes.filter(def=>order.includes(def.id));
+ chosen.sort((a,b)=>order.indexOf(a.id)-order.indexOf(b.id)).forEach(def=>{
+  const i=order.indexOf(def.id);if(i<0)throw Error('Missing teaching order: '+def.id);
+  def.chapter=chapters[i<cuts[0]?0:i<cuts[1]?1:i<cuts[2]?2:3];R.mount(def);
  });
 };
 R.t=(ru,en=ru)=>{D.i18n.pack('en',{strings:{[ru]:en}});return ru;};

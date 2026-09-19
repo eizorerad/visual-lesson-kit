@@ -1,1 +1,1 @@
-RNA.finish();
+RNA.finish({order:['rna-map','rna-protein','rna-nucleotide','rna-chemistry','rna-pairs','rna-loops','rna-representations','rna-pseudoknot','rna-geometry','rna-trna-real','rna-docking','rna-anchors','rna-ions','rna-cotranscription','rna-evidence','rna-ml','rna-takeaways'],chapters:[['Основания и цепь','Bases and backbone'],['Пары и форма','Pairs and shape'],['Контакты и среда','Contacts and environment'],['Путь и предсказание','Pathway and prediction']],cuts:[6,10,13]});
