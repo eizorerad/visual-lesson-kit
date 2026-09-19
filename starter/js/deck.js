@@ -21,6 +21,9 @@
   var NARROW_WIDTH = 1080;
   var SHORT_HEIGHT = 520;
   var insetProbe = null;
+  /* Keys the deck itself handles; a held one must not race the deck, while
+     any other repeated key (Tab, browser shortcuts) keeps its native effect. */
+  var DECK_KEYS = /^(?:[0-9]|Enter|Arrow(?:Right|Down|Left|Up)| |Page(?:Up|Down)|Home|End|Escape|\?|[rRкКnNтТqQйЙgGпПlLдДoOщЩfFаА])$/;
 
   function viewport() {
     var width = window.innerWidth, height = window.innerHeight;
@@ -544,7 +547,7 @@
     var panelShortcut = /^(?:Escape|[nNтТqQйЙgGпПlLдД])$/.test(event.key);
     // Leave details activation and native/repeated scrolling to the panel.
     if (inNotes && !panelShortcut) return;
-    if (event.repeat) { event.preventDefault(); return; }
+    if (event.repeat) { if (DECK_KEYS.test(event.key)) event.preventDefault(); return; }
     if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'BUTTON')) {
       if (event.key !== 'Escape' && target.tagName !== 'BUTTON') return;
       if (target.tagName === 'BUTTON' && (event.key === ' ' || event.key === 'Enter')) return;

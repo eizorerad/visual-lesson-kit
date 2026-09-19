@@ -6,7 +6,7 @@ The kit itself requires no MCP server, API key or additional account. Codex uses
 
 ## Install on macOS or Linux
 
-You need Git and Python 3.10 or newer. Node.js is only needed for automated JavaScript/browser tests. These commands run in Terminal or a Codex terminal.
+You need Git and Python 3.9 or newer. Node.js is only needed for automated JavaScript/browser tests. These commands run in Terminal or a Codex terminal.
 
 1. Clone the entire [Visual Lesson Kit repository](https://github.com/eizorerad/visual-lesson-kit) into a location you will keep:
 
