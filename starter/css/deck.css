@@ -201,10 +201,11 @@ body.notes-open .notes { transform: none; }
 .help-card dd { margin: 0; color: var(--color-text); }
 .help-foot { margin: 16px 0 0; font-size: 13px; color: var(--deck-ink-dim); }
 
-/* Labels toggle (T / Е): every SVG text, HTML text box, title and caption of the stage
- * fades out and back in 0.35 s; the transition is enabled only around the switch, so
- * per-frame opacity writes of a playing film are never smoothed. */
-body.labels-fading .scene text, body.labels-fading .scene .lesson-text, body.labels-fading .film-title, body.labels-fading .film-caption, body.labels-fading .s-title, body.labels-fading .lesson-caption { transition: opacity .35s ease; }
-body.labels-hidden .scene text, body.labels-hidden .scene .lesson-text, body.labels-hidden .film-title, body.labels-hidden .film-caption, body.labels-hidden .s-title, body.labels-hidden .lesson-caption { opacity: 0 !important; }
+/* Captions toggle (T / Е): the slide's title, caption and HTML text boxes fade out and
+ * back in 0.35 s; designations drawn in the SVG (5′/3′, numbers, object labels) stay.
+ * The transition is enabled only around the switch, so per-frame opacity writes of a
+ * playing film are never smoothed. */
+body.labels-fading .scene .lesson-text, body.labels-fading .film-title, body.labels-fading .film-caption, body.labels-fading .s-title, body.labels-fading .lesson-caption { transition: opacity .35s ease; }
+body.labels-hidden .scene .lesson-text, body.labels-hidden .film-title, body.labels-hidden .film-caption, body.labels-hidden .s-title, body.labels-hidden .lesson-caption { opacity: 0 !important; }
 .chrome button[data-action="labels"] .labels-slash { opacity: 0; transition: opacity .2s; }
 .chrome button[data-action="labels"].is-on .labels-slash { opacity: 1; }

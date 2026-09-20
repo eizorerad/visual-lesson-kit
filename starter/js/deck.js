@@ -490,8 +490,8 @@
     if (panel) panel.classList.toggle('is-on', open);
   }
 
-  // Labels toggle (T / Е): every on-stage text, title and caption fades out and back,
-  // so the drawing can be looked at alone. The state is not persisted.
+  // Captions toggle (T / Е): the slide's title, caption and HTML text boxes fade out and
+  // back, so the drawing with its own designations can be looked at alone. Not persisted.
   function syncLabelsButton() {
     var hidden = state.labelsHidden, text = hidden ? 'Показать надписи' : 'Скрыть надписи';
     Array.from(document.querySelectorAll('[data-action="labels"]')).forEach(function (button) {

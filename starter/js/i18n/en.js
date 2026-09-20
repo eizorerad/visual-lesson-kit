@@ -76,7 +76,7 @@
   'Скрыть надписи (T / Е)':'Hide labels (T)',
   'Показать надписи':'Show labels',
   'Показать надписи (T / Е)':'Show labels (T)',
-  'Скрыть или показать все надписи.':'Hide or show all labels.',
+  'Скрыть или показать заголовок и подпись слайда; обозначения на рисунке остаются.':'Hide or show the slide title and caption; designations on the drawing stay.',
   'Открыть меню':'Open menu',
   'Закрыть меню':'Close menu',
   'Настройки':'Settings',
