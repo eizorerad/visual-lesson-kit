@@ -3072,6 +3072,7 @@
    ],
    "sources": [
     "film.html",
+    "js/film-config.js",
     "js/recipes/film/pcr-film.js",
     "js/cinema-timeline.js",
     "js/trna-cinema.js"

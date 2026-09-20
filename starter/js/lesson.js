@@ -2,12 +2,12 @@
 (function(g){
 'use strict';
 const h=D.dom.h,s=D.dom.s;
-const palette=Object.assign({},g.C||{},{blue:'var(--color-primary)',teal:'var(--color-secondary)',gold:'var(--color-focus)',red:'var(--color-contrast)',purple:'var(--color-auxiliary)',grey:'var(--color-muted)',white:'var(--color-text)',dim:'var(--color-dim)'});
+const palette=Object.assign({},g.C||{},{blue:'var(--color-primary)',teal:'var(--color-secondary)',gold:'var(--color-focus)',red:'var(--color-contrast)',purple:'var(--color-auxiliary)',grey:'var(--color-muted)',white:'var(--color-text)',dim:'var(--color-dim)',bg:'var(--color-bg)'});
 // A guessed role such as C.cyan is undefined and silently falls back to a helper's
 // default colour. Warn once instead, naming the real roles; nothing is blocked.
 const warned=new Set(),probes=new Set(['then','toJSON','valueOf','toString','constructor','inspect','asymmetricMatch','nodeType','length','tagName','toLocaleString','hasOwnProperty','isPrototypeOf','propertyIsEnumerable']);
 const C=g.C=new Proxy(palette,{get(target,key){
- if(typeof key==='string'&&!(key in target)&&/^[a-z][a-zA-Z]*$/.test(key)&&!probes.has(key)&&!warned.has(key)){warned.add(key);if(g.console)g.console.warn('C.'+key+' is not a palette role; use one of: blue, teal, gold, red, purple, grey, white, dim');}
+ if(typeof key==='string'&&!(key in target)&&/^[a-z][a-zA-Z0-9]*$/.test(key)&&!probes.has(key)&&!warned.has(key)){warned.add(key);if(g.console)g.console.warn('C.'+key+' is not a palette role; use one of: '+Object.keys(target).join(', '));}
  return target[key];
 }});
 const config=g.LESSON||{},source=config.source||{},paper=source.url||'';

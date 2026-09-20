@@ -4,9 +4,8 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const root=path.join(__dirname,'../starter/js'),plain=x=>JSON.parse(JSON.stringify(x));
 function lesson(config){
  const registered=[],packs=[],w={D:{i18n:{pack:(code,definition)=>packs.push(definition)},deck:{register:x=>registered.push(x)}},F:{note:(...args)=>args}};
- if(config!==undefined)w.PCR_FILM_CONFIG=config;
  w.window=w;vm.createContext(w);
- for(const file of ['cinema-timeline.js','recipes/film/pcr-film.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),w,{filename:file});
+ for(const file of ['cinema-timeline.js','film-config.js','recipes/film/pcr-film.js']){vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),w,{filename:file});if(file==='film-config.js'&&config!==undefined)w.PCR_FILM_CONFIG=config;}
  return {w,film:w.PCR_FILM,scene:registered[0],packs};
 }
 test('default film has seven complete poses, a 40–70 second duration and bilingual copy',()=>{
@@ -20,9 +19,9 @@ test('default film has seven complete poses, a 40–70 second duration and bilin
   assert.notEqual(cue.titleRu,cue.titleEn);assert.match(cue.sourceUrl,/^https:\/\/doi\.org\//);
  }
  const target=Object.fromEntries(film.cues.map(c=>[c.key,c.target]));
- assert.deepEqual(plain(target.start),{melt:0,anneal:0,extend:0,copies:1,cycles:0,chart:0});
+ assert.deepEqual(plain(target.start),{melt:0,anneal:0,extend:0,copies:1,cycles:0,chart:0,legend:0});
  assert.equal(target.melt.melt,1);assert.equal(target.anneal.anneal,1);assert.equal(target.extend.extend,1);
- assert.equal(target.copies.copies,2);assert.equal(target.cycles.copies,1024);assert.equal(target.cycles.cycles,10);assert.equal(target.finale.chart,1);
+ assert.equal(target.copies.copies,2);assert.equal(target.copies.cycles,1,'the copies cue is the first completed cycle, so the counter never falls back to 1');assert.equal(target.finale.legend,1);assert.equal(target.cycles.legend,0);assert.equal(target.cycles.copies,1024);assert.equal(target.cycles.cycles,10);assert.equal(target.finale.chart,1);
  assert.equal(scene.id,'pcr-film');assert.equal(scene.notes.length,7);assert.equal(scene.qa.length,3);
  const english=packs.find(p=>p.notes&&p.notes['pcr-film']);assert.equal(english.notes['pcr-film'].length,7);assert.equal(english.qa['pcr-film'].length,3);
  const mid=film.sample(film.cues[1].arrive+film.cues[1].motion/2).values;assert(mid.melt>0&&mid.melt<1,'motion interpolates the melt fraction');

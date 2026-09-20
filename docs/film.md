@@ -2,7 +2,7 @@
 
 `python3 create.py ../my-film --template film --palette ocean` создаёт проект с одним полным фильмом на кинематографической шкале набора: ПЦР от одной молекулы до 1024 копий, семь эпизодов, около 70 секунд, RU/EN подписи, заметки и вопросы, источник Mullis & Faloona, 1987 и Saiki et al., 1988. Это не справочник по ПЦР, а рабочий образец того, как выглядит законченный фильм: крупные постоянные актёры, полная поза в каждом эпизоде, текст в объявленных рамках, проверка кадров.
 
-Рецепт: `js/recipes/film/pcr-film.js`. Страница: `film.html` → `index.html`. Общие модули: `js/cinema-timeline.js` (шкала), `js/trna-cinema.js` (контроллер `Cinema.mount`, несмотря на имя он общий), `js/film.js` и `js/layout.js`.
+Рецепт: `js/recipes/film/pcr-film.js`. Ремикс без правки рецепта: `js/film-config.js` (загружается перед рецептом; присваивание `window.PCR_FILM_CONFIG` позже не действует). Страница: `film.html` → `index.html`. Общие модули: `js/cinema-timeline.js` (шкала), `js/trna-cinema.js` (контроллер `Cinema.mount`, несмотря на имя он общий), `js/film.js` и `js/layout.js`.
 
 ## Как устроен рецепт
 
@@ -28,4 +28,4 @@ python3 build/bundle.py && python3 build/bundle.py --check
 node qa/film/review.cjs --expect-duration 40-70 --expect-cues 5-7
 ```
 
-Инструмент обзора описан в [film-review.md](film-review.md). Откройте контакт-листы в `qa-output/film-review/` и словами опишите, что видно на промежуточных кадрах: прошедшие автоматические проверки не доказывают, что фильм объясняет. Ремикс через `window.PCR_FILM_CONFIG` проверяется той же командой.
+Инструмент обзора описан в [film-review.md](film-review.md). Откройте контакт-листы в `qa-output/film-review/` и словами опишите, что видно на промежуточных кадрах: прошедшие автоматические проверки не доказывают, что фильм объясняет. Ремикс через `js/film-config.js` проверяется той же командой.

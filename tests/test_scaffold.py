@@ -270,7 +270,7 @@ class ScaffoldTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             html = (dest / 'index.html').read_text()
             scripts = re.findall(r'<script src="([^"]+)"', html)
-            sequence = ['js/film.js', 'js/layout.js', 'js/cinema-timeline.js', 'js/trna-cinema.js', 'js/recipes/film/pcr-film.js', 'js/player.js', 'js/boot.js']
+            sequence = ['js/film.js', 'js/layout.js', 'js/cinema-timeline.js', 'js/trna-cinema.js', 'js/film-config.js', 'js/recipes/film/pcr-film.js', 'js/player.js', 'js/boot.js']
             for before, after in zip(sequence, sequence[1:]):
                 self.assertLess(scripts.index(before), scripts.index(after))
             self.assertFalse(any('/episodes/' in src or 'js/atac-' in src for src in scripts))
@@ -286,6 +286,9 @@ class ScaffoldTests(unittest.TestCase):
             lean = Path(tmp) / 'lean'
             self.assertEqual(self.run_cli(lean, '--template', 'film', '--lean').returncode, 0)
             self.assertTrue((lean / 'qa/film/review.cjs').is_file(), 'the frame review is part of the core, lean projects included')
+            self.assertTrue((lean / 'js/trna-cinema.js').is_file(), 'the shared cinema controller travels with the film')
+            for family_only in ('assets/trna', 'qa/trna', 'build/trna-data.py', 'assets/rna-folding'):
+                self.assertFalse((lean / family_only).exists(), family_only + ' belongs to the tRNA family, not to a PCR film')
             self.assertFalse((lean / 'js/atac-journey.js').exists())
 
     def test_english_default_contains_both_language_packs(self):

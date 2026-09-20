@@ -3,14 +3,15 @@
  * primers and new strands are thick segments, cycles are bars on a log scale.
  * No sequence, kinetics or reaction yields are computed. Replace the actors and
  * the cue catalog to make your own film; keep one complete pose per cue.
- * Remix without editing: window.PCR_FILM_CONFIG = {route:[...], overrides:{...}}. */
+ * Remix without editing: window.PCR_FILM_CONFIG = {route:[...], overrides:{...}} in
+ * js/film-config.js, which loads before this recipe (a later assignment is ignored). */
 (function(g){
 'use strict';
 const ID='pcr-film',SOURCE='Mullis & Faloona, 1987 · Methods Enzymol.',URL='https://doi.org/10.1016/0076-6879(87)55023-6';
 const tr=(ru,en)=>{D.i18n.pack('en',{strings:{[ru]:en}});return ru;};
 const clamp=v=>Math.max(0,Math.min(1,v)),lerp=(a,b,t)=>a+(b-a)*t;
 // One complete numeric pose per cue: 0/1 fractions plus the cycle counter.
-const baseline={melt:0,anneal:0,extend:0,copies:1,cycles:0,chart:0};
+const baseline={melt:0,anneal:0,extend:0,copies:1,cycles:0,chart:0,legend:0};
 const catalog=[
  ['start',0,5,{},'Одна молекула ДНК','One DNA molecule',
   'Две цепи удерживаются вместе водородными связями между основаниями.','Two strands are held together by hydrogen bonds between their bases.',
@@ -28,7 +29,7 @@ const catalog=[
   'При 72 °C ДНК-полимераза наращивает каждый праймер в направлении 5′→3′ вдоль матрицы.','At 72 °C the DNA polymerase extends each primer 5′→3′ along its template.',
   'Термостабильная полимераза (Taq, <a href="https://doi.org/10.1126/science.2448875" target="_blank" rel="noopener">Saiki et al., 1988</a>) переживает нагрев, поэтому циклы можно повторять без добавления фермента. Новая цепь растёт только от праймера и только 5′→3′.',
   'A thermostable polymerase (Taq, <a href="https://doi.org/10.1126/science.2448875" target="_blank" rel="noopener">Saiki et al., 1988</a>) survives the heating steps, so cycles repeat without adding enzyme. A new strand grows only from a primer and only 5′→3′.'],
- ['copies',4,5,{copies:2},'Один цикл: две молекулы вместо одной','One cycle: two molecules instead of one',
+ ['copies',4,5,{copies:2,cycles:1},'Один цикл: две молекулы вместо одной','One cycle: two molecules instead of one',
   'Каждая старая цепь получила новую партнёршу: из одной двухцепочечной молекулы стало две.','Each old strand has gained a new partner: one double-stranded molecule has become two.',
   'После первого цикла продукты ещё не одинаковой длины: новые цепи заканчиваются там, где остановилась полимераза. Фрагменты строго заданной длины между праймерами накапливаются со второго-третьего цикла.',
   'After the first cycle the products are not yet of equal length: new strands end wherever the polymerase stopped. Fragments of exactly the primer-to-primer length accumulate from the second and third cycle on.'],
@@ -36,7 +37,7 @@ const catalog=[
   'Каждый цикл удваивает число молекул: 2, 4, 8, … После десяти циклов их 2¹⁰ = 1024.','Every cycle doubles the number of molecules: 2, 4, 8, … After ten cycles there are 2¹⁰ = 1024.',
   'Столбцы показывают идеальное удвоение 2ⁿ на логарифмической шкале: каждый следующий столбец выше на одну ступень. В реальной реакции эффективность ниже 100 % и рост выходит на плато, когда праймеры и нуклеотиды расходуются.',
   'The bars show ideal doubling 2ⁿ on a logarithmic scale: each bar is one step taller than the previous one. A real reaction runs below 100 % efficiency and reaches a plateau when primers and nucleotides run out.'],
- ['finale',3,6,{},'Экспонента из трёх температур','An exponential from three temperatures',
+ ['finale',3,6,{legend:1},'Экспонента из трёх температур','An exponential from three temperatures',
   'Денатурация, отжиг, удлинение — и после 30 циклов одна молекула даёт около миллиарда копий.','Denature, anneal, extend — and after 30 cycles one molecule yields about a billion copies.',
   '2³⁰ ≈ 1,07 миллиарда при идеальном удвоении. Именно это превращает единичную молекулу в измеримое количество ДНК. Схема не показывает ни детекцию продукта, ни ошибки полимеразы.',
   '2³⁰ ≈ 1.07 billion under ideal doubling. This is what turns a single molecule into a measurable amount of DNA. The schematic shows neither product detection nor polymerase errors.']
@@ -91,6 +92,7 @@ D.deck.register({id:ID,title:tr('ПЦР: как одна молекула ста
    axisLabels.push(L.textBox(chart,{id:ID+'-axis-'+n,x:x-14,y:BASE+8,width:BW+28,height:24,text:String(n),size:16,color:C.grey,padding:0}));
   }
   const axisTitle=L.textBox(chart,{id:ID+'-axis-title',x:1100,y:BASE+8,width:120,height:24,text:tr('цикл','cycle'),size:16,color:C.grey,align:'left',padding:0});
+  const legend=L.textBox(svg,{id:ID+'-legend',x:60,y:160,width:640,height:40,text:tr('94–98 °C → 50–65 °C → 72 °C · один цикл = ×2','94–98 °C → 50–65 °C → 72 °C · one cycle = ×2'),size:22,color:C.gold,padding:0});
   const formula=L.textBox(chart,{id:ID+'-formula',x:860,y:210,width:360,height:40,text:tr('N = 2ⁿ при идеальном удвоении','N = 2ⁿ under ideal doubling'),size:22,color:C.blue,align:'right',padding:0});
   let lastCopy='';
   function paint(){
@@ -115,6 +117,7 @@ D.deck.register({id:ID,title:tr('ПЦР: как одна молекула ста
    F.opacity(chart,chart01);
    bars.forEach((bar,n)=>{const grown=n===0?1:F.phase(s.cycles,n-1,n),h=STEP*(n+1)*grown;F.put(bar,'y',BASE-h);F.put(bar,'height',h);F.opacity(barLabels[n].el,grown>=1?1:0);});
    F.opacity(formula.el,F.phase(s.cycles,9,10)*chart01);
+   F.opacity(legend.el,s.legend);
    v.root.dataset.cue=String(frame.cue);v.root.dataset.filmTime=state.time.toFixed(3);
    g.PCR_FILM.snapshot={time:state.time,key:cue.key,cue:frame.cue,values:{...s},shown};
   }

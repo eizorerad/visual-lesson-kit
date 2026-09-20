@@ -51,6 +51,8 @@ FAMILIES = {
     'js/molecular-views': ('assets/molecular-views/', 'build/molecular-data.py', 'qa/molecular-views/'),
     'js/atac-': ('assets/atac/', 'build/atac-film.py', 'build/atac-histone-core.py', 'qa/atac/'),
 }
+# Runtime files whose names resemble a family but serve every film on the cinema clock.
+SHARED = ('js/trna-cinema.js', 'css/trna-cinema.css')
 IGNORED = ('__pycache__', '.DS_Store', 'dist', 'node_modules', 'qa-output')
 # Authored per project: never generated twice, never replaced by an upgrade.
 AUTHORED = ('index.html', 'js/config.js', 'lesson-kit.json')
@@ -87,7 +89,7 @@ def lean_files(template):
     wanted = {page} | page_references(page)
     for ref in list(wanted):
         for prefix, sources in FAMILIES.items():
-            if ref.startswith(prefix):
+            if ref.startswith(prefix) and ref not in SHARED:
                 wanted.update(sources)
     if template == 'gallery':
         wanted.add('assets/')
