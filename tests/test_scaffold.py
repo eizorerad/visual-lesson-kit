@@ -331,7 +331,7 @@ class ScaffoldTests(unittest.TestCase):
             self.assertEqual(styles[-1], 'css/shell.css')
             self.assertEqual((dest / 'css/shell.css').read_bytes(), (ROOT / 'starter/css/shell.css').read_bytes())
             chrome = re.search(r'<nav class="chrome".*?</nav>', html, re.S).group(0)
-            self.assertEqual(re.findall(r'data-action="([^"]+)"', chrome), ['prev', 'overview', 'next', 'reading', 'more'])
+            self.assertEqual(re.findall(r'data-action="([^"]+)"', chrome), ['prev', 'overview', 'next', 'reading', 'labels', 'more'])
             for selector in ('id="moreMenu"', 'id="languageValue"', 'id="readingLanguageToggle"', 'id="readingLanguageValue"', 'id="speedValue"', 'data-action="close-reading"', 'data-action="close-overview"'):
                 self.assertIn(selector, html)
             self.assertEqual(html.count('role="tab"'), 3)
@@ -363,7 +363,7 @@ class ScaffoldTests(unittest.TestCase):
             self.assertEqual(config['appearance'], {'background': 'white', 'palette': 'ocean', 'font': 'serif'})
             html = (dest / 'index.html').read_text()
             chrome = re.search(r'<nav class="chrome".*?</nav>', html, re.S).group(0)
-            self.assertEqual(re.findall(r'data-action="([^"]+)"', chrome), ['prev', 'overview', 'next', 'reading', 'more'])
+            self.assertEqual(re.findall(r'data-action="([^"]+)"', chrome), ['prev', 'overview', 'next', 'reading', 'labels', 'more'])
             self.assertEqual((dest / 'guide/theme.md').read_bytes(), (ROOT / 'docs/theme.md').read_bytes())
             built = subprocess.run([sys.executable, str(dest / 'build/bundle.py')], capture_output=True, text=True)
             self.assertEqual(built.returncode, 0, built.stderr)

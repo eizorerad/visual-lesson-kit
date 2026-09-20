@@ -16,9 +16,9 @@ function fixture(t){
  w.D.deck.boot();
  return {w,d,builds:()=>builds,disposals:()=>disposals,click:action=>d.querySelector('[data-action="'+action+'"]').click(),key:(key,target=d.activeElement)=>target.dispatchEvent(new w.KeyboardEvent('keydown',{key,bubbles:true,cancelable:true}))};
 }
-test('exactly five persistent controls; More owns secondary settings and keeps scene/input state',async t=>{
+test('exactly six persistent controls; More owns secondary settings and keeps scene/input state',async t=>{
  const {w,d,click,key,builds}=fixture(t);
- assert.deepEqual(Array.from(d.querySelectorAll('#chrome > button'),b=>b.dataset.action),['prev','overview','next','reading','more']);
+ assert.deepEqual(Array.from(d.querySelectorAll('#chrome > button'),b=>b.dataset.action),['prev','overview','next','reading','labels','more']);
  for(const id of ['languageToggle','speedToggle'])assert.equal(d.getElementById(id).parentElement.id,'moreMenu');
  const original=w.D.deck.root(),input=original.querySelector('input');input.value='31';
  w.D.deck.next();await settle();const before=w.D.deck.current(),count=builds(),transform=d.querySelector('#frame').style.transform;
@@ -133,4 +133,20 @@ test('cinema timeline reserve reduces fitted stage height and resets without cha
   assert.equal(d.body.style.getPropertyValue('--toolbar-bottom-space'),'72px');assert.equal(w.D.deck.scale(),original);
   assert.doesNotMatch(d.querySelector('#frame').style.transform,/NaN|Infinity/);
  }
+});
+
+test('the labels button left of More hides every label and shows it again; T / Е does the same; the button speaks the current language',async t=>{
+ const {w,d,click,key}=fixture(t);
+ const button=d.querySelector('[data-action="labels"]');
+ assert.equal(button.nextElementSibling.dataset.action,'more');
+ assert.equal(button.getAttribute('aria-pressed'),'false');assert.equal(button.getAttribute('aria-label'),'Скрыть надписи');
+ click('labels');
+ assert.ok(d.body.classList.contains('labels-hidden'));assert.ok(d.body.classList.contains('labels-fading'),'the fade is armed around the switch');
+ assert.equal(button.getAttribute('aria-pressed'),'true');assert.equal(button.getAttribute('aria-label'),'Показать надписи');assert.equal(w.D.deck.labels(),true);
+ key('t',d.body);
+ assert.ok(!d.body.classList.contains('labels-hidden'));assert.equal(w.D.deck.labels(),false);assert.equal(button.getAttribute('aria-label'),'Скрыть надписи');
+ key('Е',d.body);assert.equal(w.D.deck.labels(),true);
+ w.D.i18n.setLang('en');await settle();
+ assert.equal(button.getAttribute('aria-label'),'Show labels');assert.equal(button.getAttribute('title'),'Show labels (T)');
+ w.D.deck.labels(false);assert.equal(button.getAttribute('aria-label'),'Hide labels');
 });

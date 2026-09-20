@@ -12,7 +12,8 @@
 
   var registry = [];
   function storageKey() { return 'lesson-notes:' + String((global.LESSON || {}).id || global.location.pathname); }
-  var state = { index: 0, notesOpen: false, panel: 'notes', guideQuery: '', overviewOpen: false, helpOpen: false, moreOpen: false, jump: '', busy: false };
+  var state = { index: 0, notesOpen: false, panel: 'notes', guideQuery: '', overviewOpen: false, helpOpen: false, moreOpen: false, jump: '', busy: false, labelsHidden: false };
+  var labelsTimer = null;
   var mount = null;
   var buildVersion = 0;
   var CANVAS = { width: 1280, height: 720 };
@@ -489,10 +490,33 @@
     if (panel) panel.classList.toggle('is-on', open);
   }
 
+  // Labels toggle (T / Е): every on-stage text, title and caption fades out and back,
+  // so the drawing can be looked at alone. The state is not persisted.
+  function syncLabelsButton() {
+    var hidden = state.labelsHidden, text = hidden ? 'Показать надписи' : 'Скрыть надписи';
+    Array.from(document.querySelectorAll('[data-action="labels"]')).forEach(function (button) {
+      button.classList.toggle('is-on', hidden);
+      button.setAttribute('aria-pressed', String(hidden));
+      button.setAttribute('title', global.D.i18n.text(text + ' (T / Е)'));
+      button.setAttribute('aria-label', global.D.i18n.text(text));
+    });
+  }
+
+  function setLabels(hidden) {
+    state = Object.assign({}, state, { labelsHidden: hidden });
+    var body = document.body;
+    body.classList.add('labels-fading');
+    body.classList.toggle('labels-hidden', hidden);
+    global.clearTimeout(labelsTimer);
+    labelsTimer = global.setTimeout(function () { body.classList.remove('labels-fading'); }, 450);
+    syncLabelsButton();
+  }
+
   function applyLanguage() {
     var head = byId('notesHead');
     if (head) head.textContent = global.D.i18n.ui('notesHead');
     document.documentElement.setAttribute('data-lang', global.D.i18n.lang());
+    syncLabelsButton();
     Array.from(document.querySelectorAll('[data-action="language"]')).forEach(function (button) {
       button.hidden = global.D.i18n.languages().length < 2;
       var value = button.querySelector('[data-language-value]');
@@ -580,6 +604,7 @@
       case 'q': case 'Q': case 'й': case 'Й': togglePanel('questions'); break;
       case 'g': case 'G': case 'п': case 'П': togglePanel('guide'); break;
       case 'l': case 'L': case 'д': case 'Д': global.D.i18n.toggle(); break;
+      case 't': case 'T': case 'е': case 'Е': setLabels(!state.labelsHidden); break;
       case 'o': case 'O': case 'щ': case 'Щ': setOverview(!state.overviewOpen); break;
       case 'f': case 'F': case 'а': case 'А': toggleFullscreen(); break;
       case '?': setHelp(!state.helpOpen); break;
@@ -610,6 +635,7 @@
       questions: function (button) { togglePanel('questions', button.getAttribute('role') === 'tab'); },
       guide: function (button) { togglePanel('guide', button.getAttribute('role') === 'tab'); },
       language: function () { global.D.i18n.toggle(); },
+      labels: function () { setLabels(!state.labelsHidden); },
       fullscreen: function () { setMore(false); toggleFullscreen(); },
       help: function () { setHelp(!state.helpOpen); }
     };
@@ -699,6 +725,7 @@
     register: register, boot: boot, show: show, jump: jump, next: next, prev: prev, refit: fit, syncPlaybackStep: syncPlaybackStep,
     count: function () { return registry.length; },
     scale: function () { return currentScale; },
+    labels: function (hidden) { if (hidden !== undefined) setLabels(!!hidden); return state.labelsHidden; },
     current: function () { return mount ? { index: mount.index, step: mount.step, steps: mount.steps.length, busy: state.busy } : null; },
     steps: function () { return mount ? mount.steps.slice() : []; },
     root: function () { return mount ? mount.root : null; },

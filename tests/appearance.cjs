@@ -51,7 +51,7 @@ test('switching every setting preserves scene, progress, input, language, readin
 });
 test('native appearance controls persist selections, support both locales and do not steal select arrows',async t=>{
  const w=fixture(t,{full:true}),d=w.document;w.D.deck.register({id:'one',title:'One',build(){return w.D.dom.h('section','One');}});w.D.deck.boot();
- assert.equal(d.querySelectorAll('#chrome > button').length,5);d.querySelector('[data-action="more"]').click();d.querySelector('#appearanceSettings').open=true;
+ assert.equal(d.querySelectorAll('#chrome > button').length,6);d.querySelector('[data-action="more"]').click();d.querySelector('#appearanceSettings').open=true;
  for(const [field,value]of Object.entries({background:'white',palette:'botanical',font:'serif'})){
   const select=d.querySelector('[data-appearance="'+field+'"]');assert.ok(select);select.value=value;select.dispatchEvent(new w.Event('change',{bubbles:true}));
   select.focus();const arrow=new w.KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true,cancelable:true});select.dispatchEvent(arrow);assert.equal(arrow.defaultPrevented,false);assert.equal(d.activeElement,select);
