@@ -7,8 +7,9 @@
  * meaning or composition taste; it only reports what automated checks otherwise
  * miss: an empty stage, geometry displaced outside the drawing area, sparse
  * drawings, text without a layout contract, overflowing text, dissolving
- * transitions, duration. Findings are things to fix or to justify; notes are
- * facts worth a look (a close-up, a dissolve, off-frame geometry mid-motion).
+ * transitions, duration, a stage that depends on the language or on the history
+ * of seeks. Findings are things to fix or to justify; notes are facts worth a
+ * look (a small drawing, a close-up, a dissolve, off-frame geometry mid-motion).
  *
  *   node qa/film/review.cjs [dist/lesson.html] [--out DIR] [--lang ru,en]
  *                           [--expect-duration MIN-MAX] [--expect-cues MIN-MAX]
@@ -29,7 +30,7 @@ const maxFrames=+option('--max-frames',160)||160;
 const strict=args.includes('--strict');
 const range=value=>{if(!value)return null;const m=/^(\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)$/.exec(value);if(!m)throw new Error('Expected MIN-MAX, got '+value);return [Number(m[1]),Number(m[2])];};
 const expectDuration=range(option('--expect-duration')),expectCues=range(option('--expect-cues'));
-const SPARSE=.025,CLOSE_UP=1.5; // sparse: under 2.5% of the area; the kit films stay above 5%
+const AREA={width:1160,height:463},SPARSE=.025,CLOSE_UP=1.5; // sparse: under 2.5% of the area; the kit films stay above 5%
 
 async function launch(){
  const channel=process.env.PLAYWRIGHT_CHANNEL,configuration={headless:true,...(channel?{channel}:{})};
@@ -121,18 +122,23 @@ function assess(report,film){
  const dissolves=new Set(((film&&film.edges)||[]).filter(e=>!e.authored).map(e=>e.from+' → '+e.to));
  const dissolveOf=f=>{const m=/^(.*) → (.*) \d+%$/.exec(f.label);return !!(m&&dissolves.has(m[1]+' → '+m[2]));};
  for(const f of report.frames){
-  const where=`${f.lang} · ${f.label}`,size=f.extents?f.extents.width+'×'+f.extents.height:'none',close=f.zoom>=CLOSE_UP,endpoint=f.phase==='endpoint';
+  const where=`${f.lang} · ${f.label}`,size=f.extents?f.extents.width+'×'+f.extents.height:'none',close=f.zoom>=CLOSE_UP,endpoint=f.phase==='endpoint',primary=f.lang===report.languages[0];
   if(f.shapes===0&&f.captionVisible){
    if(dissolveOf(f))note('empty-stage',where,'the stage is empty at this point of a dissolve: the previous view has faded out and the next is not in yet');
    else find('empty-stage',where,f.texts?`caption is shown over a stage with no drawn shapes, only ${f.texts} text nodes`:'caption is shown over an empty stage');
   }else if(f.coverage<SPARSE&&f.shapes>0)find('sparse-drawing',where,`visible shapes touch ${(f.coverage*100).toFixed(1)}% of the drawing area (${f.shapes} shapes, extents ${size})`);
   if(f.outside){const detail=`${f.outside} visible shapes lie entirely outside x60–1220 / y147–610 (extents ${size})`;
-   if(close)note('off-frame',where,detail+' in a close-up');else if(!endpoint)note('off-frame',where,detail+' during motion');else find('outside-area',where,detail+' although the drawing is not a close-up');}
+   if(!close&&endpoint)find('outside-area',where,detail+' although the drawing is not a close-up');else if(primary)note('off-frame',where,detail+(close?' in a close-up':' during motion'));}
   if(f.textsOutside){const detail=`${f.textsOutside} visible text nodes outside the drawing area (extents ${size})`;if(endpoint&&!close)find('text-outside-area',where,detail);else note('text-off-frame',where,detail);}
   if(f.issues.length)find('overflow',where,'text exceeds its declared box: '+f.issues.join(', '));
   if(f.uncontractedVisible.length&&endpoint)find('uncontracted-text',where,'visible text without a layout contract: '+f.uncontractedVisible.slice(0,4).map(t=>JSON.stringify(t)).join(', '));
   if(f.invalid)find('invalid-geometry',where,`${f.invalid} nodes with NaN/Infinity`);
+  if(primary&&endpoint&&f.shapes>0&&f.extents&&f.extents.width<AREA.width/2&&f.extents.height<AREA.height/2)note('small-drawing',where,`the drawing spans ${size} of the ${AREA.width}×${AREA.height} area, under half in both directions; draw larger unless this is a deliberate detail`);
  }
+ // The stage must not depend on the language or on the order of seeks: captions differ, shapes do not.
+ const byLabel=new Map();for(const f of report.frames)if(f.phase==='endpoint')byLabel.set(f.label,[...(byLabel.get(f.label)||[]),f]);
+ for(const [label,list] of byLabel)for(const other of list.slice(1))if(other.shapes!==list[0].shapes)find('language-mismatch',label,`${list[0].lang} draws ${list[0].shapes} shapes, ${other.lang} draws ${other.shapes}: paint depends on the language or on what was shown before, look for writes without a reset branch`);
+ if(report.replay){const a=report.frames[0],b=report.replay;if(a.shapes!==b.shapes||Math.abs(a.coverage-b.coverage)>.005)find('replay-mismatch',`${a.lang} · ${a.label}`,`seeking back to the first frame after the last one draws ${b.shapes} shapes (coverage ${(b.coverage*100).toFixed(1)}%) instead of ${a.shapes} (${(a.coverage*100).toFixed(1)}%): paint depends on the history of seeks, look for writes without a reset branch`);}
  for(const edge of dissolves)note('dissolve-edge',edge,'not adjacent in the authored film: the views dissolve instead of moving continuously, and the exact midpoint may be empty by design; look at the 25 % and 75 % frames');
  if(film&&expectDuration&&(film.duration<expectDuration[0]||film.duration>expectDuration[1]))find('duration','film',`${film.duration} s is outside the requested ${expectDuration[0]}–${expectDuration[1]} s`);
  if(film&&expectCues&&(film.cues.length<expectCues[0]||film.cues.length>expectCues[1]))find('cue-count','film',`${film.cues.length} cues, requested ${expectCues[0]}–${expectCues[1]}`);
@@ -178,6 +184,7 @@ function assess(report,film){
     if(shoot){file=path.join(output,`${lang}-${String(plan.index+1).padStart(2,'0')}-${plan.phase==='mid'?'mid-':''}${plan.label.replace(/[^\w.-]+/g,'_').slice(0,60)}.png`);await page.screenshot({path:file});}
     report.frames.push({lang,...plan,...m,file:file&&path.basename(file)});
    }
+   if(lang===languages[0]&&plans.length>1)report.replay=await frameAt(page,plans[0]);
   }
   assess(report,film);
   // Contact sheets: twelve frames each, endpoints and mid frames in order.
