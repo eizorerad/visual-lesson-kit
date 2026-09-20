@@ -263,6 +263,31 @@ class ScaffoldTests(unittest.TestCase):
                 self.assertTrue((gallery / file).is_file())
                 self.assertNotIn(file, gallery_html)
 
+    def test_film_template_is_a_complete_cinema_film(self):
+        with tempfile.TemporaryDirectory(prefix='lesson-film-') as tmp:
+            dest = Path(tmp) / 'film'
+            result = self.run_cli(dest, '--template', 'film', '--lang', 'en', '--title', 'PCR film')
+            self.assertEqual(result.returncode, 0, result.stderr)
+            html = (dest / 'index.html').read_text()
+            scripts = re.findall(r'<script src="([^"]+)"', html)
+            sequence = ['js/film.js', 'js/layout.js', 'js/cinema-timeline.js', 'js/trna-cinema.js', 'js/recipes/film/pcr-film.js', 'js/player.js', 'js/boot.js']
+            for before, after in zip(sequence, sequence[1:]):
+                self.assertLess(scripts.index(before), scripts.index(after))
+            self.assertFalse(any('/episodes/' in src or 'js/atac-' in src for src in scripts))
+            self.assertIn('href="css/trna-cinema.css"', html)
+            for rel in ('qa/film/review.cjs', 'guide/film.md', 'guide/film-review.md', 'js/recipes/film/pcr-film.js'):
+                self.assertTrue((dest / rel).is_file(), rel)
+            for args in [('--check',), ()]:
+                built = subprocess.run([sys.executable, str(dest / 'build/bundle.py'), *args], capture_output=True, text=True)
+                self.assertEqual(built.returncode, 0, built.stderr)
+            bundle = (dest / 'dist/lesson.html').read_text()
+            self.assertIn('PCR_FILM', bundle)
+            self.assertNotIn('<script src=', bundle)
+            lean = Path(tmp) / 'lean'
+            self.assertEqual(self.run_cli(lean, '--template', 'film', '--lean').returncode, 0)
+            self.assertTrue((lean / 'qa/film/review.cjs').is_file(), 'the frame review is part of the core, lean projects included')
+            self.assertFalse((lean / 'js/atac-journey.js').exists())
+
     def test_english_default_contains_both_language_packs(self):
         with tempfile.TemporaryDirectory() as tmp:
             dest = Path(tmp) / 'English lesson'
