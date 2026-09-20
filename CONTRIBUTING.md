@@ -17,7 +17,7 @@ python3 tools/build-molecular-views.py --check
 python3 upgrade.py ../some-generated-lesson
 ```
 
-`tests/test_maintenance.py` guards the single template registry, checksum manifests, lean projects and the shared RNA recipes; `tests/test_upgrade.py` exercises `upgrade.py` against a simulated later release.
+`tests/film-template.cjs` compiles the film template without a DOM; `node qa/film/review.cjs` inside a generated project renders and measures its frames. `tests/test_maintenance.py` guards the single template registry, checksum manifests, lean projects and the shared RNA recipes; `tests/test_upgrade.py` exercises `upgrade.py` against a simulated later release.
 
 `tools/build-*.py --check` compares a locally built example with a fresh build, and `python3 tools/build-examples.py --check` compares every fresh build with the digests recorded in `examples/checksums.json`. The HTML files themselves are build products: `python3 tools/build-examples.py` writes them into `examples/` (ignored by git) and refreshes the digests, and the `Publish examples` workflow deploys that folder to GitHub Pages. A generated project's `build/bundle.py --check` validates inputs without writing output; it does not compare an existing export. Rebuild affected examples when changing shared runtime or bundled notices.
 

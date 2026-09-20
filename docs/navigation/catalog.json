@@ -1781,7 +1781,8 @@
     "mobile",
     "theme",
     "languages",
-    "provenance"
+    "provenance",
+    "film-review"
    ]
   },
   {
@@ -2875,7 +2876,8 @@
     "cinematic-explanation",
     "molecular-views",
     "rna-folding",
-    "export-qa"
+    "export-qa",
+    "film-review"
    ]
   },
   {
@@ -2914,7 +2916,8 @@
     "motion",
     "shell",
     "languages",
-    "export-qa"
+    "export-qa",
+    "film-review"
    ]
   },
   {
@@ -2970,7 +2973,8 @@
     "cinema-timeline",
     "cinematic-explanation",
     "molecular-views",
-    "export-qa"
+    "export-qa",
+    "film-review"
    ]
   },
   {
@@ -3034,6 +3038,97 @@
     "clearance",
     "motion",
     "export-qa"
+   ]
+  },
+  {
+   "id": "film",
+   "branch": "narrative",
+   "title": "Complete short film / Готовый короткий фильм",
+   "summary": "A finished seven-cue film on the cinema clock (PCR: one molecule to 1024 copies) as an editable starting point: complete poses per cue, persistent actors, bilingual copy, notes, questions and a frame review.",
+   "keywords": [
+    "film",
+    "short film",
+    "new film",
+    "from scratch",
+    "template film",
+    "cinema",
+    "PCR",
+    "фильм",
+    "короткий фильм",
+    "новый фильм",
+    "с нуля",
+    "шаблон фильма",
+    "ПЦР",
+    "кино"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "film.md"
+    },
+    {
+     "path": "cinema-timeline.md"
+    }
+   ],
+   "sources": [
+    "film.html",
+    "js/recipes/film/pcr-film.js",
+    "js/cinema-timeline.js",
+    "js/trna-cinema.js"
+   ],
+   "examples": [
+    "js/recipes/film/pcr-film.js"
+   ],
+   "caveat": "An authored schematic: strands are lines and cycles are ideal doublings; replace actors and catalog for another subject and keep one complete numeric pose per cue.",
+   "related": [
+    "cinema-timeline",
+    "story",
+    "scene",
+    "layout",
+    "film-review",
+    "trna-journey",
+    "atac-seq"
+   ]
+  },
+  {
+   "id": "film-review",
+   "branch": "delivery",
+   "title": "Frame review / Обзор кадров",
+   "summary": "Render every cue endpoint and transition midpoint (or every scene step), measure drawing coverage and write screenshots with contact sheets. Findings: empty stages, sparse drawings, geometry displaced outside the drawing area, uncontracted or overflowing text, duration and cue count against the brief. Notes: close-ups, off-frame geometry during motion, dissolving edges.",
+   "keywords": [
+    "review",
+    "frames",
+    "contact sheet",
+    "screenshots",
+    "blank frame",
+    "empty stage",
+    "intermediate frames",
+    "обзор кадров",
+    "скриншоты",
+    "контакт-лист",
+    "пустая сцена",
+    "промежуточные кадры",
+    "проверка фильма"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "film-review.md"
+    }
+   ],
+   "sources": [
+    "qa/film/review.cjs"
+   ],
+   "examples": [],
+   "caveat": "Reports what is drawn, not whether it explains; requires Playwright and a local browser; canvas and WebGL layers count as one shape.",
+   "related": [
+    "export-qa",
+    "film",
+    "cinema-timeline",
+    "trna-journey",
+    "atac-seq",
+    "layout",
+    "clearance"
    ]
   }
  ]

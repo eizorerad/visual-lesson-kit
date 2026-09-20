@@ -87,6 +87,7 @@ Read the [complete setup guide](docs/codex-setup.md) for installation scope, rel
 | `methods` | Statistical, biological and geometric operations |
 | `explanations` | Connected comparisons, distributions and stepwise derivations |
 | `synthesis` | A recurring map linking model, observations and verification |
+| `film` | Complete seven-cue film on the cinema clock (PCR: one molecule to 1024 copies) to replace with your own actors and catalog |
 | `crispri` | Eleven ordered CRISPRi design scenes: dCas9 origin and delivery, guide factory, repression, libraries, MOI, evidence and checks |
 | `gallery` | General component gallery and teaching patterns |
 
@@ -97,6 +98,16 @@ The separate [3D biology section](docs/three-dimensional.md) provides reusable `
 The [RNA prediction template](docs/rna-prediction.md) preserves a continuous causal narrative and its pacing. Create it with `python3 create.py ../my-rna-prediction --template rna-prediction --palette ocean`; [open the standalone example locally](examples/README.md). The [indexed RNA actor](docs/rna-pair-molecule.md) and [visual/motion style recipe](docs/cinematic-explanation.md) can be reused independently.
 
 The molecular constructor combines two high-level presets—`MolecularScenes.overview` and `MolecularScenes.detail`—with lower-level trace, fragment, camera, locator and control components. Follow the [assembly recipe](docs/molecular-views.md), [API](docs/molecular-views-api.md) and [PDB import guide](docs/molecular-data.md). Rotating source coordinates changes the view; it does not compute a folding trajectory or molecular dynamics.
+
+## Look at the frames
+
+Automated checks measure text bounds, node identity and sources; they cannot see an empty stage or a drawing lost in a corner. Every generated project carries a frame review:
+
+```sh
+node qa/film/review.cjs --expect-duration 40-70 --expect-cues 5-7
+```
+
+It renders each cue endpoint and transition midpoint in both languages, measures how much of the drawing area is used, and reports empty stages, sparse drawings, geometry displaced outside the drawing area, uncontracted or overflowing text, and duration or cue count against the brief; close-ups, off-frame geometry during motion and dissolving edges are listed as notes to look at. Contact sheets go to `qa-output/film-review/`. Look at them and describe what the frames show; see [docs/film-review.md](docs/film-review.md).
 
 ## Find the right component
 
