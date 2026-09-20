@@ -8,8 +8,9 @@
  * miss: an empty stage, geometry displaced outside the drawing area, sparse
  * drawings, text without a layout contract, overflowing text, dissolving
  * transitions, duration, a stage that depends on the language or on the history
- * of seeks. Findings are things to fix or to justify; notes are facts worth a
- * look (a small drawing, a close-up, a dissolve, off-frame geometry mid-motion).
+ * of seeks, labels that pop or teleport instead of fading and moving. Findings
+ * are things to fix or to justify; notes are facts worth a look (a small
+ * drawing, a close-up, a dissolve, off-frame geometry mid-motion).
  *
  *   node qa/film/review.cjs [dist/lesson.html] [--out DIR] [--lang ru,en]
  *                           [--expect-duration MIN-MAX] [--expect-cues MIN-MAX]
@@ -110,6 +111,36 @@ function measure(){
   title:heading?heading.textContent.trim():'',caption:caption?caption.textContent.trim():'',captionVisible:!!caption&&opacity(caption)>.05,invalid,skipped};
 }
 
+/* Runs inside the page: every SVG text label with its effective opacity and centre in stage units. */
+function labels(){
+ const root=D.deck.root(),svg=root&&(root.querySelector('svg.film-viz, svg.lesson-viz')||root.querySelector('svg')),ctm=svg&&svg.getScreenCTM();
+ if(!ctm)return [];
+ const inv=ctm.inverse(),opacity=n=>{let a=1;while(n&&n.nodeType===1){const s=getComputedStyle(n);if(s.display==='none'||s.visibility==='hidden')return 0;a*=+s.opacity;n=n.parentElement;}return a;};
+ const out=[];let i=0;
+ for(const n of svg.querySelectorAll('text')){const key=n.dataset.layoutId||('text#'+i);i++;if(n.closest('defs,clipPath,mask'))continue;const txt=n.textContent.trim();if(!txt)continue;
+  try{const b=n.getBBox(),m=inv.multiply(n.getScreenCTM()),x=b.x+b.width/2,y=b.y+b.height/2;out.push({key,txt:txt.slice(0,40),o:+opacity(n).toFixed(3),cx:Math.round(m.a*x+m.c*y+m.e),cy:Math.round(m.b*x+m.d*y+m.f)});}catch(_){}}
+ return out;
+}
+
+/* Sweep the whole timeline at a fine step (0.1 s up to 150 s, coarser beyond) and
+ * follow every label: an opacity step of 0.5 or more within one sample is a pop,
+ * an isolated move of 40 px or more while visible is a teleport. A label riding a
+ * fast actor moves in consecutive samples and is not reported. */
+async function sweepLabels(page,duration){
+ const step=Math.max(.1,duration/1500),samples=[];
+ for(let t=0;t<=duration+1e-9;t+=step)samples.push({t:+t.toFixed(3),labels:await page.evaluate(async ({t,source})=>{const C=window.CINEMA;C.pause();C.seek(t);await L.ready(D.deck.root());await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));return new Function('return ('+source+')')()();},{t,source:labels.toString()})});
+ const pop=step<=.15?.5:.9,leap=step<=.15?40:60,series=new Map();
+ samples.forEach((sample,i)=>{for(const l of sample.labels){const list=series.get(l.key)||[];list.push({i,t:sample.t,...l});series.set(l.key,list);}});
+ const events=[];
+ for(const list of series.values())for(let j=1;j<list.length;j++){const p=list[j-1],l=list[j];if(l.i!==p.i+1)continue;
+  const dO=l.o-p.o,dist=Math.hypot(l.cx-p.cx,l.cy-p.cy);
+  if(Math.abs(dO)>=pop)events.push({t:l.t,key:l.key,txt:l.txt,kind:dO>0?'appears':'vanishes',detail:`opacity ${p.o} → ${l.o} within ${step.toFixed(2)} s`});
+  if(dist>=leap&&Math.min(l.o,p.o)>.3&&l.txt===p.txt){const before=j>1?Math.hypot(p.cx-list[j-2].cx,p.cy-list[j-2].cy):0,after=j+1<list.length?Math.hypot(list[j+1].cx-l.cx,list[j+1].cy-l.cy):0;
+   if(before<leap/4&&after<leap/4)events.push({t:l.t,key:l.key,txt:l.txt,kind:'jumps',detail:`${Math.round(dist)} px within ${step.toFixed(2)} s, (${p.cx}, ${p.cy}) → (${l.cx}, ${l.cy})`});}}
+ events.sort((a,b)=>a.t-b.t);
+ return {step:+step.toFixed(3),samples:samples.length,events};
+}
+
 async function frameAt(page,plan){
  if(plan.kind==='film')await page.evaluate(t=>{const C=window.CINEMA;C.pause();C.seek(t);},plan.time);
  else{await page.evaluate(p=>D.deck.show(p.scene,p.step),plan);await page.waitForFunction(()=>{const c=D.deck.current();return !c||!c.busy;},{timeout:10000});}
@@ -152,6 +183,16 @@ function assess(report,film){
  const byLabel=new Map();for(const f of report.frames)if(f.phase==='endpoint')byLabel.set(f.label,[...(byLabel.get(f.label)||[]),f]);
  for(const [label,list] of byLabel)for(const other of list.slice(1))if(other.shapes!==list[0].shapes)find('language-mismatch',label,`${list[0].lang} draws ${list[0].shapes} shapes, ${other.lang} draws ${other.shapes}: paint depends on the language or on what was shown before, look for writes without a reset branch`);
  if(report.replay){const a=report.frames[0],b=report.replay;if(a.shapes!==b.shapes||Math.abs(a.coverage-b.coverage)>.005)find('replay-mismatch',`${a.lang} · ${a.label}`,`seeking back to the first frame after the last one draws ${b.shapes} shapes (coverage ${(b.coverage*100).toFixed(1)}%) instead of ${a.shapes} (${(a.coverage*100).toFixed(1)}%): paint depends on the history of seeks, look for writes without a reset branch`);}
+ // Labels should fade and travel with their actors, not pop in, pop out or teleport.
+ // Many labels popping within the same second are one staggered effect and get one note.
+ if(report.labels){const lang=report.languages[0],hint='; fade with F.phase and keep the label in its actor\'s group';
+  const seconds=new Map();for(const e of report.labels.events){const k=e.kind+'@'+Math.floor(e.t);seconds.set(k,[...(seconds.get(k)||[]),e]);}
+  const single=[];for(const [k,list] of seconds){const keys=new Set(list.map(e=>e.key));
+   if(keys.size>=6)note('abrupt-labels',`${lang} · t=${list[0].t}–${list[list.length-1].t} s`,`${keys.size} labels ${list[0].kind} abruptly within one second (${list.slice(0,3).map(e=>JSON.stringify(e.txt)).join(', ')}, …): a staggered wipe reads as one motion, a scattered set of pops does not`+hint);
+   else single.push(...list);}
+  const perLabel=new Map();for(const e of single){const k=e.key+'|'+e.kind;perLabel.set(k,[...(perLabel.get(k)||[]),e]);}
+  let shown=0;for(const [,list] of perLabel){const e=list[0];if(++shown>24){note('abrupt-labels',`${lang}`,`… and ${perLabel.size-24} more labels with the same kind of events, see report.json`);break;}
+   note(e.kind==='jumps'?'jumping-label':'abrupt-label',`${lang} · t=${e.t} s`,`${JSON.stringify(e.txt)} ${e.kind} ${e.detail}${list.length>1?` (${list.length} times, first at ${e.t} s)`:''}`+hint);}}
  for(const edge of (film&&film.edges||[]).filter(e=>!e.authored))note('dissolve-edge',edge.from+' → '+edge.to,'not adjacent in the authored film: the views dissolve instead of moving continuously, and the exact midpoint may be empty by design; look at the 25 % and 75 % frames');
  if(film&&expectDuration&&(film.duration<expectDuration[0]||film.duration>expectDuration[1]))find('duration','film',`${film.duration} s is outside the requested ${expectDuration[0]}–${expectDuration[1]} s`);
  if(film&&expectCues&&(film.cues.length<expectCues[0]||film.cues.length>expectCues[1]))find('cue-count','film',`${film.cues.length} cues, requested ${expectCues[0]}–${expectCues[1]}`);
@@ -201,6 +242,7 @@ function assess(report,film){
     if(shoot){file=path.join(output,`${lang}-${String(ordinal+1).padStart(3,'0')}-${plan.phase==='endpoint'?'':plan.phase==='mid'?'mid-':'q-'}${plan.label.replace(/[^\p{L}\p{N}.-]+/gu,'_').slice(0,60)}.png`);await page.screenshot({path:file});}
     report.frames.push({lang,...plan,...m,file:file&&path.basename(file)});
    }
+   if(lang===languages[0]&&film)report.labels=await sweepLabels(page,film.duration);
    if(lang===languages[0]&&plans.length>1)report.replay=await frameAt(page,plans[0]);
   }
  }catch(error){report.findings.push({kind:'review-failed',frame:'run',detail:error.stack||error.message});}

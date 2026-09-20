@@ -107,7 +107,7 @@ Automated checks measure text bounds, node identity and sources; they cannot see
 node qa/film/review.cjs --expect-duration 40-70 --expect-cues 5-7
 ```
 
-It renders each cue endpoint and transition midpoint in both languages, measures how much of the drawing area is used, and reports empty stages, sparse drawings, geometry displaced outside the drawing area, uncontracted or overflowing text, a stage that changes with the language or with the order of seeks, and duration or cue count against the brief; small drawings, close-ups, off-frame geometry during motion and dissolving edges are listed as notes to look at. Contact sheets go to `qa-output/film-review/`. Look at them and describe what the frames show; see [docs/film-review.md](docs/film-review.md).
+It renders each cue endpoint and transition midpoint in both languages, measures how much of the drawing area is used, and reports empty stages, sparse drawings, geometry displaced outside the drawing area, uncontracted or overflowing text, a stage that changes with the language or with the order of seeks, and duration or cue count against the brief; small drawings, labels that pop or teleport, close-ups, off-frame geometry during motion and dissolving edges are listed as notes to look at. Contact sheets go to `qa-output/film-review/`. Look at them and describe what the frames show; see [docs/film-review.md](docs/film-review.md).
 
 ## Find the right component
 

@@ -105,18 +105,24 @@ D.deck.register({id:ID,title:tr('ПЦР: как одна молекула ста
    F.seg(primerReverse,X1-20,TOP+14+40*(1-anneal),X1-140,TOP+14+40*(1-anneal));F.opacity(primerReverse,anneal);
    F.seg(primerForward,X0+20,BOTTOM-14-40*(1-anneal),X0+140,BOTTOM-14-40*(1-anneal));F.opacity(primerForward,anneal);
    const tipR=lerp(X1-140,X0+20,extend),tipF=lerp(X0+140,X1-20,extend);
-   F.seg(newReverse,X1-140,TOP+14,tipR,TOP+14);F.opacity(newReverse,extend>0?1:0);
-   F.seg(newForward,X0+140,BOTTOM-14,tipF,BOTTOM-14);F.opacity(newForward,extend>0?1:0);
+   // Everything that appears or disappears does so through a ramp, never a step.
+   const strandIn=F.phase(extend,0,.1);
+   F.seg(newReverse,X1-140,TOP+14,tipR,TOP+14);F.opacity(newReverse,strandIn);
+   F.seg(newForward,X0+140,BOTTOM-14,tipF,BOTTOM-14);F.opacity(newForward,strandIn);
    F.pos(polymeraseReverse,tipR,TOP+14);F.pos(polymeraseForward,tipF,BOTTOM-14);
    const working=clamp(4*extend*(1-extend));F.opacity(polymeraseReverse,working);F.opacity(polymeraseForward,working);
-   F.opacity(primerLabel.el,anneal*(1-extend));F.opacity(strandLabel.el,extend>0&&extend<1?1:extend*(1-chart01));
-   F.opacity(molecule,1-chart01);
-   const shown=chart01>0?2**Math.min(10,Math.floor(s.cycles)):Math.round(s.copies);
+   // The molecule and the chart swap during the first 15% of the chart's arrival;
+   // the ladder climbs only once the chart is there, so bars never grow over strands.
+   const swap=F.phase(chart01,0,.15),ladder=chart01>0&&chart01<1?1+(s.cycles-1)*F.phase(chart01,.15,1):s.cycles;
+   F.opacity(primerLabel.el,anneal*(1-extend));F.opacity(strandLabel.el,F.phase(extend,0,.2)*(1-swap));
+   F.opacity(molecule,1-swap);
+   // The counter names completed cycles; the count of two arrives early in the copies cue, with its caption.
+   const shown=chart01>0?2**Math.min(10,Math.floor(ladder)):Math.floor(s.copies+.8);
    counter.setText((lang==='En'?'DNA molecules: ':'Молекул ДНК: ')+shown);
    F.opacity(counter.el,1);
-   F.opacity(chart,chart01);
-   bars.forEach((bar,n)=>{const grown=n===0?1:F.phase(s.cycles,n-1,n),h=STEP*(n+1)*grown;F.put(bar,'y',BASE-h);F.put(bar,'height',h);F.opacity(barLabels[n].el,grown>=1?1:0);});
-   F.opacity(formula.el,F.phase(s.cycles,9,10)*chart01);
+   F.opacity(chart,swap);
+   bars.forEach((bar,n)=>{const grown=n===0?1:F.phase(ladder,n-1,n),h=STEP*(n+1)*grown;F.put(bar,'y',BASE-h);F.put(bar,'height',h);F.opacity(barLabels[n].el,grown);});
+   F.opacity(formula.el,F.phase(ladder,9,10)*swap);
    F.opacity(legend.el,s.legend);
    v.root.dataset.cue=String(frame.cue);v.root.dataset.filmTime=state.time.toFixed(3);
    g.PCR_FILM.snapshot={time:state.time,key:cue.key,cue:frame.cue,values:{...s},shown};
