@@ -508,7 +508,7 @@
     body.classList.add('labels-fading');
     body.classList.toggle('labels-hidden', hidden);
     global.clearTimeout(labelsTimer);
-    labelsTimer = global.setTimeout(function () { body.classList.remove('labels-fading'); }, 450);
+    labelsTimer = global.setTimeout(function () { if (document.body) document.body.classList.remove('labels-fading'); }, 450);
     syncLabelsButton();
   }
 
