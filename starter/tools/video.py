@@ -6,6 +6,7 @@
     python3 tools/video.py --engine say                                   # offline, no key
     GEMINI_API_KEY=... python3 tools/video.py --engine gemini --check     # Gemini API key
     python3 tools/video.py --engine cloud --project=GCP-PROJECT --check   # gcloud login
+    VERTEX_API_KEY=... python3 tools/video.py --engine vertex --project=KEY-PROJECT   # class key
 
 Needs node with Playwright (PLAYWRIGHT_CHANNEL=chrome uses the installed Chrome) and
 ffmpeg with libx264 (--ffmpeg, $FFMPEG, PATH, or `pip install imageio-ffmpeg`).
@@ -39,10 +40,10 @@ def run(*cmd, **kw):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--engine', choices=['say', 'gemini', 'cloud'], default='say')
+    parser.add_argument('--engine', choices=['say', 'gemini', 'cloud', 'vertex'], default='say')
     parser.add_argument('--voice')
     parser.add_argument('--lang', choices=['ru', 'en'], default='ru')
-    parser.add_argument('--project', help='cloud: GCP project to bill; also used by --check')
+    parser.add_argument('--project', help='cloud: GCP project to bill (also used by --check); vertex: the key\'s project')
     parser.add_argument('--check', action='store_true', help='let a Gemini model hear every clip before rendering')
     parser.add_argument('--ffmpeg')
     args = parser.parse_args()
@@ -59,7 +60,9 @@ def main():
     if args.project:
         voice += ['--project=' + args.project]
     run(*voice)
-    if args.check and args.engine != 'say':
+    if args.check and args.engine == 'vertex':
+        print('   --check needs a Gemini API key or a gcloud login; a TTS-only class key cannot run the checker model')
+    if args.check and args.engine in ('gemini', 'cloud'):
         check = [py, 'tools/voice_check.py'] + (['--vertex', args.project] if args.engine == 'cloud' else [])
         if subprocess.run([str(c) for c in check], cwd=ROOT).returncode:
             sys.exit('the clip check failed to run')

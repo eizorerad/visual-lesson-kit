@@ -11,6 +11,7 @@
 3. Если да — спросите про голос:
    - **Ключ Google AI Studio (Gemini API)**: лучшая модель `gemini-3.8-flash-tts`, интонации и теги. Ключ пользователь даёт сам; используйте его только в переменной окружения `GEMINI_API_KEY` в команде запуска, никогда не записывайте в файлы, логи и коммиты; после работы предложите перевыпустить ключ, если он оказался в тексте чата.
    - **Google Cloud через вход gcloud** (без ключа): `gemini-3.1-flash-tts-preview` в Cloud Text-to-Speech, оплата по обычному биллингу GCP-проекта. Пользователь сам выполняет `gcloud auth login`; включение API или создание ключей в его проекте — только с явного разрешения.
+   - **Ключ группы от преподавателя (Vertex AI)**: временный ключ, привязанный к сервисному аккаунту, только для TTS-моделей (`--engine vertex`, `VERTEX_API_KEY`, `--project` проекта ключа); как его сделать — раздел «Временный ключ для группы».
    - **Без ключа, офлайн**: голос macOS `say` (Milena / Samantha). Интонаций нет, зато ничего не нужно.
 4. Если сервис отказал (402 — закончились предоплаченные кредиты AI Studio; 401 — Cloud TTS не принимает API-ключи; 403 — ключ ограничен другим API), скажите пользователю причину и предложите другой путь, а не обходите ограничение.
 
@@ -41,11 +42,39 @@ node qa/narrated/shots.cjs --mid                                       # кад�
 python3 tools/video.py --engine say                                    # офлайн
 GEMINI_API_KEY=… python3 tools/video.py --engine gemini --check        # ключ AI Studio
 python3 tools/video.py --engine cloud --project=GCP-PROJECT --check    # вход gcloud
+VERTEX_API_KEY=… python3 tools/video.py --engine vertex --project=KEY-PROJECT   # ключ группы
 ```
 
 `video.py` выполняет: сборку → список эпизодов (`qa/narrated/cues.cjs`) → озвучку (`tools/voice.py`, кэш по содержимому в `media/voice/`) → проверку клипов (`tools/voice_check.py`: модель Gemini слушает каждый клип рядом с текстом) → повторную сборку → рендер (`qa/narrated/render.cjs`: каждый кадр движения снимается по часам фильма, удержание снимается один раз) → склейку (`tools/mux.py` → `media/<id>.mp4` и `.srt`). Отдельные шаги можно запускать сами по себе; `voice.py --only KEY,…` переозвучивает выбранные эпизоды.
 
 Перед сдачей: прочитайте `media/voice/check.json`, переозвучьте найденное, посмотрите промежуточные кадры и несколько кадров готового видео и честно перечислите, что проверено.
+
+## Временный ключ для группы
+
+Преподаватель может раздать студентам один ключ на ограниченный срок, через который можно только озвучивать. У API-ключей Google нет собственного срока действия, а Cloud Text-to-Speech ключи не принимает, поэтому ключ делается для Vertex AI и гаснет через права сервисного аккаунта. Все шаги меняют облачный проект пользователя — выполняйте их только с его явного согласия.
+
+```sh
+P=class-tts-2026            # отдельный проект: ключ не видит остальные ресурсы
+gcloud projects create $P --organization=ORG_ID
+gcloud billing projects link $P --billing-account=BILLING_ACCOUNT
+gcloud services enable aiplatform.googleapis.com apikeys.googleapis.com iam.googleapis.com --project=$P
+gcloud iam service-accounts create class-tts --project=$P
+gcloud iam roles create ttsPredictOnly --project=$P --title="TTS predict only" \
+  --permissions=aiplatform.endpoints.predict --stage=GA      # запускать модели, ничего не создавать и не удалять
+gcloud projects add-iam-policy-binding $P --role=projects/$P/roles/ttsPredictOnly \
+  --member=serviceAccount:class-tts@$P.iam.gserviceaccount.com \
+  --condition='expression=request.time < timestamp("2026-10-11T20:00:00Z"),title=until-2026-10-11'
+gcloud services api-keys create --project=$P --display-name="class TTS" \
+  --service-account=class-tts@$P.iam.gserviceaccount.com --api-target=service=aiplatform.googleapis.com
+gcloud billing budgets create --billing-account=BILLING_ACCOUNT --display-name="class TTS" \
+  --budget-amount=100USD --filter-projects=projects/$P --threshold-rule=percent=0.5 --threshold-rule=percent=1.0
+```
+
+- В организации ключи с привязкой к сервисному аккаунту по умолчанию запрещены (`iam.managed.disableServiceAccountApiKeyCreation`). Узкое исключение на уровне проекта: `enforce: true` с параметром `allowedServices: [aiplatform.googleapis.com]`; применяется примерно за минуту.
+- Белый список моделей — политика `vertexai.allowedModels` на проекте со значениями `publishers/google/models/gemini-3.1-flash-tts-preview:predict` и `…/gemini-2.5-pro-tts:predict`. Замечено: в точке `global` политика не остановила `gemini-2.5-flash` (в `us-central1` остановила), поэтому дешёвая текстовая модель остаётся доступной. Бюджет-оповещение обязательно; оно пишет письма, но не останавливает траты.
+- Условие IAM по имени модели (`resource.name.endsWith("-tts")`) для Vertex не работает — роль тогда не действует совсем. Используйте только условие по времени; права расходятся за 1–2 минуты.
+- Ключ не даёт управлять ресурсами: API ограничен Vertex AI, а роль содержит одно право на запуск моделей. После срока ключ бесполезен; сам ключ и проект стоит удалить.
+- Проверка клипов (`voice_check.py`) с таким ключом не работает: ей нужна текстовая модель. Студентам хватит просмотра кадров и прослушивания.
 
 ## Подводные камни, найденные на практике
 

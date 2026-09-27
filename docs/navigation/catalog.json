@@ -3136,7 +3136,7 @@
    "id": "narrated-video",
    "branch": "delivery",
    "title": "Narrated video on request / Видеоролик с озвучкой по запросу",
-   "summary": "Optional extra after the main lesson: a narrated film (chapters, shots, cues with RU/EN spoken text and tone) rendered to MP4 with voice, subtitles and chapters. Offer it once after delivery; the voice is a Gemini API key, a gcloud login (Cloud TTS) or offline macOS say.",
+   "summary": "Optional extra after the main lesson: a narrated film (chapters, shots, cues with RU/EN spoken text and tone) rendered to MP4 with voice, subtitles and chapters. Offer it once after delivery; the voice is a Gemini API key, a gcloud login (Cloud TTS), a time-limited TTS-only class key (Vertex AI) or offline macOS say.",
    "keywords": [
     "video",
     "narrated",

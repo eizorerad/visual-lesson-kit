@@ -13,6 +13,9 @@ Engines (a video is made only when the user asks for one):
   cloud   Google Cloud Text-to-Speech, Gemini-TTS voices (gemini-3.1-flash-tts-preview),
           as the logged-in gcloud user and billed to a GCP project; no key:
           python3 tools/voice.py --engine cloud --voice Sulafat --project=MY-PROJECT
+  vertex  Gemini-TTS on Vertex AI with a key bound to a service account (for example a
+          time-limited class key from a teacher), read only from VERTEX_API_KEY:
+          VERTEX_API_KEY=... python3 tools/voice.py --engine vertex --project=KEY-PROJECT
 
 Delivery markup in the spoken text: a cue's `tone` sets the style; {style} switches
 it for the rest of the clip (a new request segment); [pause], [long pause],
@@ -43,6 +46,8 @@ TIMING = ROOT / 'js' / 'recipes' / 'narrated' / 'voice-timing.js'
 PRONUNCIATION = ROOT / 'tools' / 'pronunciation.json'
 GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/interactions'
 CLOUD_URL = 'https://texttospeech.googleapis.com/v1/text:synthesize'
+VERTEX_URL = 'https://aiplatform.googleapis.com/v1/projects/{project}/locations/global/publishers/google/models/{model}:generateContent'
+LANGUAGE_NAME = {'ru': 'Russian', 'en': 'English'}
 STYLE = 'engaging science explainer talking to a school student, lively and clear, brisk pace without rushing'
 LANGUAGE = {'ru': 'ru-RU', 'en': 'en-US'}
 SAY_VOICE = {'ru': 'Milena', 'en': 'Samantha'}
@@ -201,6 +206,39 @@ def cloud_clip(parts, clip, args):
     trim(clip)
 
 
+def vertex_body(text, style, args):
+    """One generateContent request: the delivery instruction, a colon, then the words."""
+    for tag, markup in CLOUD_TAGS.items():
+        text = text.replace(tag, markup)
+    instruction = f'Read aloud in {LANGUAGE_NAME[args.lang]}, {style or args.style}, at a lively natural pace with short pauses'
+    return {'contents': [{'role': 'user', 'parts': [{'text': instruction + ': ' + text}]}],
+            'generationConfig': {'responseModalities': ['AUDIO'], 'speechConfig': {
+                'languageCode': LANGUAGE[args.lang], 'voiceConfig': {'prebuiltVoiceConfig': {'voiceName': args.voice}}}}}
+
+
+def vertex_clip(parts, clip, args):
+    """Gemini-TTS on Vertex AI with a service-account-bound key; one request per styled segment."""
+    key = os.environ.get('VERTEX_API_KEY')
+    if not key:
+        sys.exit('VERTEX_API_KEY is not set (a Vertex AI key bound to a service account)')
+    url = VERTEX_URL.format(project=args.project, model=args.vertex_model)
+    frames, rate = [], 24000
+    for style, text in parts:
+        data = post(url, vertex_body(text, style, args), lambda: {'x-goog-api-key': key, 'Content-Type': 'application/json'}, clip.stem)
+        inline = data['candidates'][0]['content']['parts'][0]['inlineData']
+        rate = int(re.search(r'rate=(\d+)', inline.get('mimeType', '')).group(1)) if 'rate=' in inline.get('mimeType', '') else rate
+        if frames:
+            frames.append(b'\0' * int(0.08 * rate) * 2)
+        frames.append(base64.b64decode(inline['data']))
+    frames.append(b'\0' * int(0.15 * rate) * 2)
+    with wave.open(str(clip), 'wb') as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(rate)
+        w.writeframes(b''.join(frames))
+    trim(clip)
+
+
 def load_cues(path, page):
     if path:
         return json.loads(Path(path).read_text(encoding='utf-8'))
@@ -212,23 +250,27 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--cues', help='JSON from qa/narrated/cues.cjs (default: run it on --page)')
     parser.add_argument('--page', default='index.html')
-    parser.add_argument('--engine', choices=['say', 'gemini', 'cloud'], default='say')
+    parser.add_argument('--engine', choices=['say', 'gemini', 'cloud', 'vertex'], default='say')
     parser.add_argument('--lang', choices=sorted(LANGUAGE), default='ru', help='narration language (voice text of that language)')
     parser.add_argument('--voice', help='say: Milena/Samantha; gemini and cloud: a prebuilt voice such as Sulafat or Kore')
     parser.add_argument('--rate', type=int, default=185, help='say words-per-minute setting')
     parser.add_argument('--model', default='gemini-3.8-flash-tts', help='gemini: model')
     parser.add_argument('--cloud-model', default='gemini-3.1-flash-tts-preview', help='cloud: Gemini-TTS model name')
-    parser.add_argument('--project', help='cloud: the GCP project to bill (default: gcloud config project)')
+    parser.add_argument('--vertex-model', default='gemini-3.1-flash-tts-preview', help='vertex: Gemini-TTS model name')
+    parser.add_argument('--project', help='cloud: the GCP project to bill (default: gcloud config project); vertex: the key\'s project')
     parser.add_argument('--style', default=STYLE, help='default delivery when a cue has no tone')
     parser.add_argument('--workers', type=int, default=3, help='parallel requests for gemini/cloud')
     parser.add_argument('--only', help='comma-separated cue keys to (re)synthesize regardless of the cache')
     args = parser.parse_args()
     args.voice = args.voice or (SAY_VOICE[args.lang] if args.engine == 'say' else 'Sulafat')
+    if args.engine == 'vertex' and not (args.project or os.environ.get('VERTEX_PROJECT')):
+        sys.exit('vertex: pass --project=KEY-PROJECT (the project the key belongs to)')
+    args.project = args.project or os.environ.get('VERTEX_PROJECT')
     if args.engine == 'cloud' and not args.project:
         args.project = subprocess.run(['gcloud', 'config', 'get-value', 'project'], capture_output=True, text=True).stdout.strip()
         if not args.project:
             sys.exit('cloud: pass --project=GCP-PROJECT')
-    model = {'say': str(args.rate), 'gemini': args.model, 'cloud': args.cloud_model}[args.engine]
+    model = {'say': str(args.rate), 'gemini': args.model, 'cloud': args.cloud_model, 'vertex': args.vertex_model}[args.engine]
     data = load_cues(args.cues, args.page)
     table = load_pronunciation(args.lang)
     tones = data.get('tones', {})
@@ -248,7 +290,7 @@ def main():
         if cue['key'] in forced or not (entry and entry.get('hash') == digest and clip.exists()):
             jobs.append((parts, clip))
         entries.append((i, cue['key'], text, clip, digest, parts))
-    synth = {'say': say_clip, 'gemini': gemini_clip, 'cloud': cloud_clip}[args.engine]
+    synth = {'say': say_clip, 'gemini': gemini_clip, 'cloud': cloud_clip, 'vertex': vertex_clip}[args.engine]
     with ThreadPoolExecutor(max_workers=1 if args.engine == 'say' else args.workers) as pool:
         for n, (parts, clip) in enumerate(pool.map(lambda job: (synth(job[0], job[1], args), job)[1], jobs), 1):
             print(f'  {n:>2}/{len(jobs)} {clip.stem}: {duration(clip):.1f} s', flush=True)

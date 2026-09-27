@@ -35,6 +35,18 @@ class NarrationMarkupTest(unittest.TestCase):
         parts = self.voice.segments('{calm and slow} Шаг [long pause] два.', '', {}, [(r'\bpause\b', 'X')])
         self.assertEqual(parts, [('calm and slow', 'Шаг <long pause> два.')])
 
+    def test_vertex_request_puts_the_delivery_before_the_words(self):
+        from types import SimpleNamespace
+        args = SimpleNamespace(lang='ru', style='default', voice='Sulafat')
+        body = self.voice.vertex_body('Раз <short pause> два.', 'calm and warm', args)
+        text = body['contents'][0]['parts'][0]['text']
+        self.assertTrue(text.startswith('Read aloud in Russian, calm and warm'))
+        self.assertTrue(text.endswith(': Раз [short pause] два.'))
+        config = body['generationConfig']
+        self.assertEqual(config['responseModalities'], ['AUDIO'])
+        self.assertEqual(config['speechConfig']['languageCode'], 'ru-RU')
+        self.assertEqual(config['speechConfig']['voiceConfig']['prebuiltVoiceConfig']['voiceName'], 'Sulafat')
+
     def test_default_pronunciation_table_is_ordered_pairs(self):
         table = self.voice.load_pronunciation('ru')
         self.assertTrue(table and all(len(pair) == 2 for pair in table))
