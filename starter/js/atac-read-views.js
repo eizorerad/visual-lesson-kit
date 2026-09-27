@@ -65,12 +65,14 @@ function create(svg){
  const roundBadge=text(locator,910,277,260,27,'Вся вставка','Whole insert',16,C.grey);
  const dirArrows=[F.arrow(foreground,C.blue,3),F.arrow(foreground,C.blue,3)];
  const connector=line(background,C.gold,1);connector.setAttribute('stroke-dasharray','3 5');
- let disposed=false,last=null,lastOrder=[];
+ let lastKey=null,disposed=false,last=null,lastOrder=[];
  function setLabel(b,a){opacity(b.el,a);}
  function applyTube(item,a,b,alpha,width){const d=`M${a[0]},${a[1]}L${b[0]},${b[1]}`;attrs(item.body,{d,'stroke-width':width});attrs(item.shadow,{d,'stroke-width':width});item.depth=(a[2]+b[2])/2;opacity(item.q,alpha*(.77+.23*clamp((item.depth+45)/90)));}
  function paint(input={}){
   if(disposed)throw new Error('AtacReadViews actor is disposed');
   const stage=Math.max(0,Math.min(4,Number.isFinite(input.stage)?input.stage:0)),visibility=clamp(Number.isFinite(input.visibility)?input.visibility:1);
+  // An unchanged state (typically this actor hidden behind other scenes) repaints nothing.
+  const key=stage+'|'+visibility;if(key===lastKey&&last)return last;lastKey=key;
   opacity(g,visibility);g.dataset.stage=String(stage);
   if(visibility<.001){last={stage,visibility,insertId:insert.id,start:insert.start,end:insert.end,bp,readLength,unreadBp:bp-2*readLength,schematic:true,hidden:true};return last;}
   const separate=phase(stage,0,.27),switchRound=phase(stage,1.06,1.35),flat=phase(stage,2.04,3),map=phase(stage,3,4);

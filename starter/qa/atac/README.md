@@ -62,7 +62,10 @@ Browser checks above explicitly compare every cue with the canonical build, incl
 
 ```sh
 node qa/atac/remix.cjs
+node qa/film/review.cjs
 ```
+
+`qa/film/review.cjs` reviews the route you actually configured: it renders every cue endpoint and transition midpoint, lists non-adjacent cue pairs that dissolve instead of moving continuously (`dissolve-edge`), and writes contact sheets to `qa-output/film-review/`.
 
 This checks route/configuration mechanics. It does not certify newly authored captions or the scientific adequacy of a subset. Run source science checks when data are retained; inspect every selected cue and intermediate handoff in all relevant languages/themes; independently verify any changed counts, source geometry, chemistry, camera registration or measurement units. Use only the relevant component checks for an isolated actor, adapting their fixture explicitly rather than claiming the whole-film suite passed. Preserve the synthetic-data and structural-source boundaries in [assets/atac/SOURCES.md](../../assets/atac/SOURCES.md).
 

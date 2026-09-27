@@ -12,6 +12,8 @@ venv/
 /starter/qa-output/
 /dist/
 /coverage/
+# Reproducible build products; their digests live in examples/checksums.json
+/examples/*.html
 /playwright-report/
 /test-results/
 .env

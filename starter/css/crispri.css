@@ -1,0 +1,6 @@
+/* The lesson uses the kit shell unchanged. */
+.film-title{font-size:38px;}
+.film-caption{font-size:24px;}
+.film-scene [role="button"]{cursor:pointer;}
+.film-scene .lesson-slider{padding:0;}
+.film-scene svg text{font-variant-numeric:tabular-nums;}

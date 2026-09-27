@@ -133,15 +133,17 @@
     if(!svg||typeof svg.appendChild!=='function')throw new TypeError('AtacChromatin.create needs an SVG parent');
     initializeGeometry();
     const C=global.C, id='atac-chromatin-'+(++serial), nodes=[];
-    let disposed=false,lastOrder=[],lastSourceProject=null;
+    let disposed=false,lastOrder=[],lastSourceProject=null,lastKey=null,lastOutput=null;
     const baseAlpha=new WeakMap();
     function el(tag,attributes,parent) {
       const n=document.createElementNS(NS,tag);
       Object.entries(attributes||{}).forEach(([k,v])=>n.setAttribute(k,String(v)));
       if(parent)parent.appendChild(n);nodes.push(n);return n;
     }
-    function attrs(n,a){Object.entries(a).forEach(([k,v])=>n.setAttribute(k,typeof v==='number'?String(f(v)):String(v)));}
-    function opacity(n,a){baseAlpha.set(n,clamp(a));n.style.opacity=String(clamp(a));}
+    // Writes compare against the current value; unchanged strands, rungs and
+    // cores then produce no mutation records or style invalidation per frame.
+    function attrs(n,a){Object.entries(a).forEach(([k,v])=>{const next=typeof v==='number'?String(f(v)):String(v);if(n.getAttribute(k)!==next)n.setAttribute(k,next);});}
+    function opacity(n,a){const next=String(clamp(a));baseAlpha.set(n,clamp(a));if(n.style.opacity!==next)n.style.opacity=next;}
     const g=el('g',{'data-actor':'atac-chromatin','data-representation':'authored-3d-schematic'},svg);
     const title=el('title',{},g);title.textContent='';
     const defs=el('defs',{},g);
@@ -205,6 +207,12 @@
         const value=Number.isFinite(input[k])?input[k]:DEFAULTS[k];
         state[k]=k==='turn'?value%360:clamp(value);
       });
+      // An unchanged state (typically this actor hidden behind other scenes)
+      // repaints nothing. Callers get fresh anchor and obstacle containers
+      // because the camera story transforms them in place.
+      const key=Object.keys(DEFAULTS).map(k=>state[k]).join('|');
+      const share=result=>({...result,anchors:{...result.anchors},geometry:{...result.geometry,labelObstacles:{...result.geometry.labelObstacles}}});
+      if(key===lastKey&&lastOutput)return share(lastOutput);
       const s=state, move=smooth((s.release-.22)/.78), proteinRemain=1-smooth(s.release/.25);
       const pitch=(18+s.turn)*Math.PI/180, yaw=.22*Math.sin(s.turn*Math.PI/180);
       const cp=Math.cos(pitch),sp=Math.sin(pitch),cy=Math.cos(yaw),sy=Math.sin(yaw),scale=mix(.64,1,s.focus);
@@ -335,7 +343,7 @@
         enzyme:enzymes[0].center.slice(),adapter:adapterPoints[1]||xy(leftFragment),
         cutA:xy(move>0?leftFragment:cutA),cutB:xy(move>0?rightFragment:cutB),fragment:xy(fragmentCenter)
       };
-      return {
+      lastKey=key;lastOutput={
         anchors,registration,enzymeRegistration:enzymes[0],
         fragmentEndpoints:[xy(leftFragment),xy(rightFragment)],
         geometry:{
@@ -349,6 +357,7 @@
           centerline:Array.from({length:61},(_,i)=>{const bp=i*20;return {bp,point:xy(point(bp,'center',bp>=CUT_A&&bp<=CUT_B))};})
         }
       };
+      return share(lastOutput);
     }
     // A view transform preserves all authored vertices. The fixed outer clip
     // keeps the enlarged neighbors inside the figure, away from its captions.

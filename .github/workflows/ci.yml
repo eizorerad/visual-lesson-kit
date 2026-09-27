@@ -1,0 +1,25 @@
+name: Checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Build the standalone examples and compare them with the recorded digests
+        run: python3 tools/build-examples.py --check
+      - name: Python tests (generation, export, upgrade, navigation)
+        run: python3 -m unittest discover -s tests
+      - name: Node tests (runtime, recipes, exported examples)
+        run: |
+          npm ci
+          npm test

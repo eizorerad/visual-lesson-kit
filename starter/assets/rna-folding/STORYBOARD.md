@@ -2,7 +2,7 @@
 
 The lesson answers: **what does pairing explain, what does it leave undetermined, and how do contacts, environment and time help organize an RNA?**
 
-The order is registered explicitly in `../../js/recipes/rna-folding/rna-common.js` and finalized by `../../js/recipes/rna-folding/rna-order.js`. Every state has RU/EN captions and notes. A source ID identifies an experimental model; invented diagrams are labeled as teaching examples. Camera motion is distinct from changing the arrangement of schematic modules.
+The shared registry `../../js/recipes/rna-shared/rna-common.js` mounts the episodes; the teaching order and chapters are declared in `../../js/recipes/rna-folding/rna-order.js`. Every state has RU/EN captions and notes. A source ID identifies an experimental model; invented diagrams are labeled as teaching examples. Camera motion is distinct from changing the arrangement of schematic modules.
 
 | Scene | States | Viewer’s question → visible operation → result | What persists / next question |
 |---|---:|---|---|

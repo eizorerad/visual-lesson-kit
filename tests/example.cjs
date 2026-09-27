@@ -21,7 +21,7 @@ test('standalone mean/spread example preserves data across all RU/EN states and 
  await settle();w.A.setInstant(true);
  assert.equal(scenes.length,1);assert.equal(w.D.deck.count(),1);assert.equal(scenes[0].id,'mean-and-spread');
  assert.equal(scenes[0].notes.length,3);assert.equal(scenes[0].qa.length,2);
- assert.equal(w.document.querySelectorAll('#chrome>button').length,5);assert.equal(w.document.querySelectorAll('[role="tab"]').length,3);
+ assert.equal(w.document.querySelectorAll('#chrome>button').length,6);assert.equal(w.document.querySelectorAll('[role="tab"]').length,3);
  for(const language of ['ru','en']){
   w.D.i18n.setLang(language);await settle();
   assert.equal(w.D.i18n.notes(scenes[0]).length,3);assert.equal(w.D.i18n.qa(scenes[0]).length,2);

@@ -438,7 +438,9 @@ function renderFrame(cues,frame,time){
   else if(bv===0)pose=a;
   else if(keys.some(key=>a[key]!==b[key])){
    pose=p<.5?a:b;
-   values[visibility]*=Math.abs(2*p-1);
+   // Fade out over the 15% of the motion before the switch and back in over the
+   // 15% after it (30% in all): the stage is empty for an instant, not half the motion.
+   values[visibility]*=Math.min(1,Math.abs(2*p-1)/.3);
   }
   if(pose)for(const key of keys)values[key]=pose[key];
  }

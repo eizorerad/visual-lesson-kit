@@ -22,7 +22,7 @@ def library_root():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command', choices=('root', 'doctor', 'route', 'create'))
+    parser.add_argument('command', choices=('root', 'doctor', 'route', 'create', 'upgrade'))
     parser.add_argument('arguments', nargs=argparse.REMAINDER)
     args = parser.parse_args()
     forwarded = args.arguments
@@ -37,9 +37,9 @@ def main():
         if args.command == 'doctor':
             print('Visual Lesson Kit ' + (root / 'VERSION').read_text().strip())
             print('Python: ' + sys.executable)
-            print('Checkout is complete; route and create entry points are available.')
+            print('Checkout is complete; route, create and upgrade entry points are available.')
         return
-    script = 'docs/navigation/route.py' if args.command == 'route' else 'create.py'
+    script = {'route': 'docs/navigation/route.py', 'create': 'create.py', 'upgrade': 'upgrade.py'}[args.command]
     # Argument boundaries, caller's cwd and exit status are preserved, including spaces.
     result = subprocess.run([sys.executable, str(root / script), *forwarded])
     raise SystemExit(result.returncode)

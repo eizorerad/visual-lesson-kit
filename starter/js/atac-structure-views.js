@@ -17,8 +17,10 @@ function create(svg){
  if(!global.AtacStructures)throw new Error('AtacStructureViews requires source coordinates in AtacStructures');
  const uid='atac-structure-'+(++serial),C=global.C,labels=[],nodes=[],models=[];let disposed=false,lb=0,lastState=null;
  const element=(tag,attrs={},parent)=>{const e=document.createElementNS(NS,tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,String(v));if(parent)parent.appendChild(e);nodes.push(e);return e;};
- const group=p=>element('g',{},p),attrs=(n,o)=>{for(const[k,v]of Object.entries(o))n.setAttribute(k,String(v));};
- const opacity=(n,a)=>{n.style.opacity=String(clamp(a));};
+ // Attribute and opacity writes skip values the node already has: unchanged
+ // actors then cost no mutation records or style invalidation per frame.
+ const group=p=>element('g',{},p),attrs=(n,o)=>{for(const[k,v]of Object.entries(o)){const next=String(v);if(n.getAttribute(k)!==next)n.setAttribute(k,next);}};
+ const opacity=(n,a)=>{const next=String(clamp(a));if(n.style.opacity!==next)n.style.opacity=next;};
  const root=element('g',{'data-actor':'atac-structure-views','data-representation':'source-coordinate-polymer-traces'},svg);
  const title=element('title',{},root);title.textContent='Experimental nucleosome and Tn5 coordinates, shown as C-alpha and C4-prime polymer traces';
  const defs=element('defs',{},root),clip=element('clipPath',{id:uid+'-clip'},defs);
@@ -74,14 +76,20 @@ function rotated(p,center,yaw,pitch,roll){
   const proteinPoints=source.chains.filter(c=>c.kind==='protein').flatMap(c=>c.points),proteinCenter=mean(proteinPoints);
   const corePoints=proteinPoints.filter(p=>distance(p,proteinCenter)<30);
   const chainInfo=source.chains.map((chain,ci)=>{
-   const color=roleColor(chain,ci,kind),dna=chain.kind==='dna',inFocus=focusSet.has(chain),points=chain.points,limit=dna?1:2;
+   const color=roleColor(chain,ci,kind),dna=chain.kind==='dna',inFocus=focusSet.has(chain),points=chain.points,limit=dna?4:6,gap=dna?11:7,breaks=new Set(chain.breaks||[]);
    const occupancy=kind==='nucleosome'&&!dna?AtacHistoneCoreData.chains.find(c=>c.id===chain.id)?.occupancies:null;
    const uncertain=i=>!!occupancy&&(occupancy[i]===0||occupancy[i+1]===0);
+   // Consecutive retained vertices share one stroke triple. A run ends at a
+   // chain break, an implausible gap, a change of occupancy certainty or the
+   // length limit, so every retained source vertex is still drawn exactly once
+   // and painter sorting keeps a useful per-run depth. One node triple per
+   // residue only multiplied SVG nodes; the polyline passes through the same points.
+   const joined=j=>j>0&&j<points.length&&!breaks.has(j)&&distance(points[j],points[j-1])<=gap;
    for(let i=0;i<points.length-1;){
-    let end=Math.min(points.length-1,i+limit);const weak=uncertain(i);
-    for(let j=i+1;j<end;j++)if(uncertain(j)!==weak){end=j;break;}
+    if(!joined(i+1)){i++;continue;}
+    const weak=uncertain(i);let end=i+1;
+    while(end<points.length-1&&end-i<limit&&joined(end+1)&&uncertain(end)===weak)end++;
     const ps=points.slice(i,end+1);
-    if((chain.breaks||[]).some(b=>b>i&&b<=end)||ps.some((p,j)=>j&&distance(p,ps[j-1])>(dna?11:7))){i=end;continue;}
     const node=element('g',{'data-chain':chain.id,'data-role':chain.role,'data-kind':chain.kind,'data-zero-occupancy':String(weak),'data-start-index':i,'data-end-index':end},geometry);
     const base=element('path',{fill:'none',stroke:'color-mix(in srgb, '+color+' 52%, var(--color-bg))','stroke-linecap':'round','stroke-linejoin':'round'},node);
     const tube=element('path',{fill:'none',stroke:color,'stroke-linecap':'round','stroke-linejoin':'round'},node);
