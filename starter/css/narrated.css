@@ -1,0 +1,7 @@
+/* Narrated film: chapter route in the title band and a clean recording mode (?record). */
+.narrated-route{position:absolute;left:60px;right:60px;top:14px;display:flex;flex-wrap:nowrap;gap:22px;font-family:var(--f-ui);font-size:13px;line-height:20px;letter-spacing:.07em;text-transform:uppercase;color:var(--color-dim);white-space:nowrap;}
+.narrated-route span.is-past{color:var(--color-muted);}
+.narrated-route span.is-current{color:var(--color-focus);font-weight:600;}
+body.narrated-record{--cinema-bottom-reserve:0px;cursor:none;}
+body.narrated-record #chrome,body.narrated-record .trna-timeline,body.narrated-record #progress,body.narrated-record #moreMenu,body.narrated-record .jump-badge,body.narrated-record .rotate{display:none!important;}
+body.narrated-record #frame{transform:none!important;left:0!important;top:0!important;}

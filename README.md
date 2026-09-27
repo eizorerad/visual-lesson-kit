@@ -88,6 +88,7 @@ Read the [complete setup guide](docs/codex-setup.md) for installation scope, rel
 | `explanations` | Connected comparisons, distributions and stepwise derivations |
 | `synthesis` | A recurring map linking model, observations and verification |
 | `film` | Complete seven-cue film on the cinema clock (PCR: one molecule to 1024 copies) to replace with your own actors and catalog |
+| `narrated` | Narrated film with chapters, shots and spoken RU/EN cues with tone markup; an MP4 with voice, subtitles and chapters is built on request (Gemini API key, gcloud Cloud TTS or offline `say`) |
 | `crispri` | Eleven ordered CRISPRi design scenes: dCas9 origin and delivery, guide factory, repression, libraries, MOI, evidence and checks |
 | `gallery` | General component gallery and teaching patterns |
 
@@ -124,6 +125,17 @@ The selector reads a compact metadata catalog. Open the returned guide sections 
 [Contributing](CONTRIBUTING.md) lists test and browser-check commands; [CHANGELOG.md](CHANGELOG.md) summarizes releases.
 
 Visual Lesson Kit is authored by **Leonid Klarov** ([eizorerad](https://github.com/eizorerad), [eizonix@gmail.com](mailto:eizonix@gmail.com)) and released under the [MIT License](LICENSE). Bundled fonts and structural data retain their separate terms and scientific attribution; see [third-party notices](THIRD_PARTY_NOTICES.md) and [provenance](docs/provenance.md).
+
+## Narrated video on request
+
+A video is an optional extra, not a default step: after the main lesson, an agent may ask once whether a narrated video is wanted and which voice to use — a Google AI Studio key (Gemini API TTS with intonation), a `gcloud` login (Google Cloud Text-to-Speech, no key) or offline macOS `say`. The `narrated` template holds the film (chapters, shots, cues whose spoken text carries a tone and `{style}`, `[pause]`, `*stress*` markup); one command voices, checks, renders and muxes it:
+
+```sh
+python3 create.py ../my-film --template narrated --palette ocean
+python3 ../my-film/tools/video.py --engine say
+```
+
+Keys are read only from environment variables. See [docs/narrated-video.md](docs/narrated-video.md).
 
 ## Repeat or remix the tRNA film
 

@@ -18,7 +18,7 @@ KIT = 'visual-lesson-kit'
 # starter page is <name>.html, and the gallery keeps starter/index.html.
 TEMPLATES = ('gallery', 'methods', 'explanations', 'synthesis', 'molecular', 'molecular-check',
              'chemistry-bridge', 'rna-folding', 'rna-prediction', 'trna-journey', 'atac-seq',
-             'atac-components', 'molecular-views', 'spatial-biology', 'crispri', 'film')
+             'atac-components', 'molecular-views', 'spatial-biology', 'crispri', 'film', 'narrated')
 BACKGROUNDS, PALETTES, FONTS, LANGUAGES = ('black', 'white'), ('warm', 'ocean', 'botanical'), ('sans', 'serif'), ('ru', 'en')
 
 # Guides every project receives, alongside the navigation catalog and selector.
@@ -32,7 +32,8 @@ GUIDES = ('START.md', 'authoring.md', 'components.md', 'qa.md', 'provenance.md',
           'chemistry.md', 'physical-chemistry.md', 'chemistry-bridge.md', 'rna-folding.md', 'rna-prediction.md', 'rna-pair-molecule.md', 'cinematic-explanation.md', 'trna-journey.md', 'atac-seq.md', 'atac-components.md', 'cinema-timeline.md', 'molecular-coordinates.md',
           'molecular-views.md', 'molecular-views-api.md', 'molecular-data.md', 'three-dimensional.md',
           'explanation-geometry.md', 'explanation-design.md',
-          'interaction-regions.md', 'hit-region-audit.md', 'pipeline-synthesis.md', 'film.md', 'film-review.md')
+          'interaction-regions.md', 'hit-region-audit.md', 'pipeline-synthesis.md', 'film.md', 'film-review.md',
+          'narrated-video.md')
 
 # Runtime, shell, export and notices: present in every project, full or lean.
 CORE = ('AGENTS.md', 'README.md', 'serve.py', 'build/bundle.py', 'build/inspect.html', 'build/inspect.js',
@@ -50,6 +51,8 @@ FAMILIES = {
                                    'qa/rna-prediction/', 'qa/rna-folding/'),
     'js/molecular-views': ('assets/molecular-views/', 'build/molecular-data.py', 'qa/molecular-views/'),
     'js/atac-': ('assets/atac/', 'build/atac-film.py', 'build/atac-histone-core.py', 'qa/atac/'),
+    # A narrated film carries its voice, check, render and mux tools; a video is made on request.
+    'js/recipes/narrated/': ('tools/', 'qa/narrated/'),
 }
 # Runtime files whose names resemble a family but serve every film on the cinema clock.
 SHARED = ('js/trna-cinema.js', 'css/trna-cinema.css')
@@ -192,7 +195,7 @@ def main():
     parser.add_argument('--title', default=None)
     parser.add_argument('--lang', choices=LANGUAGES, default='ru', help='Начальный язык; обе локали входят в HTML')
     parser.add_argument('--template', choices=TEMPLATES, default='gallery',
-                        help='Стартовая страница: галерея, научные методы, связное объяснение, общая карта, молекулярные атлас и проверка, мост от химии к биологии, укладка и предсказание структуры РНК, фильмы о тРНК и ATAC-seq, молекулярный конструктор, пространственная биология, CRISPRi или готовый короткий фильм (film)')
+                        help='Стартовая страница: галерея, научные методы, связное объяснение, общая карта, молекулярные атлас и проверка, мост от химии к биологии, укладка и предсказание структуры РНК, фильмы о тРНК и ATAC-seq, молекулярный конструктор, пространственная биология, CRISPRi, готовый короткий фильм (film) или фильм с озвучкой, из которого по запросу собирается видео (narrated)')
     parser.add_argument('--lean', action='store_true',
                         help='Копировать только ядро и файлы выбранного шаблона вместо всего набора компонентов')
     parser.add_argument('--source-url', default='')

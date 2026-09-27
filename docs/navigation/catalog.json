@@ -3131,6 +3131,81 @@
     "layout",
     "clearance"
    ]
+  },
+  {
+   "id": "narrated-video",
+   "branch": "delivery",
+   "title": "Narrated video on request / Видеоролик с озвучкой по запросу",
+   "summary": "Optional extra after the main lesson: a narrated film (chapters, shots, cues with RU/EN spoken text and tone) rendered to MP4 with voice, subtitles and chapters. Offer it once after delivery; the voice is a Gemini API key, a gcloud login (Cloud TTS) or offline macOS say.",
+   "keywords": [
+    "video",
+    "narrated",
+    "narration",
+    "voice-over",
+    "voice",
+    "TTS",
+    "text-to-speech",
+    "Gemini TTS",
+    "intonation",
+    "subtitles",
+    "MP4",
+    "видео",
+    "видеоролик",
+    "ролик",
+    "озвучка",
+    "диктор",
+    "голос",
+    "интонация",
+    "субтитры",
+    "фильм с озвучкой"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "narrated-video.md",
+     "section": "Когда предлагать"
+    },
+    {
+     "path": "narrated-video.md",
+     "section": "Как устроен фильм"
+    },
+    {
+     "path": "narrated-video.md",
+     "section": "Интонация"
+    },
+    {
+     "path": "narrated-video.md",
+     "section": "Собрать и проверить видео"
+    },
+    {
+     "path": "narrated-video.md",
+     "section": "Подводные камни, найденные на практике"
+    }
+   ],
+   "sources": [
+    "narrated.html",
+    "js/recipes/narrated/core.js",
+    "js/recipes/narrated/narrated-film.js",
+    "tools/video.py",
+    "tools/voice.py",
+    "tools/voice_check.py",
+    "tools/mux.py",
+    "tools/pronunciation.json",
+    "qa/narrated/cues.cjs",
+    "qa/narrated/render.cjs",
+    "qa/narrated/shots.cjs"
+   ],
+   "examples": [
+    "js/recipes/narrated/example-pairs.js"
+   ],
+   "caveat": "Not a default step: make a video only when the user asks. Keys live only in environment variables, never in files or commits. Neural voices slip on words and over-apply pace words; check clips before rendering. Rendering needs Playwright and ffmpeg.",
+   "related": [
+    "film",
+    "cinema-timeline",
+    "film-review",
+    "export-qa",
+    "languages"
+   ]
   }
  ]
 }
