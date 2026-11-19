@@ -37,6 +37,29 @@ def load_cues(path, page):
     return json.loads(out.stdout.decode('utf-8'))
 
 
+def load_manifest(voice):
+    """media/voice/manifest.json written by voice.py, or {} when there is none."""
+    path = Path(voice) / 'manifest.json'
+    return json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+
+
+def preflight(data, voice, manifest, lang):
+    """Return a list of problems that would make the narration wrong or unbuildable."""
+    if not data.get('cues'):
+        return ['the page has no narration cues, so there is nothing to mux']
+    problems = []
+    for cue in data['cues']:
+        key = cue['key']
+        if not (Path(voice) / f'{key}.wav').is_file():
+            problems.append(f'voice clip for cue "{key}" is missing; run tools/voice.py --lang {lang}')
+            continue
+        voiced = (manifest.get(key) or {}).get('lang')
+        if voiced and voiced != lang:
+            problems.append(f'cue "{key}" was voiced in "{voiced}" but --lang is "{lang}"; '
+                            f'run tools/voice.py --lang {lang} or mux with --lang {voiced}')
+    return problems
+
+
 def narration(data, target):
     """One mono track as long as the film, each clip starting LEAD s after its cue arrives."""
     rate, width, frames = None, None, []
@@ -133,6 +156,10 @@ def main():
     field = 'voiceRu' if args.lang == 'ru' else 'voiceEn'
     title = (data.get('title') or {}).get(args.lang) or data.get('id', 'film')
     out = Path(args.out) if args.out else ROOT / 'media' / (data.get('id', 'film') + '.mp4')
+    problems = preflight(data, VOICE, load_manifest(VOICE), args.lang)
+    if problems:
+        shown = problems[:10] + ([f'... and {len(problems) - 10} more'] if len(problems) > 10 else [])
+        sys.exit('cannot assemble the video:\n  ' + '\n  '.join(shown))
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         narration(data, tmp / 'narration.wav')
