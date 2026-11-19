@@ -65,6 +65,8 @@
    "summary": "Create scene objects once and update them through authored states with F.stage and F.step.",
    "keywords": [
     "scene",
+    "blank",
+    "пустая сцена",
     "SVG actors",
     "F.stage",
     "F.step",
@@ -85,6 +87,7 @@
     "js/lesson.js"
    ],
    "examples": [
+    "js/episodes/blank.js",
     "js/episodes/01-objects.js"
    ],
    "caveat": "Object identity must match scientific identity; provide a note for every state and clean up scene resources.",

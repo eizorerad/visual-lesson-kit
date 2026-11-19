@@ -32,6 +32,31 @@ def newer_kit(directory, version='9.9.9'):
 
 
 class UpgradeTests(unittest.TestCase):
+    def test_force_upgrade_preserves_authored_blank_scene_and_deletions(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            lesson = Path(tmp) / 'lesson'
+            created = run(ROOT / 'create.py', lesson, '--template', 'blank')
+            self.assertEqual(created.returncode, 0, created.stderr)
+            seeds = {'blank.html', 'js/episodes/blank.js'}
+            self.assertTrue(seeds.isdisjoint(json.loads((lesson / 'lesson-kit.json').read_text())['files']))
+            scene = lesson / 'js/episodes/blank.js'
+            edited = scene.read_text() + '\n// Local lesson edit.\n'
+            scene.write_text(edited)
+            (lesson / 'blank.html').unlink()
+            kit = newer_kit(tmp)
+            for deleted in (False, True):
+                if deleted:
+                    scene.unlink()
+                result = run(kit / 'upgrade.py', lesson, '--apply', '--force', '--json')
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertTrue(seeds.isdisjoint(row['path'] for row in json.loads(result.stdout)['rows']))
+                self.assertTrue(seeds.isdisjoint(json.loads((lesson / 'lesson-kit.json').read_text())['files']))
+                self.assertFalse((lesson / 'blank.html').exists())
+                if deleted:
+                    self.assertFalse(scene.exists())
+                else:
+                    self.assertEqual(scene.read_text(), edited)
+
     def test_pristine_files_update_edited_files_are_kept_and_manifest_moves_on(self):
         with tempfile.TemporaryDirectory() as tmp:
             lesson = Path(tmp) / 'lesson'

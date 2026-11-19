@@ -16,7 +16,7 @@ KIT = 'visual-lesson-kit'
 
 # One registry for validation, the CLI and the README table; the template's
 # starter page is <name>.html, and the gallery keeps starter/index.html.
-TEMPLATES = ('gallery', 'methods', 'explanations', 'synthesis', 'molecular', 'molecular-check',
+TEMPLATES = ('blank', 'gallery', 'methods', 'explanations', 'synthesis', 'molecular', 'molecular-check',
              'chemistry-bridge', 'rna-folding', 'rna-prediction', 'trna-journey', 'atac-seq',
              'atac-components', 'molecular-views', 'spatial-biology', 'crispri', 'film', 'narrated', 'q-align')
 BACKGROUNDS, PALETTES, FONTS, LANGUAGES = ('black', 'white'), ('warm', 'ocean', 'botanical'), ('sans', 'serif'), ('ru', 'en')
@@ -59,7 +59,7 @@ FAMILIES = {
 SHARED = ('js/trna-cinema.js', 'css/trna-cinema.css')
 IGNORED = ('__pycache__', '.DS_Store', 'dist', 'node_modules', 'qa-output')
 # Authored per project: never generated twice, never replaced by an upgrade.
-AUTHORED = ('index.html', 'js/config.js', 'lesson-kit.json')
+AUTHORED = ('index.html', 'js/config.js', 'lesson-kit.json', 'blank.html', 'js/episodes/blank.js')
 LOCAL_REFERENCE = re.compile(r'\b(?:src|href)="([^":#?]+)"')
 
 

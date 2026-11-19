@@ -78,6 +78,8 @@ Read the [complete setup guide](docs/codex-setup.md) for installation scope, rel
 
 | Template | Starting point |
 | --- | --- |
+| `blank` | One editable scene with an empty drawing area and a RU/EN note |
+| `q-align` | Graph alignment and QUBO, from a worked example to the notebook results |
 | `spatial-biology` | Procedural 3D cell labelling, bead/droplet capture, barcode–feature–UMI explanation and paired RNA/ADT libraries |
 | `molecular-views` | Coordinate-backed complex overview and atomic detail, fitted camera, rotation, shared depth ordering and source provenance |
 | `atac-seq` / `atac-components` | Four-minute ATAC-seq film with remixable cues, or independent source structures, readout and quantitative views |

@@ -15,6 +15,26 @@ class ScaffoldTests(unittest.TestCase):
         return subprocess.run([sys.executable, str(ROOT / 'create.py'), str(dest), *args],
                               capture_output=True, text=True)
 
+    def test_blank_projects_export_just_the_editable_scene(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            for profile, flags in [('full', []), ('lean', ['--lean'])]:
+                with self.subTest(profile=profile):
+                    dest = Path(tmp) / profile
+                    result = self.run_cli(dest, '--template', 'blank', *flags)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    page = (dest / 'index.html').read_text()
+                    self.assertEqual(re.findall(r'src="(js/(?:episodes|recipes)/[^"]+)"', page),
+                                     ['js/episodes/blank.js'])
+                    if profile == 'lean':
+                        self.assertEqual([p.name for p in (dest / 'js/episodes').iterdir()], ['blank.js'])
+                    built = subprocess.run([sys.executable, str(dest / 'build/bundle.py')],
+                                           capture_output=True, text=True)
+                    self.assertEqual(built.returncode, 0, built.stderr)
+                    bundle = (dest / 'dist/lesson.html').read_text()
+                    self.assertNotIn('<script src=', bundle)
+                    self.assertNotIn('href="css/', bundle)
+                    self.assertIn((dest / 'js/episodes/blank.js').read_text(), bundle)
+
     def test_creates_portable_project_with_escaped_metadata(self):
         with tempfile.TemporaryDirectory(prefix='lesson kit ') as tmp:
             dest = Path(tmp) / 'Новая лекция'
