@@ -22,7 +22,7 @@ def build_example():
     creator = module(ROOT / 'create.py', 'transfer_scaffold')
     with tempfile.TemporaryDirectory(prefix='visual-lesson-transfer-') as temporary:
         lesson = creator.create(Path(temporary) / 'lesson', 'Почему больше клеток — не всегда больше независимых данных',
-                                source_label='Придуманный учебный набор · три независимых донора по условию')
+                                source_label='Придуманный учебный набор · три независимых донора по условию', template='gallery')
         shutil.rmtree(lesson / 'js/episodes')
         for asset in (lesson / 'assets').iterdir():
             if asset.is_file():

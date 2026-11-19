@@ -58,7 +58,7 @@ class RnaPredictionTests(unittest.TestCase):
 
     def test_prediction_assets_are_available_but_not_loaded_in_other_templates(self):
         with tempfile.TemporaryDirectory() as tmp:
-            p=Path(tmp)/'gallery';r=self.run_cli(ROOT/'create.py',p)
+            p=Path(tmp)/'gallery';r=self.run_cli(ROOT/'create.py',p,'--template','gallery')
             self.assertEqual(r.returncode,0,r.stderr)
             self.assertTrue((p/'js/rna-pair-molecule.js').exists())
             self.assertTrue((p/'guide/cinematic-explanation.md').exists())

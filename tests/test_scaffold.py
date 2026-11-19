@@ -8,12 +8,48 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+import create as kit
 
 
 class ScaffoldTests(unittest.TestCase):
     def run_cli(self, dest, *args):
         return subprocess.run([sys.executable, str(ROOT / 'create.py'), str(dest), *args],
                               capture_output=True, text=True)
+
+    def test_default_and_explicit_blank_match_across_entry_points_and_profiles(self):
+        self.assertIn('по умолчанию: blank', ' '.join(self.run_cli('--help').stdout.split()))
+        self.assertEqual(kit.kit_sources(lean=True), kit.kit_sources('blank', lean=True))
+        with tempfile.TemporaryDirectory() as tmp:
+            for profile in ('full', 'lean'):
+                pages = set()
+                for template in (None, 'blank'):
+                    with self.subTest(profile=profile, template=template):
+                        folder = Path(tmp) / profile / (template or 'default')
+                        cli, api = folder / 'cli', folder / 'api'
+                        flags = ['--lean'] if profile == 'lean' else []
+                        if template:
+                            flags += ['--template', template]
+                        result = self.run_cli(cli, '--title', 'My lesson', '--lang', 'en', *flags)
+                        self.assertEqual(result.returncode, 0, result.stderr)
+                        kit.create(api, 'My lesson', lang='en', lean=profile == 'lean',
+                                   **({'template': template} if template else {}))
+                        for dest in (cli, api):
+                            manifest = json.loads((dest / 'lesson-kit.json').read_text())
+                            self.assertEqual((manifest['template'], manifest['profile']), ('blank', profile))
+                            pages.add((dest / 'index.html').read_bytes())
+                self.assertEqual(len(pages), 1, profile)
+
+    def test_explicit_gallery_keeps_the_original_entry_page(self):
+        gallery = (ROOT / 'starter/index.html').read_text()
+        title = re.search(r'<title>(.*?)</title>', gallery).group(1)
+        with tempfile.TemporaryDirectory() as tmp:
+            dest = Path(tmp) / 'gallery'
+            result = self.run_cli(dest, '--template', 'gallery', '--title', title)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual((dest / 'index.html').read_text(), gallery)
+            self.assertEqual(re.findall(r'src="js/episodes/(\d+)-', gallery),
+                             [f'{n:02}' for n in range(1, 14)])
 
     def test_blank_projects_export_just_the_editable_scene(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -39,7 +75,7 @@ class ScaffoldTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='lesson kit ') as tmp:
             dest = Path(tmp) / 'Новая лекция'
             title = 'Данные & модели </script><script>window.bad=1</script>'
-            result = self.run_cli(dest, '--title', title, '--source-url', 'https://example.org/paper')
+            result = self.run_cli(dest, '--template', 'gallery', '--title', title, '--source-url', 'https://example.org/paper')
             self.assertEqual(result.returncode, 0, result.stderr)
             config_text = (dest / 'js/config.js').read_text()
             config = json.loads(config_text.split('=', 1)[1].strip().removesuffix(';'))
@@ -101,7 +137,7 @@ class ScaffoldTests(unittest.TestCase):
             self.assertFalse(any(p.is_file() for p in (dest / 'assets').iterdir()))
             self.assertTrue((dest / 'assets/fonts').is_dir())
             gallery = Path(tmp) / 'gallery'
-            self.assertEqual(self.run_cli(gallery).returncode, 0)
+            self.assertEqual(self.run_cli(gallery, '--template', 'gallery').returncode, 0)
             self.assertNotIn('js/recipes/explanation-bridges.js', (gallery / 'index.html').read_text())
             self.assertTrue((gallery / 'js/recipes/explanation-bridges.js').is_file())
 
@@ -120,7 +156,7 @@ class ScaffoldTests(unittest.TestCase):
             self.assertEqual(built.returncode, 0, built.stderr)
             self.assertNotIn('<script src=', (dest / 'dist/lesson.html').read_text())
             gallery = Path(tmp) / 'gallery'
-            self.assertEqual(self.run_cli(gallery).returncode, 0)
+            self.assertEqual(self.run_cli(gallery, '--template', 'gallery').returncode, 0)
             self.assertNotIn('js/recipes/pipeline-synthesis.js', (gallery / 'index.html').read_text())
             self.assertTrue((gallery / 'js/recipes/pipeline-synthesis.js').is_file())
 
@@ -227,7 +263,7 @@ class ScaffoldTests(unittest.TestCase):
             self.assertNotIn('<script src=', bundle)
             self.assertNotIn(str(ROOT), bundle)
             gallery = Path(tmp) / 'gallery'
-            self.assertEqual(self.run_cli(gallery).returncode, 0)
+            self.assertEqual(self.run_cli(gallery, '--template', 'gallery').returncode, 0)
             gallery_html = (gallery / 'index.html').read_text()
             for name in ('chemistry.js', 'physical-chemistry.js', 'chemistry-bridge-qa.js',
                          'recipes/chemistry-foundations-bonds.js',
@@ -277,7 +313,7 @@ class ScaffoldTests(unittest.TestCase):
             for name in episodes:
                 self.assertIn((dest / 'js/recipes/crispri' / (name + '.js')).read_text().strip(), bundle)
             gallery = Path(tmp) / 'gallery'
-            self.assertEqual(self.run_cli(gallery).returncode, 0)
+            self.assertEqual(self.run_cli(gallery, '--template', 'gallery').returncode, 0)
             gallery_html = (gallery / 'index.html').read_text()
             for file in ['js/crispri-design.js', 'css/crispri.css', *recipes]:
                 self.assertTrue((gallery / file).is_file())
@@ -311,10 +347,10 @@ class ScaffoldTests(unittest.TestCase):
                 self.assertFalse((lean / family_only).exists(), family_only + ' belongs to the tRNA family, not to a PCR film')
             self.assertFalse((lean / 'js/atac-journey.js').exists())
 
-    def test_english_default_contains_both_language_packs(self):
+    def test_gallery_can_start_in_english_with_both_language_packs(self):
         with tempfile.TemporaryDirectory() as tmp:
             dest = Path(tmp) / 'English lesson'
-            result = self.run_cli(dest, '--lang', 'en')
+            result = self.run_cli(dest, '--template', 'gallery', '--lang', 'en')
             self.assertEqual(result.returncode, 0, result.stderr)
             config = json.loads((dest / 'js/config.js').read_text().split('=', 1)[1].strip().removesuffix(';'))
             self.assertEqual(config['lang'], 'en')
@@ -327,7 +363,7 @@ class ScaffoldTests(unittest.TestCase):
     def test_measured_layout_and_motion_recipe_are_portable(self):
         with tempfile.TemporaryDirectory(prefix='lesson-layout-motion-') as tmp:
             dest = Path(tmp) / 'lesson'
-            result = self.run_cli(dest)
+            result = self.run_cli(dest, '--template', 'gallery')
             self.assertEqual(result.returncode, 0, result.stderr)
             html = (dest / 'index.html').read_text()
             for name in ('layout.js', 'motion.js'):

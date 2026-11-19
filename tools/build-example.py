@@ -22,7 +22,7 @@ def build_example():
     creator = module(ROOT / 'create.py', 'example_scaffold')
     with tempfile.TemporaryDirectory(prefix='visual-lesson-example-') as temporary:
         lesson = creator.create(Path(temporary) / 'lesson', 'Почему среднее не рассказывает всё',
-                                source_label='Придуманные данные')
+                                source_label='Придуманные данные', template='gallery')
         for folder in ('js/episodes', 'js/i18n'):
             shutil.rmtree(lesson / folder)
             (lesson / folder).mkdir()

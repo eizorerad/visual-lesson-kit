@@ -39,7 +39,7 @@ class AtacTemplateTests(unittest.TestCase):
    self.assertEqual(json.loads(r.stdout)['results'][0]['id'],expected)
  def test_gallery_does_not_load_atac(self):
   with tempfile.TemporaryDirectory() as temp:
-   p=Path(temp)/'gallery';r=self.run_python(ROOT/'create.py',p)
+   p=Path(temp)/'gallery';r=self.run_python(ROOT/'create.py',p,'--template','gallery')
    self.assertEqual(r.returncode,0,r.stderr)
    self.assertTrue((p/'js/atac-fragment-origin.js').is_file())
    self.assertNotIn('atac-',(p/'index.html').read_text())

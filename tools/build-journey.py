@@ -22,7 +22,7 @@ def build_example():
     creator = module(ROOT / 'create.py', 'journey_scaffold')
     with tempfile.TemporaryDirectory(prefix='visual-lesson-journey-') as temporary:
         lesson = creator.create(Path(temporary) / 'lesson', 'Один объект — несколько представлений',
-                                source_label='Учебные объекты и координаты')
+                                source_label='Учебные объекты и координаты', template='gallery')
         shutil.rmtree(lesson / 'js/episodes')
         for asset in (lesson / 'assets').iterdir():
             if asset.is_file():

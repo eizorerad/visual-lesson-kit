@@ -2,12 +2,12 @@
 
 Load `js/motion.js` after `js/film.js` and `js/layout.js`. The runnable recipe is
 `starter/js/recipes/representation-journey.js` in the kit, or
-`js/recipes/representation-journey.js` in a generated lesson.
+`js/recipes/representation-journey.js` in a full generated project.
 It contains three connected scenes with complete RU/EN text, nine notes and three
 questions: named records → feature rows → an xy plot → camera turn → supplied z.
-It is a menu example, not part of the default thirteen-scene gallery. Replace the
-episode script tags with this recipe to run it; keep `layout.js`, `perspective.js`
-and the usual runtime dependencies loaded before the recipe.
+To run it, create a full project with `--template gallery` and replace the 13
+episode script tags in `index.html` with this recipe. The gallery already loads
+`layout.js`, `perspective.js` and the other dependencies before the episodes.
 
 Start with the operation the audience should follow. Write its persistent IDs,
 source and values, the starting layout, the destination layout, and the reason for

@@ -24,12 +24,13 @@ class TrnaJourneyTests(unittest.TestCase):
             fixture = Path(temp) / 'library'
             starter = fixture / 'starter'
             (starter / 'js').mkdir(parents=True)
+            (starter / 'js/config.js').write_text('window.LESSON = {};\n')
             (starter / 'qa-output').mkdir()
             (starter / 'qa-output/private-report.json').write_text('{"local": true}')
             (starter / 'index.html').write_text('<html lang="ru"><title>Film</title></html>')
             destination = Path(temp) / 'lesson'
-            with patch.object(creator, 'ROOT', fixture):
-                creator.create(destination, 'Film')
+            with patch.object(creator, 'ROOT', fixture), patch.object(creator, 'STARTER', starter):
+                creator.create(destination, 'Film', template='gallery')
             self.assertTrue((destination / 'index.html').is_file())
             self.assertFalse((destination / 'qa-output').exists())
 
@@ -65,7 +66,7 @@ class TrnaJourneyTests(unittest.TestCase):
     def test_components_available_without_loading_in_gallery(self):
         with tempfile.TemporaryDirectory() as temp:
             project = Path(temp) / 'gallery'
-            result = self.run_python(ROOT / 'create.py', project)
+            result = self.run_python(ROOT / 'create.py', project, '--template', 'gallery')
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertTrue((project / 'js/trna-journey.js').is_file())
             self.assertTrue((project / 'js/cinema-timeline.js').is_file())

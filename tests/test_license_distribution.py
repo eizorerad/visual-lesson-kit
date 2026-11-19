@@ -65,7 +65,7 @@ class LicenseDistributionTests(unittest.TestCase):
         return kit, files
 
     def create_project(self, kit, dest):
-        result = subprocess.run([sys.executable, str(kit / 'create.py'), str(dest)],
+        result = subprocess.run([sys.executable, str(kit / 'create.py'), str(dest), '--template', 'gallery'],
                                 capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
 

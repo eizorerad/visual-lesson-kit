@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parent
 STARTER = ROOT / 'starter'
 VERSION = (ROOT / 'VERSION').read_text(encoding='utf-8').strip()
 KIT = 'visual-lesson-kit'
+DEFAULT_TEMPLATE = 'blank'
 
 # One registry for validation, the CLI and the README table; the template's
 # starter page is <name>.html, and the gallery keeps starter/index.html.
@@ -106,8 +107,8 @@ def lean_files(template):
     return [rel for rel in starter_files() if keep(rel)]
 
 
-def kit_sources(template='gallery', lean=False):
-    """Map every kit-managed project path to its source file in this checkout."""
+def kit_sources(template=DEFAULT_TEMPLATE, lean=False):
+    """Map project paths, including authored seeds, to their sources in this checkout."""
     files = {rel: STARTER / rel for rel in (lean_files(template) if lean else starter_files())}
     for name in GUIDES:
         source = ROOT / 'docs' / name
@@ -142,7 +143,7 @@ def write_manifest(dest, template, lean):
 
 
 def create(destination, title, source_url='', source_label='Источник', lang='ru',
-           background='black', palette='warm', font='sans', template='gallery', lean=False):
+           background='black', palette='warm', font='sans', template=DEFAULT_TEMPLATE, lean=False):
     if not title.strip():
         raise ValueError('Название урока не может быть пустым.')
     if lang not in LANGUAGES:
@@ -195,8 +196,8 @@ def main():
     parser.add_argument('destination', help='Новая папка урока; существующая должна быть пустой')
     parser.add_argument('--title', default=None)
     parser.add_argument('--lang', choices=LANGUAGES, default='ru', help='Начальный язык; обе локали входят в HTML')
-    parser.add_argument('--template', choices=TEMPLATES, default='gallery',
-                        help='Стартовая страница: галерея, научные методы, связное объяснение, общая карта, молекулярные атлас и проверка, мост от химии к биологии, укладка и предсказание структуры РНК, фильмы о тРНК и ATAC-seq, молекулярный конструктор, пространственная биология, CRISPRi, готовый короткий фильм (film) или фильм с озвучкой, из которого по запросу собирается видео (narrated)')
+    parser.add_argument('--template', choices=TEMPLATES, default=DEFAULT_TEMPLATE,
+                        help='Стартовый шаблон (по умолчанию: %(default)s). Для галереи примеров выберите gallery.')
     parser.add_argument('--lean', action='store_true',
                         help='Копировать только ядро и файлы выбранного шаблона вместо всего набора компонентов')
     parser.add_argument('--source-url', default='')

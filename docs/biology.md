@@ -1,6 +1,6 @@
 # Count aggregation, normalization and allele counting
 
-Load `js/biology.js` after `film.js`, `patterns.js`, the `lib/*` dependencies and optional `layout.js`. It extends `K`. The connected examples are in `js/recipes/methods-biology.js`, separate from the default gallery. They use invented, independently calculable data and full RU/EN notes, questions and controls.
+Load `js/biology.js` after `film.js`, `patterns.js`, the `lib/*` dependencies and optional `layout.js`. It extends `K`. Use `--template methods` to run the connected examples in `js/recipes/methods-biology.js`. They use invented, independently calculable data and full RU/EN notes, questions and controls.
 
 The module separates pure numerical models from small persistent SVG views. Models copy and deeply freeze their output. Counts must be nonnegative safe integers; missing, sparse or inconsistent rows, duplicate IDs and overflowing sums reject. No coercion turns missing values into zero. Setters validate before DOM writes, and normalization views retain their own source snapshot rather than rereading caller-owned data.
 

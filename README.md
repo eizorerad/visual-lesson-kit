@@ -16,23 +16,22 @@ Clone the complete repository and create a lesson:
 ```sh
 git clone https://github.com/eizorerad/visual-lesson-kit.git
 cd visual-lesson-kit
-python3 create.py ../my-lesson \
-  --template molecular-views \
-  --title "Telomerase: complex and template" \
-  --lang en --palette ocean
+python3 create.py ../my-lesson --title "My visual lesson" --lang en
 python3 ../my-lesson/build/bundle.py
 ```
 
 You can also use **Code → Download ZIP** on the [GitHub repository](https://github.com/eizorerad/visual-lesson-kit), extract it, and run the Python commands from the extracted folder.
 
-Open `../my-lesson/dist/lesson.html` in a browser. To edit the source with live local serving:
+Open `../my-lesson/dist/lesson.html` in a browser. The default template, `blank`, opens one scene with an empty drawing area. Edit the drawing and its Russian and English notes in `js/episodes/blank.js`. To start with the 13 demo scenes instead, run `python3 create.py ../my-gallery --template gallery` from the kit root.
+
+To preview your edits locally:
 
 ```sh
 cd ../my-lesson
 python3 serve.py --port 8150
 ```
 
-Visit `http://127.0.0.1:8150`. Change the lesson's recipe in `js/recipes/`, then rebuild the export. Generated projects contain their own runtime, guides, data and notices, and remain usable independently of the original checkout. The generator refuses to overwrite nonempty folders.
+Visit `http://127.0.0.1:8150`. After editing, run `python3 build/bundle.py` again to update the export. Generated projects contain their own runtime, guides, data and notices, and remain usable independently of the original checkout. The generator refuses to overwrite nonempty folders.
 
 By default a project receives the whole component library, so any template's actors can be added later. `--lean` copies only the shared runtime plus the selected template's scripts, data, builders and checks (about 6 MB instead of 14 MB for the tRNA film); the full toolkit can always be regenerated from the checkout.
 
