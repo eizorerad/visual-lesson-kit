@@ -299,7 +299,7 @@
  numbered.forEach(source=>{
   patterns.push({match:new RegExp('^(\\d+(?:\\s*/\\s*\\d+)?\\s*·\\s*)'+escaped(source)+'$'),replace:'$1'+strings[source]});
  });
- global.D.i18n.pack('en',{label:'EN',ui:{notesHead:'Notes · current step highlighted',notesEmpty:'No notes for this scene.',swipeHint:'Swipe for the next or previous step'},strings,patterns});
+ global.D.i18n.pack('en',{label:'EN',ui:{notesHead:'Notes · current step highlighted',notesEmpty:'No notes for this scene.',swipeHint:'Swipe for the next or previous step',foundQuestions:'Questions found: {n}',noMatchingQuestions:'No questions match this search.',noSceneQuestions:'No questions for this scene yet. Open Notes or browse all questions.',guideToggle:'All lesson questions · search',guideHead:'All questions · search the lesson',sceneQuestionsHead:'Questions and answers · scene {n}',stepCounter:'Step {step} / {total}',sourceLabel:'Source',sourceDetails:'Source details',languageAria:'Language: {label}'},strings,patterns});
 })(window);
 
 /* Shared compact shell. Authored source strings keep live RU/EN state. */

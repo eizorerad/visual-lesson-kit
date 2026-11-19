@@ -2,7 +2,7 @@
    observing text changes lets legacy state-painted scenes stay in the chosen language. */
 (function(global){
 'use strict';
-var PACKS={ru:{label:'RU',source:true,ui:{notesHead:'Пояснения · подсвечен текущий шаг',notesEmpty:'Нет пояснения к этой сцене.',swipeHint:'Свайп — следующий или предыдущий шаг'},notes:{},qa:{},strings:{},patterns:[]}};
+var PACKS={ru:{label:'RU',source:true,ui:{notesHead:'Пояснения · подсвечен текущий шаг',notesEmpty:'Нет пояснения к этой сцене.',swipeHint:'Свайп — следующий или предыдущий шаг',foundQuestions:'Найдено вопросов: {n}',noMatchingQuestions:'Нет вопросов по этому запросу.',noSceneQuestions:'К этой сцене пока нет вопросов. Откройте пояснения или все вопросы урока.',guideToggle:'Все вопросы урока · поиск',guideHead:'Все вопросы · поиск по уроку',sceneQuestionsHead:'Вопросы и ответы · сцена {n}',stepCounter:'Шаг {step} / {total}',sourceLabel:'Источник',sourceDetails:'Сведения об источнике',languageAria:'Язык: {label}'},notes:{},qa:{},strings:{},patterns:[]}};
 var current='ru',listeners=[],records=new WeakMap(),bindings=new Map();
 var ATTRS=['title','aria-label','placeholder','alt'];
 var IGNORE='script,style,code,pre,textarea,[contenteditable]:not([contenteditable="false"]),[data-i18n-ignore]';

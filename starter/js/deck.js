@@ -8,6 +8,10 @@
   'use strict';
 
   var h = global.D.dom.h;
+  function ui(key) { return global.D.i18n.ui(key); }
+  function uiFormat(key, values) {
+    return ui(key).replace(/\{(\w+)\}/g, function (match, name) { return Object.prototype.hasOwnProperty.call(values, name) ? values[name] : match; });
+  }
   var A = global.A;
 
   var registry = [];
@@ -181,7 +185,7 @@
   function questionCard(item, open) {
     var label = typeof item.source === 'string' ? item.source : '';
     var url = sourceUrl(item.url);
-    var source = url ? h('a', { href: url, target: '_blank', rel: 'noopener noreferrer' }, label || 'Источник') : label;
+    var source = url ? h('a', { href: url, target: '_blank', rel: 'noopener noreferrer' }, label || ui('sourceLabel')) : label;
     return h('details.qa-item', { open: open }, [
       h('summary', item.q), h('div.qa-answer', { html: item.a }),
       source ? h('p.qa-source', {}, source) : null
@@ -212,8 +216,8 @@
       matches.forEach(function (item) { group.appendChild(questionCard(item, !!query)); });
       results.appendChild(group);
     });
-    body.querySelector('.qa-result-count').textContent = 'Найдено вопросов: ' + total;
-    if (!total) results.appendChild(h('p.notes-empty', 'Нет вопросов по этому запросу.'));
+    body.querySelector('.qa-result-count').textContent = uiFormat('foundQuestions', { n: total });
+    if (!total) results.appendChild(h('p.notes-empty', ui('noMatchingQuestions')));
   }
 
   function renderQuestions(body, scene) {
@@ -231,8 +235,8 @@
       if (state.panel === 'questions') {
         body.appendChild(h('p.qa-scene-title', plainText(global.D.i18n.text(scene.title))));
         questions(scene).forEach(function (item) { body.appendChild(questionCard(item, true)); });
-        if (!questions(scene).length) body.appendChild(h('p.notes-empty', 'К этой сцене пока нет вопросов. Откройте пояснения или все вопросы урока.'));
-        body.appendChild(h('button.qa-guide-toggle', { type: 'button', onClick: function () { togglePanel('guide'); } }, 'Все вопросы урока · поиск'));
+        if (!questions(scene).length) body.appendChild(h('p.notes-empty', ui('noSceneQuestions')));
+        body.appendChild(h('button.qa-guide-toggle', { type: 'button', onClick: function () { togglePanel('guide'); } }, ui('guideToggle')));
       } else {
         var search = h('input.qa-search', {
           id: 'qaSearch', type: 'search', value: state.guideQuery, placeholder: 'Вопрос, ответ или источник',
@@ -262,8 +266,8 @@
     if (!body || !mount) return;
     var scene = registry[mount.index];
     var heading = byId('notesHead');
-    if (heading) heading.textContent = state.panel === 'questions' ? 'Вопросы и ответы · сцена ' + (mount.index + 1) :
-      state.panel === 'guide' ? 'Все вопросы · поиск по уроку' : global.D.i18n.ui('notesHead');
+    if (heading) heading.textContent = state.panel === 'questions' ? uiFormat('sceneQuestionsHead', { n: mount.index + 1 }) :
+      state.panel === 'guide' ? ui('guideHead') : global.D.i18n.ui('notesHead');
     var panel = byId('notes');
     if (panel) panel.dataset.mode = state.panel;
     body.setAttribute('aria-labelledby', 'tab-' + state.panel);
@@ -287,7 +291,7 @@
         body.appendChild(block);
       });
       var provenance = mount.root.querySelector('.film-source, .lesson-source');
-      if (provenance && provenance.textContent.trim()) body.appendChild(h('details.note-provenance', { open: sourceOpen }, [h('summary', 'Сведения об источнике'), h('p', provenance.textContent)]));
+      if (provenance && provenance.textContent.trim()) body.appendChild(h('details.note-provenance', { open: sourceOpen }, [h('summary', ui('sourceDetails')), h('p', provenance.textContent)]));
       body.dataset.panel = 'notes';
       body.dataset.sceneIndex = String(mount.index);
       body.dataset.lang = global.D.i18n.lang();
@@ -310,7 +314,7 @@
     var counter = byId('counter');
     if (counter) counter.textContent = (index + 1) + ' / ' + registry.length;
     var stepCount = byId('stepCount');
-    if (stepCount) stepCount.textContent = 'Шаг ' + (mount.step + 1) + ' / ' + (mount.steps.length + 1);
+    if (stepCount) stepCount.textContent = uiFormat('stepCounter', { step: mount.step + 1, total: mount.steps.length + 1 });
     var tag = byId('actTag');
     if (tag) tag.textContent = registry[index].chapter || '';
     var dots = byId('stepDots');
@@ -526,7 +530,7 @@
       button.hidden = global.D.i18n.languages().length < 2;
       var value = button.querySelector('[data-language-value]');
       if (value) value.textContent = global.D.i18n.label(); else button.textContent = global.D.i18n.label();
-      button.setAttribute('aria-label', 'Язык: ' + global.D.i18n.label());
+      button.setAttribute('aria-label', uiFormat('languageAria', { label: global.D.i18n.label() }));
     });
     global.D.i18n.apply(document.body);
   }
