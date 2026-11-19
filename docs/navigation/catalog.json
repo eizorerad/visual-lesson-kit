@@ -3206,6 +3206,74 @@
     "export-qa",
     "languages"
    ]
+  },
+  {
+   "id": "graph-alignment",
+   "branch": "geometry",
+   "title": "Graph matching and QUBO / Сопоставление графов и QUBO",
+   "summary": "A 26-scene bilingual lesson: simple four-person opening, fixed input graphs, then source-backed notebook details on QUBO, entropy, SA budgets, survey R², FDC, neutral walks and minimax barriers.",
+   "keywords": [
+    "Q-Align",
+    "QUBO",
+    "graph alignment",
+    "graph matching",
+    "graphlets",
+    "energy landscape",
+    "simulated annealing",
+    "сопоставление графов",
+    "графлеты",
+    "энергетический ландшафт",
+    "отжиг",
+    "beginner",
+    "school",
+    "с нуля",
+    "для школьника",
+    "fixed graph positions",
+    "FDC",
+    "autocorrelation",
+    "minimax",
+    "notebook details",
+    "подробный разбор"
+   ],
+   "status": "ready",
+   "guides": [
+    {
+     "path": "graph-alignment.md",
+     "section": "API"
+    },
+    {
+     "path": "graph-alignment.md",
+     "section": "Source and scientific scope"
+    },
+    {
+     "path": "graph-alignment.md",
+     "section": "Verification and export"
+    }
+   ],
+   "sources": [
+    "q-align.html",
+    "js/graph-alignment.js",
+    "js/q-align-data.js",
+    "js/recipes/q-align-beginner.js",
+    "build/q-align-data.py",
+    "qa/q-align/numerics.cjs",
+    "js/recipes/q-align-details.js",
+    "qa/q-align/scenes.cjs",
+    "qa/q-align/static-review.cjs"
+   ],
+   "examples": [
+    "js/recipes/q-align-beginner.js",
+    "js/recipes/q-align-details.js"
+   ],
+   "caveat": "The four-person example is invented and labelled. Later scenes use verified Q-Align data. Changing assignments never moves graph vertices. The prototype uses classical search; quantum comparison is a future experiment. Teaching graphlet counts check connectivity; original survey regressions retain their original convention.",
+   "related": [
+    "scene",
+    "story",
+    "motion",
+    "layout",
+    "languages",
+    "export-qa"
+   ]
   }
  ]
 }

@@ -1,5 +1,8 @@
 # Visual Lesson Kit
 
+**Graph alignment and QUBO:** the new [Q-Align teaching pack](docs/graph-alignment.md) supplies 26 bilingual scenes, with a beginner opening and twelve notebook-detail scenes, fixed graph layouts, an explicitly labelled four-person warm-up, and source-backed scores, barriers and SA trajectories. Create it with `python3 create.py /absolute/new-lesson --template q-align --lean --palette ocean`.
+
+
 Build scientific explanations as animated, interactive HTML lessons. Start from a working template, combine reusable visual components, and share one self-contained HTML file.
 
 **[Подробное описание на русском](README.ru.md)** · **[Connect to Codex](docs/codex-setup.md)** · **[Authoring guide](docs/START.md)** · **[Examples](examples/README.md)**

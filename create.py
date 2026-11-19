@@ -18,7 +18,7 @@ KIT = 'visual-lesson-kit'
 # starter page is <name>.html, and the gallery keeps starter/index.html.
 TEMPLATES = ('gallery', 'methods', 'explanations', 'synthesis', 'molecular', 'molecular-check',
              'chemistry-bridge', 'rna-folding', 'rna-prediction', 'trna-journey', 'atac-seq',
-             'atac-components', 'molecular-views', 'spatial-biology', 'crispri', 'film', 'narrated')
+             'atac-components', 'molecular-views', 'spatial-biology', 'crispri', 'film', 'narrated', 'q-align')
 BACKGROUNDS, PALETTES, FONTS, LANGUAGES = ('black', 'white'), ('warm', 'ocean', 'botanical'), ('sans', 'serif'), ('ru', 'en')
 
 # Guides every project receives, alongside the navigation catalog and selector.
@@ -33,7 +33,7 @@ GUIDES = ('START.md', 'authoring.md', 'components.md', 'qa.md', 'provenance.md',
           'molecular-views.md', 'molecular-views-api.md', 'molecular-data.md', 'three-dimensional.md',
           'explanation-geometry.md', 'explanation-design.md',
           'interaction-regions.md', 'hit-region-audit.md', 'pipeline-synthesis.md', 'film.md', 'film-review.md',
-          'narrated-video.md')
+          'narrated-video.md', 'graph-alignment.md')
 
 # Runtime, shell, export and notices: present in every project, full or lean.
 CORE = ('AGENTS.md', 'README.md', 'serve.py', 'build/bundle.py', 'build/inspect.html', 'build/inspect.js',
@@ -43,6 +43,7 @@ CORE = ('AGENTS.md', 'README.md', 'serve.py', 'build/bundle.py', 'build/inspect.
 # A lean project carries the runtime files its page loads plus the sources,
 # builders and checks that regenerate or verify those files.
 FAMILIES = {
+    'js/graph-alignment.js': ('build/q-align-data.py', 'qa/q-align/'),
     'js/trna-': ('assets/trna/', 'assets/rna-folding/', 'build/trna-data.py', 'build/trna-elbow.py',
                  'build/trna-magnesium.py', 'build/trna-spacefill.py', 'qa/trna/'),
     'js/rna-structures.js': ('assets/rna-folding/', 'build/rna-structures.py', 'qa/rna-folding/'),
