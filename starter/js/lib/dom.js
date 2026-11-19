@@ -6,7 +6,7 @@
   var SVG_NS = 'http://www.w3.org/2000/svg';
 
   function appendChild(node, child) {
-    if (child === null || child === undefined || child === false) return;
+    if (child === null || child === undefined || child === false || child === '') return;
     if (Array.isArray(child)) {
       child.forEach(function (one) { appendChild(node, one); });
       return;
@@ -54,7 +54,7 @@
     var parsed = parseSelector(selector);
     var node = document.createElement(parsed.tag);
     if (parsed.classes.length) node.className = parsed.classes.join(' ');
-    if (attrs && (attrs instanceof Node || Array.isArray(attrs) || typeof attrs !== 'object')) {
+    if (attrs !== null && attrs !== undefined && (attrs instanceof Node || Array.isArray(attrs) || typeof attrs !== 'object')) {
       appendChild(node, attrs);
       return node;
     }
@@ -67,7 +67,7 @@
     var parsed = parseSelector(selector);
     var node = document.createElementNS(SVG_NS, parsed.tag);
     if (parsed.classes.length) node.setAttribute('class', parsed.classes.join(' '));
-    if (attrs && (attrs instanceof Node || Array.isArray(attrs) || typeof attrs !== 'object')) {
+    if (attrs !== null && attrs !== undefined && (attrs instanceof Node || Array.isArray(attrs) || typeof attrs !== 'object')) {
       appendChild(node, attrs);
       return node;
     }
