@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const {JSDOM}=require('jsdom');
 const root=process.env.LESSON_TEST_DIR||path.join(__dirname,'..','starter');
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
-function fixture(t){
+function fixture(t,extra=[]){
  const dom=new JSDOM(fs.readFileSync(path.join(root,'index.html'),'utf8'),{runScripts:'outside-only',pretendToBeVisual:true,url:'http://localhost/lesson/'});
  t.after(()=>dom.window.close());const w=dom.window,d=w.document;w.matchMedia=()=>({matches:false});
  for(const file of ['js/config.js','js/lib/dom.js','js/lib/i18n.js','js/i18n/en.js','js/lib/touch.js','js/lib/anim.js','js/deck.js','js/player.js'])w.eval(fs.readFileSync(path.join(root,file),'utf8'));
@@ -12,6 +12,7 @@ function fixture(t){
   builds++;ctx.onDispose(()=>disposals++);const el=w.D.dom.h('section',{},[w.D.dom.h('input',{type:'range',value:17}),w.D.dom.h('span.film-source','Источник')]);
   for(let i=0;i<steps;i++)ctx.step(()=>{el.dataset.replayedStep=String(i+1);return Promise.resolve();});return el;
  }});
+ for(const [id,chapter] of extra)w.D.deck.register({id,title:'Тест',chapter,notes:['Первый'],build(){return w.D.dom.h('section',{});}});
  w.D.i18n.pack('en',{strings:{'Тест':'Test','Пример':'Example'},notes:{one:['First','Second','Third'],two:['First','Second','Third']},qa:{one:[{q:'Question?',a:'Answer.'}],two:[{q:'Question?',a:'Answer.'}]}});
  w.D.deck.boot();
  return {w,d,builds:()=>builds,disposals:()=>disposals,click:action=>d.querySelector('[data-action="'+action+'"]').click(),key:(key,target=d.activeElement)=>target.dispatchEvent(new w.KeyboardEvent('keydown',{key,bubbles:true,cancelable:true}))};
@@ -149,4 +150,11 @@ test('the labels button left of More hides every label and shows it again; T / �
  w.D.i18n.setLang('en');await settle();
  assert.equal(button.getAttribute('aria-label'),'Show labels');assert.equal(button.getAttribute('title'),'Show labels (T)');
  w.D.deck.labels(false);assert.equal(button.getAttribute('aria-label'),'Hide labels');
+});
+test('overview groups scenes by chapter and numbers chapters by order of appearance',t=>{
+ const {w,d}=fixture(t,[['three','Вторая'],['four','Вторая'],['five','Пример']]);
+ const scenes=w.D.deck.scenes();
+ assert.deepEqual(Array.from(scenes,s=>s.chapterKey),['Пример','Пример','Вторая','Вторая','Пример']);
+ assert.deepEqual(Array.from(scenes,s=>s.chapter),['1 · Пример','1 · Пример','2 · Вторая','2 · Вторая','3 · Пример']);
+ assert.deepEqual(Array.from(d.querySelectorAll('h3.ov-chapter'),h=>h.textContent),['1 · Пример','2 · Вторая','3 · Пример']);
 });

@@ -45,7 +45,11 @@
     return parseFloat(window.getComputedStyle(insetProbe).paddingBottom) || 0;
   }
 
-  function register(scene) { scene.chapter=(registry.length+1)+' · '+String(scene.chapter||'').replace(/^\d+\s*[·]\s*/,'');registry.push(scene); }
+  function register(scene) {
+    var key = String(scene.chapter || '').replace(/^\d+\s*[·]\s*/, ''), prev = registry[registry.length - 1];
+    var no = !prev ? 1 : (prev.chapterKey === key ? prev.chapterNo : prev.chapterNo + 1);
+    scene.chapterKey = key; scene.chapterNo = no; scene.chapter = no + ' · ' + key; registry.push(scene);
+  }
   function byId(id) { return document.getElementById(id); }
 
   function fit() {
@@ -531,8 +535,8 @@
     if (!grid) return;
     var lastChapter = null;
     registry.forEach(function (scene, index) {
-      if (scene.chapter !== lastChapter) {
-        lastChapter = scene.chapter;
+      if (scene.chapterKey !== lastChapter) {
+        lastChapter = scene.chapterKey;
         grid.appendChild(h('h3.ov-chapter', scene.chapter || ''));
       }
       grid.appendChild(h('button.ov-card', {
@@ -729,6 +733,6 @@
     current: function () { return mount ? { index: mount.index, step: mount.step, steps: mount.steps.length, busy: state.busy } : null; },
     steps: function () { return mount ? mount.steps.slice() : []; },
     root: function () { return mount ? mount.root : null; },
-    scenes: function () { return registry.map(function (s) { return { id: s.id, title: s.title, chapter: s.chapter, notes: Array.isArray(s.notes) ? s.notes.length : (s.notes ? 1 : 0) }; }); }
+    scenes: function () { return registry.map(function (s) { return { id: s.id, title: s.title, chapter: s.chapter, chapterKey: s.chapterKey, notes: Array.isArray(s.notes) ? s.notes.length : (s.notes ? 1 : 0) }; }); }
   };
 })(window);
