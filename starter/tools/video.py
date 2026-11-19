@@ -59,6 +59,8 @@ def main():
     if args.project:
         voice += ['--project=' + args.project]
     run(*voice)
+    if args.check and args.engine == 'say':
+        print('warning: --check is skipped for --engine say (the clip check needs gemini or cloud)', file=sys.stderr)
     if args.check and args.engine != 'say':
         check = [py, 'tools/voice_check.py'] + (['--vertex', args.project] if args.engine == 'cloud' else [])
         if subprocess.run([str(c) for c in check], cwd=ROOT).returncode:
