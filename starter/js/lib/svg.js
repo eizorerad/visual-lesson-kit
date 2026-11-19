@@ -95,12 +95,20 @@
     });
   }
 
-  function tickFormat(v) {
+  /* Tick label. With a tick step, decimals follow the step and show it exactly
+     (0.25 -> 2, 5 -> 0); without one they come from the magnitude of v. */
+  function tickFormat(v, step) {
     if (Math.abs(v) >= 1000) return global.N.fmtInt(v);
-    var abs = Math.abs(v);
-    var digits = abs === 0 || abs >= 10 ? 0 : (abs >= 1 ? 1 : 2);
-    var str = abs.toFixed(digits).replace(/\.0+$/, '');
-    return (v < 0 ? '−' : '') + str;
+    var abs = Math.abs(v), digits;
+    if (step > 0 && isFinite(step)) {
+      digits = Math.max(0, -Math.floor(Math.log10(step)));
+      while (digits < 6 && Math.abs(Math.round(step * Math.pow(10, digits)) / Math.pow(10, digits) - step) > step * 1e-9) digits += 1;
+    } else {
+      digits = abs === 0 || abs >= 100 ? 0 : (abs >= 10 ? 1 : (abs >= 1 ? 2 : (abs >= 0.1 ? 2 : Math.min(6, 1 - Math.floor(Math.log10(abs))))));
+    }
+    var str = abs.toFixed(digits);
+    if (step === undefined && str.indexOf('.') >= 0) str = str.replace(/\.?0+$/, '');
+    return (v < 0 && /[1-9]/.test(str) ? '−' : '') + str;
   }
 
   /* axes({ left, top, width, height, x: [lo, hi], y: [lo, hi], ... }) */
@@ -112,7 +120,10 @@
     var col = o.color || 'var(--color-muted)';
     var xt = Array.isArray(o.xTicks) ? o.xTicks : (o.xTicks === 0 ? [] : sx.ticks(o.xTicks || 5));
     var yt = Array.isArray(o.yTicks) ? o.yTicks : (o.yTicks === 0 ? [] : sy.ticks(o.yTicks || 5));
-    var xFmt = o.xFmt || tickFormat, yFmt = o.yFmt || tickFormat;
+    var xStep = !o.xLog && xt.length > 1 ? xt[1] - xt[0] : undefined;
+    var yStep = !o.yLog && yt.length > 1 ? yt[1] - yt[0] : undefined;
+    var xFmt = o.xFmt || function (v) { return tickFormat(v, xStep); };
+    var yFmt = o.yFmt || function (v) { return tickFormat(v, yStep); };
     var frame = s('g.axes-frame');
     g.appendChild(frame);
     if (o.grid) {
