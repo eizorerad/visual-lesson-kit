@@ -96,6 +96,28 @@ class NavigationTests(unittest.TestCase):
         with patch.object(Path, 'read_text', side_effect=AssertionError('unexpected content read')):
             self.assertEqual(nav.search('permutation test')[0]['id'], 'permutation')
 
+    def test_scene_card_resolves_blank_entry_contract_and_guide_in_lean_project(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            lesson = Path(tmp).resolve() / 'lesson'
+            subprocess.run([sys.executable, str(ROOT / 'create.py'), str(lesson),
+                            '--template', 'blank', '--lean'], check=True, capture_output=True)
+            for runtime, guides in [(ROOT / 'starter', ROOT / 'docs'), (lesson, lesson / 'guide')]:
+                with self.subTest(runtime=runtime):
+                    script = guides / 'navigation/route.py'
+                    result = self.cli('--show', 'scene', '--json', script=script)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    card = json.loads(result.stdout)
+                    self.assertIn(str(runtime / 'js/episodes/blank.js'), card['examples'])
+                    self.assertIn(str(runtime / 'AGENTS.md'), card['sources'])
+                    for filename in card['examples'] + card['sources']:
+                        self.assertTrue(Path(filename).is_file(), filename)
+                    section = self.cli('--read', 'scene', '--json', script=script)
+                    self.assertEqual(section.returncode, 0, section.stderr)
+                    guide = json.loads(section.stdout)
+                    self.assertEqual(guide['path'], str(guides / 'components.md'))
+                    self.assertEqual(guide['section'], '1. Сцена и постоянные объекты')
+                    self.assertIn('K.viewport', guide['text'])
+
     def test_chemistry_operations_and_template_have_specific_portable_cards(self):
         for query, expected in [('ковалентная связь', 'chemistry'),
                                 ('covalent bond', 'chemistry'),

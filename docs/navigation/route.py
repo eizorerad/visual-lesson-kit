@@ -44,12 +44,17 @@ class Navigator:
             raise ValueError('Unknown concept: ' + identifier + '. Use the tree or search.')
         return self.by_id[identifier]
 
+    def optional_project_examples(self, concept):
+        # Check all seeds in the kit. A generated lesson may omit or rename its episodes.
+        return concept.get('optional_project_examples', False) and self.runtime_root == self.guide_root.parent
+
     def card(self, identifier):
         c = self.concept(identifier)
-        return {k: v for k, v in c.items() if k != 'keywords'} | {
+        examples = (self.resolve(p, 'example') for p in c['examples'])
+        return {k: v for k, v in c.items() if k not in ('keywords', 'optional_project_examples')} | {
             'guides': [dict(ref, path=str(self.resolve(ref['path'], 'guide'))) for ref in c['guides']],
             'sources': [str(self.resolve(p, 'source')) for p in c['sources']],
-            'examples': [str(self.resolve(p, 'source')) for p in c['examples']],
+            'examples': [str(p) for p in examples if not self.optional_project_examples(c) or p.is_file()],
         }
 
     def tree(self):
@@ -139,6 +144,8 @@ class Navigator:
                     try:
                         p = self.resolve(ref['path'] if kind == 'guide' else ref, kind)
                         if not p.is_file():
+                            if kind == 'example' and self.optional_project_examples(c):
+                                continue
                             raise ValueError('Missing file: ' + str(p))
                         if kind == 'guide':
                             self._section(ref)

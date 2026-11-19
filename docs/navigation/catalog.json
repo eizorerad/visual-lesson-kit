@@ -62,7 +62,7 @@
    "id": "scene",
    "branch": "drawing",
    "title": "Persistent scene / Постоянная сцена",
-   "summary": "Create scene objects once and update them through authored states with F.stage and F.step.",
+   "summary": "In the blank template, edit js/episodes/blank.js following AGENTS.md. Create scene objects once and update them with F.stage and F.step.",
    "keywords": [
     "scene",
     "blank",
@@ -87,12 +87,17 @@
     }
    ],
    "sources": [
+    "AGENTS.md",
     "js/film.js",
-    "js/lesson.js"
+    "js/lesson.js",
+    "js/interaction-regions.js",
+    "js/patterns.js"
    ],
    "examples": [
+    "js/episodes/blank.js",
     "js/episodes/01-objects.js"
    ],
+   "optional_project_examples": true,
    "caveat": "Object identity must match scientific identity; provide a note for every state and clean up scene resources.",
    "related": [
     "story",
