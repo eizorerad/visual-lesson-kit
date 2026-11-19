@@ -32,6 +32,22 @@ def newer_kit(directory, version='9.9.9'):
 
 
 class UpgradeTests(unittest.TestCase):
+    def test_full_gallery_upgrade_has_valid_navigation_without_blank_seeds(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            lesson = Path(tmp) / 'gallery'
+            created = run(ROOT / 'create.py', lesson, '--template', 'gallery')
+            self.assertEqual(created.returncode, 0, created.stderr)
+            # A full gallery from before the blank template has neither authored seed.
+            for rel in ('blank.html', 'js/episodes/blank.js'):
+                (lesson / rel).unlink()
+            (lesson / 'guide/navigation/catalog.json').unlink()
+
+            applied = run(ROOT / 'upgrade.py', lesson, '--apply')
+            self.assertEqual(applied.returncode, 0, applied.stderr)
+            self.assertFalse((lesson / 'js/episodes/blank.js').exists())
+            checked = run(lesson / 'guide/navigation/route.py', '--check')
+            self.assertEqual(checked.returncode, 0, checked.stdout + checked.stderr)
+
     def test_force_upgrade_preserves_authored_blank_scene_and_deletions(self):
         with tempfile.TemporaryDirectory() as tmp:
             lesson = Path(tmp) / 'lesson'
