@@ -58,6 +58,8 @@ FAMILIES = {
 }
 # Runtime files whose names resemble a family but serve every film on the cinema clock.
 SHARED = ('js/trna-cinema.js', 'css/trna-cinema.css')
+# The gallery's source episode loads this figure through JavaScript.
+GALLERY_FIGURE = 'assets/illustrative-figure.svg'
 IGNORED = ('__pycache__', '.DS_Store', 'dist', 'node_modules', 'qa-output')
 # Authored per project: never generated twice, never replaced by an upgrade.
 AUTHORED = ('index.html', 'js/config.js', 'lesson-kit.json', 'blank.html', 'js/episodes/blank.js')
@@ -72,12 +74,14 @@ def sha256(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def starter_files():
-    """Relative paths of every distributable starter file."""
+def starter_files(template='gallery'):
+    """Relative paths of distributable starter files, including the figure only for the gallery."""
     out = []
     for path in sorted(STARTER.rglob('*')):
         rel = path.relative_to(STARTER)
         if not path.is_file() or any(part in IGNORED for part in rel.parts) or rel.as_posix() == 'lesson-kit.json':
+            continue
+        if template != 'gallery' and rel.as_posix() == GALLERY_FIGURE:
             continue
         out.append(rel.as_posix())
     return out
@@ -97,19 +101,19 @@ def lean_files(template):
             if ref.startswith(prefix) and ref not in SHARED:
                 wanted.update(sources)
     if template == 'gallery':
-        wanted.add('assets/')
+        wanted.add(GALLERY_FIGURE)
     others = {template_page(name) for name in TEMPLATES} - {page}
 
     def keep(rel):
-        if rel in others or (template != 'gallery' and rel.startswith('assets/') and '/' not in rel[len('assets/'):]):
+        if rel in others:
             return False
         return any(rel == item or (item.endswith('/') and rel.startswith(item)) for item in (*CORE, *wanted))
-    return [rel for rel in starter_files() if keep(rel)]
+    return [rel for rel in starter_files(template) if keep(rel)]
 
 
 def kit_sources(template=DEFAULT_TEMPLATE, lean=False):
     """Map project paths, including authored seeds, to their sources in this checkout."""
-    files = {rel: STARTER / rel for rel in (lean_files(template) if lean else starter_files())}
+    files = {rel: STARTER / rel for rel in (lean_files(template) if lean else starter_files(template))}
     for name in GUIDES:
         source = ROOT / 'docs' / name
         if source.is_file():
@@ -172,10 +176,6 @@ def create(destination, title, source_url='', source_label='Источник', l
         shutil.copy2(source, target)
     if template != 'gallery':
         shutil.copy2(dest / template_page(template), dest / 'index.html')
-        # The methods use calculated SVG only; gallery images are not their evidence.
-        for asset in (dest / 'assets').iterdir():
-            if asset.is_file():
-                asset.unlink()
         if lean:
             (dest / template_page(template)).unlink()
     config = {'title': title, 'lang': lang, 'kicker': 'Пошаговый визуальный урок',

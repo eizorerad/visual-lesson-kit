@@ -52,13 +52,11 @@ def plan(lesson, kit):
     legacy = not recorded
     template = manifest.get('template') if manifest.get('template') in kit.TEMPLATES else None
     lean = manifest.get('profile') == 'lean' and template is not None
-    sources = kit.kit_sources(template, True) if lean else kit.kit_sources()
+    sources = kit.kit_sources(template, lean)
     rows = []
     for rel, source in sources.items():
         if rel in kit.AUTHORED or rel == 'README.md':
             continue
-        if template != 'gallery' and rel.startswith('assets/') and '/' not in rel[len('assets/'):]:
-            continue  # gallery figures are removed from every other template
         if lean and rel == kit.template_page(template):
             continue  # a lean project keeps its page only as index.html
         target = lesson / rel

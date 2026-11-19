@@ -41,9 +41,12 @@ class UpgradeTests(unittest.TestCase):
             for rel in ('blank.html', 'js/episodes/blank.js'):
                 (lesson / rel).unlink()
             (lesson / 'guide/navigation/catalog.json').unlink()
+            figure = 'assets/illustrative-figure.svg'
+            (lesson / figure).unlink()
 
             applied = run(ROOT / 'upgrade.py', lesson, '--apply')
             self.assertEqual(applied.returncode, 0, applied.stderr)
+            self.assertEqual((lesson / figure).read_bytes(), (ROOT / 'starter' / figure).read_bytes())
             self.assertFalse((lesson / 'js/episodes/blank.js').exists())
             checked = run(lesson / 'guide/navigation/route.py', '--check')
             self.assertEqual(checked.returncode, 0, checked.stdout + checked.stderr)
@@ -140,6 +143,36 @@ class UpgradeTests(unittest.TestCase):
             manifest = json.loads((lesson / 'lesson-kit.json').read_text())
             self.assertEqual(manifest['version'], '9.9.9')
             self.assertGreater(len(manifest['files']), 300, 'the next upgrade can rely on recorded checksums')
+
+    def test_both_profiles_restore_a_missing_selected_svg_and_keep_local_edits(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            kit = newer_kit(tmp)
+            asset = 'assets/shared.svg'
+            source = kit / 'starter' / asset
+            source.write_text('<svg xmlns="http://www.w3.org/2000/svg"><circle r="4"/></svg>\n')
+            page = kit / 'starter/blank.html'
+            page.write_text(page.read_text().replace('</body>', f'<img src="{asset}" alt="Circle"></body>'))
+            for profile, flags in [('full', []), ('lean', ['--lean'])]:
+                with self.subTest(profile=profile):
+                    lesson = Path(tmp) / profile
+                    created = run(kit / 'create.py', lesson, *flags)
+                    self.assertEqual(created.returncode, 0, created.stderr)
+                    target = lesson / asset
+                    target.unlink()
+                    restored = run(kit / 'upgrade.py', lesson, '--apply', '--json')
+                    self.assertEqual(restored.returncode, 0, restored.stderr)
+                    self.assertEqual(json.loads(restored.stdout)['rows'],
+                                     [{'path': asset, 'status': 'add', 'applied': True}])
+                    self.assertEqual(target.read_bytes(), source.read_bytes())
+                    self.assertFalse((lesson / 'assets/illustrative-figure.svg').exists())
+
+                    edited = source.read_text().replace('r="4"', 'r="8"')
+                    target.write_text(edited)
+                    kept = run(kit / 'upgrade.py', lesson, '--apply', '--json')
+                    self.assertEqual(kept.returncode, 2, kept.stderr)
+                    self.assertEqual(json.loads(kept.stdout)['rows'],
+                                     [{'path': asset, 'status': 'conflict', 'applied': False}])
+                    self.assertEqual(target.read_text(), edited)
 
     def test_lean_lessons_do_not_receive_other_template_packs(self):
         with tempfile.TemporaryDirectory() as tmp:

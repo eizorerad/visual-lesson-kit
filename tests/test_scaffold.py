@@ -44,12 +44,15 @@ class ScaffoldTests(unittest.TestCase):
         gallery = (ROOT / 'starter/index.html').read_text()
         title = re.search(r'<title>(.*?)</title>', gallery).group(1)
         with tempfile.TemporaryDirectory() as tmp:
-            dest = Path(tmp) / 'gallery'
-            result = self.run_cli(dest, '--template', 'gallery', '--title', title)
-            self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertEqual((dest / 'index.html').read_text(), gallery)
-            self.assertEqual(re.findall(r'src="js/episodes/(\d+)-', gallery),
-                             [f'{n:02}' for n in range(1, 14)])
+            for profile, flags in [('full', []), ('lean', ['--lean'])]:
+                with self.subTest(profile=profile):
+                    dest = Path(tmp) / profile
+                    result = self.run_cli(dest, '--template', 'gallery', '--title', title, *flags)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertEqual((dest / 'index.html').read_text(), gallery)
+                    self.assertTrue((dest / 'assets/illustrative-figure.svg').is_file())
+        self.assertEqual(re.findall(r'src="js/episodes/(\d+)-', gallery),
+                         [f'{n:02}' for n in range(1, 14)])
 
     def test_blank_projects_export_just_the_editable_scene(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -67,6 +70,8 @@ class ScaffoldTests(unittest.TestCase):
                                            capture_output=True, text=True)
                     self.assertEqual(built.returncode, 0, built.stderr)
                     bundle = (dest / 'dist/lesson.html').read_text()
+                    assets = json.loads(re.search(r'window\.LESSON_ASSETS=(.*?);</script>', bundle)[1])
+                    self.assertNotIn('illustrative-figure.svg', assets)
                     self.assertNotIn('<script src=', bundle)
                     self.assertNotIn('href="css/', bundle)
                     self.assertIn((dest / 'js/episodes/blank.js').read_text(), bundle)
@@ -134,7 +139,7 @@ class ScaffoldTests(unittest.TestCase):
                 self.assertIn('js/' + name + '.js', html)
             for name in ('explanation-geometry.md', 'distributions.md', 'explanation-design.md'):
                 self.assertEqual((dest / 'guide' / name).read_bytes(), (ROOT / 'docs' / name).read_bytes())
-            self.assertFalse(any(p.is_file() for p in (dest / 'assets').iterdir()))
+            self.assertFalse((dest / 'assets/illustrative-figure.svg').exists())
             self.assertTrue((dest / 'assets/fonts').is_dir())
             gallery = Path(tmp) / 'gallery'
             self.assertEqual(self.run_cli(gallery, '--template', 'gallery').returncode, 0)
@@ -185,7 +190,7 @@ class ScaffoldTests(unittest.TestCase):
                 self.assertEqual('src="js/molecular-check-qa.js"' in html, template == 'molecular-check')
                 if template in ('molecular', 'molecular-check'):
                     self.assertNotIn('src="js/episodes/', html)
-                    self.assertFalse(any(p.is_file() for p in (dest / 'assets').iterdir()))
+                    self.assertFalse((dest / 'assets/illustrative-figure.svg').exists())
                     built = subprocess.run([sys.executable, str(dest / 'build/bundle.py')], capture_output=True, text=True)
                     self.assertEqual(built.returncode, 0, built.stderr)
                     bundle = (dest / 'dist/lesson.html').read_text()
@@ -301,7 +306,7 @@ class ScaffoldTests(unittest.TestCase):
                 self.assertEqual((dest / file).read_bytes(), (ROOT / 'starter' / file).read_bytes())
             self.assertEqual((dest / 'guide/crispri-design.md').read_bytes(),
                              (ROOT / 'docs/crispri-design.md').read_bytes())
-            self.assertFalse(any(p.is_file() for p in (dest / 'assets').iterdir()))
+            self.assertFalse((dest / 'assets/illustrative-figure.svg').exists())
             for args in [('--check',), ()]:
                 built = subprocess.run([sys.executable, str(dest / 'build/bundle.py'), *args],
                                        capture_output=True, text=True)
