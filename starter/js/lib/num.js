@@ -208,7 +208,7 @@
     if (x === null || x === undefined || isNaN(x)) return '–';
     var d = digits === undefined ? 2 : digits;
     var s = Math.abs(x).toFixed(d);
-    return (x < 0 ? '−' : '') + s;
+    return (x < 0 && /[1-9]/.test(s) ? '−' : '') + s;
   }
 
   function fmtInt(x) {
