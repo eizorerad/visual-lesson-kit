@@ -23,6 +23,17 @@ python3 upgrade.py ../some-generated-lesson
 
 ## Browser checks
 
+CI opens both default scaffolds (full and `--lean`) in Chromium, selects the blank scene from Overview and switches between Russian and English. It repeats these checks offline with only the exported HTML in a new folder. The test checks script requests and bundle headers for demo code and fails if the export requests another file or network resource.
+
+After `npm ci`, run from the repository root:
+
+```sh
+npx playwright install --with-deps chromium
+npm run test:scaffold-browser
+```
+
+If Chromium's system libraries are already installed, `npx playwright install chromium` is sufficient.
+
 Open the actual exported `dist/lesson.html`. Check explanations and motion, both languages, fonts and backgrounds, manual controls, reading panels and representative narrow viewports. DOM tests cannot prove visual quality or physical touchscreen behavior.
 
 For the molecular constructor's repeatable browser checks, use a separate optional QA environment and an installed Google Chrome:
