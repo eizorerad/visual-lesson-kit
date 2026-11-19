@@ -1,6 +1,43 @@
 # Новый визуальный урок
 
-Если при создании не указан шаблон, `index.html` открывает одну сцену без рисунка. Добавьте рисунок и отредактируйте русскую и английскую заметки в `js/episodes/blank.js`. Для отдельного урока с 13 примерами запустите `python3 create.py ../my-gallery --template gallery` из корня библиотеки.
+## Первый рисунок: соедините два узла
+
+Если вы создали урок без параметра `--template`, откройте `index.html` из этой папки: область рисунка пока пуста. В файле `js/episodes/blank.js` найдите функцию `build(ctx)` и вставьте этот код прямо перед строкой `return scene.root;`:
+
+```js
+const action = 'Удвоить вес ребра';
+D.i18n.pack('en', { strings: { [action]: 'Double the edge weight' } });
+
+let weight = 1;
+const button = T.svgButton(scene.svg, {
+  id: 'edge-weight', label: action, pressed: false,
+  box: { x: 375, y: 300, width: 530, height: 110 },
+  onActivate() {
+    weight = weight === 1 ? 2 : 1;
+    edge.setAttribute('stroke-width', 4 * weight);
+    label.setText(weight);
+    button.setPressed(weight === 2);
+  }
+});
+const edge = F.line(button.g, 400, 380, 880, 380, C.white, 4 * weight);
+const label = L.textBox(button.g, {
+  x: 600, y: 310, width: 80, height: 60, text: weight
+});
+F.dot(scene.svg, 400, 380, 18, C.blue);
+F.dot(scene.svg, 880, 380, 18, C.blue);
+ctx.onDispose(button.dispose);
+ctx.onDispose(label.dispose);
+```
+
+После правки соберите урок из его папки:
+
+```sh
+python3 build/bundle.py
+```
+
+Откройте `dist/lesson.html`. Щёлкните по линии между узлами: вес над ней изменится с 1 на 2, а линия станет толще. Второй щелчок вернёт вес 1. Чтобы переключить вес с клавиатуры, перейдите к ребру клавишей Tab и нажмите Enter или пробел. Узлы останутся на месте.
+
+Для галереи из 13 примеров выполните `python3 create.py ../my-gallery --template gallery` из корня библиотеки.
 
 Для агента: `guide/START.md` → карточка нужного понятия → конкретный API или пример. Краткий обязательный контракт — `AGENTS.md`.
 

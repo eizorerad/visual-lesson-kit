@@ -1,37 +1,56 @@
 # Visual Lesson Kit
 
-**Graph alignment and QUBO:** the new [Q-Align teaching pack](docs/graph-alignment.md) supplies 26 bilingual scenes, with a beginner opening and twelve notebook-detail scenes, fixed graph layouts, an explicitly labelled four-person warm-up, and source-backed scores, barriers and SA trajectories. Create it with `python3 create.py /absolute/new-lesson --template q-align --lean --palette ocean`.
-
-
-Build scientific explanations as animated, interactive HTML lessons. Start from a working template, combine reusable visual components, and share one self-contained HTML file.
+Build scientific explanations as animated, interactive HTML lessons. Start from a blank scene, combine reusable visual components, and share one self-contained HTML file.
 
 **[Подробное описание на русском](README.ru.md)** · **[Connect to Codex](docs/codex-setup.md)** · **[Authoring guide](docs/START.md)** · **[Examples](examples/README.md)**
 
 Version **0.19.0**. Vanilla JavaScript and SVG at runtime, with WebGL and a Canvas 2D fallback for procedural 3D scenes; Python for project generation and export. No runtime package installation or server is required to view an exported lesson.
 
-## Start with a working lesson
+## First edit: connect two nodes
 
-Clone the complete repository and create a lesson:
-
-```sh
-git clone https://github.com/eizorerad/visual-lesson-kit.git
-cd visual-lesson-kit
-python3 create.py ../my-lesson --title "My visual lesson" --lang en
-python3 ../my-lesson/build/bundle.py
-```
-
-You can also use **Code → Download ZIP** on the [GitHub repository](https://github.com/eizorerad/visual-lesson-kit), extract it, and run the Python commands from the extracted folder.
-
-Open `../my-lesson/dist/lesson.html` in a browser. The default template, `blank`, opens one scene with an empty drawing area. Edit the drawing and its Russian and English notes in `js/episodes/blank.js`. To start with the 13 demo scenes instead, run `python3 create.py ../my-gallery --template gallery` from the kit root.
-
-To preview your edits locally:
+Clone or download the [repository](https://github.com/eizorerad/visual-lesson-kit). From its root, create a blank lesson and enter the new project:
 
 ```sh
+python3 create.py ../my-lesson
 cd ../my-lesson
-python3 serve.py --port 8150
 ```
 
-Visit `http://127.0.0.1:8150`. After editing, run `python3 build/bundle.py` again to update the export. Generated projects contain their own runtime, guides, data and notices, and remain usable independently of the original checkout. The generator refuses to overwrite nonempty folders.
+Open `index.html` to see the empty drawing area. Press L to switch the lesson to English. In `js/episodes/blank.js`, paste this code inside `build(ctx)`, immediately before `return scene.root;`:
+
+```js
+const action = 'Удвоить вес ребра';
+D.i18n.pack('en', { strings: { [action]: 'Double the edge weight' } });
+
+let weight = 1;
+const button = T.svgButton(scene.svg, {
+  id: 'edge-weight', label: action, pressed: false,
+  box: { x: 375, y: 300, width: 530, height: 110 },
+  onActivate() {
+    weight = weight === 1 ? 2 : 1;
+    edge.setAttribute('stroke-width', 4 * weight);
+    label.setText(weight);
+    button.setPressed(weight === 2);
+  }
+});
+const edge = F.line(button.g, 400, 380, 880, 380, C.white, 4 * weight);
+const label = L.textBox(button.g, {
+  x: 600, y: 310, width: 80, height: 60, text: weight
+});
+F.dot(scene.svg, 400, 380, 18, C.blue);
+F.dot(scene.svg, 880, 380, 18, C.blue);
+ctx.onDispose(button.dispose);
+ctx.onDispose(label.dispose);
+```
+
+Rebuild from the lesson folder:
+
+```sh
+python3 build/bundle.py
+```
+
+Open `dist/lesson.html`. Click the line between the two nodes: the weight above it changes from 1 to 2 and the line thickens. Click again to return to 1. To use the keyboard, tab to the edge and press Enter or Space. The nodes stay in place.
+
+To start with the 13 demos, run `python3 create.py ../my-gallery --template gallery` from the kit root. To preview further edits locally, run `python3 serve.py --port 8150` from the lesson folder and visit `http://127.0.0.1:8150`. Generated projects contain their own runtime, guides, data and notices. The generator refuses to overwrite nonempty folders.
 
 By default a project receives the whole component library, so any template's actors can be added later. `--lean` copies only the shared runtime plus the selected template's scripts, data, builders and checks (about 6 MB instead of 14 MB for the tRNA film); the full toolkit can always be regenerated from the checkout.
 
@@ -70,6 +89,8 @@ in a browser. Create the project outside the library directory.
 Read the [complete setup guide](docs/codex-setup.md) for installation scope, relocation, existing skills, troubleshooting and browser verification. This is a local library and skill; it does not require an MCP server or an API key of its own.
 
 ## What you can assemble
+
+**Graph alignment and QUBO:** the new [Q-Align teaching pack](docs/graph-alignment.md) supplies 26 bilingual scenes, with a beginner opening and twelve notebook-detail scenes, fixed graph layouts, an explicitly labelled four-person warm-up, and source-backed scores, barriers and SA trajectories. Create it with `python3 create.py /absolute/new-lesson --template q-align --lean --palette ocean`.
 
 ![A source-backed telomerase complex view with labeled protein, RNA and DNA](docs/images/molecular-overview.png)
 
