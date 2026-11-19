@@ -65,7 +65,10 @@ def build(root=ROOT):
         path = local_path(match[1], root, root)
         css = path.read_text(encoding='utf-8')
         def asset(m):
-            return m[0] if m[2].startswith(('data:', '#')) else 'url("' + data_uri(local_path(m[2], path.parent, root)) + '")'
+            if m[2].startswith(('data:', '#')):
+                return m[0]
+            reference = re.split(r'[?#]', m[2], maxsplit=1)[0]
+            return 'url("' + data_uri(local_path(reference, path.parent, root)) + '")'
         css = CSS_URL.sub(asset, css)
         if re.search(r'</\s*style', css, re.I):
             raise ValueError('Недопустимый закрывающий тег в CSS: ' + match[1])
@@ -78,8 +81,19 @@ def build(root=ROOT):
         counts['scripts'] += 1
         return '<script>/* ' + match[1] + ' */\n' + js + '\n</script>'
 
-    source = SCRIPT.sub(script, STYLE.sub(stylesheet, source))
-    source = IMAGE_ATTR.sub(lambda m: m[1] + '="' + data_uri(local_path(m[2], root, root)) + '"', source)
+    # Images are inlined in the HTML markup only, before scripts and styles are expanded,
+    # so asset-looking text inside JS or CSS is never touched. Script and stylesheet tags
+    # are left for their own handlers.
+    def image(match):
+        return match[1] + '="' + data_uri(local_path(match[2], root, root)) + '"'
+
+    parts, position = [], 0
+    for tag in sorted((m for m in (*SCRIPT.finditer(source), *STYLE.finditer(source))),
+                      key=lambda m: m.start()):
+        parts.append(IMAGE_ATTR.sub(image, source[position:tag.start()]) + tag[0])
+        position = tag.end()
+    parts.append(IMAGE_ATTR.sub(image, source[position:]))
+    source = SCRIPT.sub(script, STYLE.sub(stylesheet, ''.join(parts)))
     bootstrap = '<script>window.LESSON_ASSETS=' + json.dumps(images, separators=(',', ':')) + ';</script>\n'
     first = source.find('<script>')
     if first < 0:
