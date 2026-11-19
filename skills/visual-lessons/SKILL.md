@@ -5,27 +5,32 @@ description: "Create or edit animated scientific HTML/SVG lessons with Visual Le
 
 # Visual lessons
 
-This skill belongs to a **complete Visual Lesson Kit checkout**. Locate `scripts/kit.py` relative to this SKILL.md's actual path from the skill catalog; do not assume the current working directory or a fixed username. Run its `root` command to obtain the library root and `doctor` if the installation is uncertain. The helper resolves symlinks and can dispatch the public tools without copying their implementation:
+Locate `scripts/kit.py` relative to this SKILL.md in the skill catalog. Substitute its path in the commands below. The helper's `root` command locates the full checkout; if `doctor` reports an incomplete installation, see `docs/codex-setup.md`.
+
+For a new lesson, start with one blank scene:
 
 ```sh
-python3 "/path/to/visual-lessons/scripts/kit.py" root
-python3 "/path/to/visual-lessons/scripts/kit.py" route "protein RNA complex"
-python3 "/path/to/visual-lessons/scripts/kit.py" route --read molecular-views
-python3 "/path/to/visual-lessons/scripts/kit.py" create /absolute/new-lesson --template molecular-views --title "Telomerase" --lang en
-python3 "/path/to/visual-lessons/scripts/kit.py" upgrade /absolute/existing-lesson --apply
+python3 "/path/to/visual-lessons/scripts/kit.py" create /absolute/new-lesson
+python3 "/path/to/visual-lessons/scripts/kit.py" route --read scene
 ```
 
-Replace the helper path with the discovered location. If the checkout is missing, use `docs/codex-setup.md` in the repository to restore the full installation; the skill folder alone does not contain the library.
+Choose the assets and drawing components that answer the viewer's question. Compose them in `js/episodes/blank.js`. The generated project's `README.md` shows a first edit: draw two nodes, connect them, and change the edge weight on click.
+
+When the user wants to adapt a ready-made lesson, pass `--template NAME` explicitly. For example, to explore the gallery:
+
+```sh
+python3 "/path/to/visual-lessons/scripts/kit.py" create /absolute/my-gallery --template gallery
+```
 
 ## Select only the needed contract
 
 Begin with the library's `docs/START.md` and short `starter/AGENTS.md`. In an existing generated project these are `guide/START.md` and `AGENTS.md`. Use the metadata selector through `kit.py route` with the teaching question; `--tree` lists branches, `--show ID` shows a card and `--read ID` reads selected guide sections. Open implementation only for adaptation, debugging or a missing contract. Custom SVG constructions and local helpers are welcome.
 
-For a protein–RNA complex, telomerase-style 3D overview or atomic close-up with a locator, select **`molecular-views`**. Start with `--template molecular-views` and its two `MolecularScenes.overview(...)` / `.detail(...)` calls in `js/recipes/molecular-views.js`. Change verified source data, component roles and explanatory states. Camera, depth sorting, persistent geometry and manual controls are supplied. Use the independent MV bricks for a different composition; read the lower-level MC contract only when needed. The template includes a bounded offline PDB importer; it does not infer a biological assembly or reconstruct absent atoms.
+For a protein–RNA complex overview or atomic close-up, the `molecular-views` card describes reusable MV components for rendering, camera and manual controls. Its two-scene recipe in `js/recipes/molecular-views.js` is an optional starting point. The offline PDB importer does not infer a biological assembly or reconstruct absent atoms.
 
-For RNA folding, pairing/stacking, A-minor contacts or hydrated magnesium, select **`rna-folding`** first. It provides a complete editable template, source coordinates and portable QA. Select `molecular-coordinates` to reuse the fragment renderer and locator elsewhere. Preserve source/model/coordinate identity and actual connectivity. Rotation and emphasis explain a structure; they do not compute folding or molecular dynamics.
+For RNA folding, pairing/stacking, A-minor contacts or hydrated magnesium, see `molecular-coordinates` for the reusable fragment renderer and locator. The `rna-folding` card also points to source coordinates, portable QA and a complete lesson. Preserve source/model/coordinate identity and actual connectivity. Rotation and emphasis explain a structure; they do not compute folding or molecular dynamics.
 
-For chromatin accessibility, Tn5, paired-end reading or fragment-length distributions, select `atac-seq`. Its full-film template supports named episode/timing/text remixes. Select `atac-components` for independent source-backed nucleosome/Tn5 views, fragment straightening, reading, histograms and nearby fading labels. Source data, builders and portable QA travel with generated projects; synthetic records and authored docking are explicitly distinguished from PDB coordinates.
+For chromatin accessibility, Tn5, paired-end reading or fragment-length distributions, see `atac-components` for independent views. Use `atac-seq` when adapting the full film. Source data, builders and portable QA travel with generated projects; synthetic records and authored docking are explicitly distinguished from PDB coordinates.
 
 A new episode can use `scene` and `story`; a repair can go directly to `layout`, `clearance`, `motion`, `hit-audit` or the relevant domain. Cards distinguish ready components, compositions and missing external capabilities. Do not force a scientific question into an unrelated example.
 
