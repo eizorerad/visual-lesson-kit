@@ -128,6 +128,7 @@
     var root;
     try {
       root = scene.build(ctx);
+      if (!(root instanceof global.Node)) throw new TypeError('build() must return an element');
     } catch (error) {
       dispose();
       console.error(error);
