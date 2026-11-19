@@ -547,14 +547,23 @@
   }
 
   function toggleFullscreen() {
-    var root = document.documentElement;
-    if (!document.fullscreenElement) {
-      if (root.requestFullscreen) root.requestFullscreen().catch(function () { document.body.classList.add('is-presenting'); });
-      document.body.classList.add('is-presenting');
+    var root = document.documentElement, body = document.body;
+    if (!body.classList.contains('is-presenting') && !document.fullscreenElement) {
+      body.classList.add('is-presenting');
+      if (root.requestFullscreen) {
+        // A refused request keeps the pseudo-presenting mode; Escape and F still leave it.
+        try {
+          var request = root.requestFullscreen();
+          if (request && request.catch) request.catch(function () { /* stay in pseudo-presenting mode */ });
+        } catch (error) { /* stay in pseudo-presenting mode */ }
+      }
       return;
     }
-    if (document.exitFullscreen) document.exitFullscreen().catch(function () { /* already out */ });
-    document.body.classList.remove('is-presenting');
+    body.classList.remove('is-presenting');
+    if (document.fullscreenElement && document.exitFullscreen) {
+      var exit = document.exitFullscreen();
+      if (exit && exit.catch) exit.catch(function () { /* already out */ });
+    }
   }
 
   function flashJump() {
@@ -617,7 +626,7 @@
         else if (state.helpOpen) setHelp(false);
         else if (state.overviewOpen) setOverview(false);
         else if (state.notesOpen) setNotes(false);
-        else if (document.fullscreenElement) toggleFullscreen();
+        else if (document.body.classList.contains('is-presenting') || document.fullscreenElement) toggleFullscreen();
         break;
       default:
         if (state.jump) { state = Object.assign({}, state, { jump: '' }); flashJump(); }
